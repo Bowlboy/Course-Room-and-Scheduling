@@ -14,6 +14,7 @@ describe("EchoSpec", function () {
         expect(response).to.have.property('code');
         expect(response).to.have.property('body');
         expect(response.code).to.be.a('number');
+        //testing
     }
 
     before(function () {
