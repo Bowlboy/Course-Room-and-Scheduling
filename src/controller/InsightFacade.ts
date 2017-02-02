@@ -140,6 +140,175 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
-        return null;
+        var readFromDisk = fs.readFileSync('./dummyfile.txt', "UTF8");
+        var returnedArray: String[] = [];
+        var files = JSON.parse(readFromDisk);
+        return new Promise(function(fulfill, reject) {
+
+            var content = query.content;
+            content = JSON.parse(content);
+
+            var WHERE = content[<any>"WHERE"];
+            var wherekey = Object.keys(WHERE);
+            // Log.test("WHEREE = " + wherekey);
+            var OPTIONS = content[<any>"OPTIONS"];
+            // Log.test("OPTIONS = " + Object.keys(OPTIONS));
+
+            //The for loop is arbitrarily deep, how to recurse? Make helper function
+            for (var i = 0; i < wherekey.length; i++) {
+                var contents = wherekey[<any>i];
+                // Log.test("CONTENT IS " + contents);
+                switch(contents) {
+                    case'AND':;
+                    case'OR':;
+                    case'LT':{
+                        var thingsGreaterThan = WHERE[<any>contents];
+                        // Log.test("IT REACHED HERE" + Object.keys(files));
+                        // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                        var filesKey = Object.keys(files);
+                        for (var j = 0; j < filesKey.length; j++) {
+                            var file = files[<any>filesKey[<any>j]];
+                            var fileKey = Object.keys(file);
+                            // Log.test("files = " + filesKey.length);
+                            // Log.test("THE KEYS ARE" + fileKey);
+                            // Log.test("FILEKEY LENGTH " + fileKey.length);
+                            for (var k = 0; k < fileKey.length; k++) {
+                                var key = file[<any>fileKey[<any>k]];
+                                // Log.test("THIS IS SOMETHING = " + key);
+                                var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                                for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                    // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                        // Log.test("KEY LT" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
+                                        if (key < thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
+                                            // Log.test("THIS ONE IS PUSHED LT" + key);
+                                            returnedArray.push(file);
+                                            // Log.test("THE REASON ISSSS" + returnedArray);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                        break;
+                    case'GT': {
+                        var thingsGreaterThan = WHERE[<any>contents];
+                        // Log.test("IT REACHED HERE" + Object.keys(files));
+                        // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                        var filesKey = Object.keys(files);
+                        for (var j = 0; j < filesKey.length; j++) {
+                            var file = files[<any>filesKey[<any>j]];
+                            var fileKey = Object.keys(file);
+                            // Log.test("files = " + filesKey.length);
+                            // Log.test("THE KEYS ARE" + fileKey);
+                            // Log.test("FILEKEY LENGTH " + fileKey.length);
+                            for (var k = 0; k < fileKey.length; k++) {
+                                var key = file[<any>fileKey[<any>k]];
+                                // Log.test("THIS IS SOMETHING = " + key);
+                                var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                                for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                    // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                        // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
+                                        if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
+                                            Log.test("THIS ONE IS PUSHED" + key);
+                                            returnedArray.push(file);
+                                            // Log.test("THE REASON ISSSS" + returnedArray);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                        break;
+                    case'EQ':{
+                        var thingsGreaterThan = WHERE[<any>contents];
+                        // Log.test("IT REACHED HERE" + Object.keys(files));
+                        // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                        var filesKey = Object.keys(files);
+                        for (var j = 0; j < filesKey.length; j++) {
+                            var file = files[<any>filesKey[<any>j]];
+                            var fileKey = Object.keys(file);
+                            // Log.test("files = " + filesKey.length);
+                            // Log.test("THE KEYS ARE" + fileKey);
+                            // Log.test("FILEKEY LENGTH " + fileKey.length);
+                            for (var k = 0; k < fileKey.length; k++) {
+                                var key = file[<any>fileKey[<any>k]];
+                                // Log.test("THIS IS SOMETHING = " + key);
+                                var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                                for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                    // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                        // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
+                                        if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
+                                            Log.test("THIS ONE IS PUSHED" + key);
+                                            returnedArray.push(file);
+                                            // Log.test("THE REASON ISSSS" + returnedArray);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                        break;
+                    case'IS':{
+                        var thingsGreaterThan = WHERE[<any>contents];
+                        // Log.test("IT REACHED HERE" + Object.keys(files));
+                        // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                        var filesKey = Object.keys(files);
+                        for (var j = 0; j < filesKey.length; j++) {
+                            var file = files[<any>filesKey[<any>j]];
+                            var fileKey = Object.keys(file);
+                            // Log.test("files = " + filesKey.length);
+                            // Log.test("THE KEYS ARE" + fileKey);
+                            // Log.test("FILEKEY LENGTH " + fileKey.length);
+                            for (var k = 0; k < fileKey.length; k++) {
+                                var key = file[<any>fileKey[<any>k]];
+                                // Log.test("THIS IS SOMETHING = " + key);
+                                var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                                for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                    // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                        // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
+                                        if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
+                                            Log.test("THIS ONE IS PUSHED" + key);
+                                            returnedArray.push(file);
+                                            // Log.test("THE REASON ISSSS" + returnedArray);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                        break;
+                    case'NOT':;
+                    default: break;
+                }
+            }
+
+            // OPTIONS not implemented yet
+            // for (var option of OPTIONS) {
+            //     switch(option) {
+            //         case'COLUMNS':;
+            //         case'ORDER':;
+            //         case'FORM':;
+            //         default: break;
+            //     }
+            // }
+            var ke = Object.keys(returnedArray);
+            for (var i = 0; i < ke.length; i++) {
+                Log.test("THE CONTENT OF THE ARRAY ARE " + returnedArray[<any>ke[<any>i]]);
+            }
+            let myIR = {code: 0, body: returnedArray};
+            fulfill(myIR);
+        })
     }
 }
