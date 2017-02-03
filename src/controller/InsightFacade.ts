@@ -31,7 +31,7 @@ export default class InsightFacade implements IInsightFacade {
             //console.log(id);
             //console.log(typeof content);
             //console.log(content);
-            js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64'
+            js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64' // should handle non zip file???
                 .then(function (zip: any) {
                     // console.log(zip);
                     //console.log('success loadAsyc');
@@ -115,7 +115,13 @@ export default class InsightFacade implements IInsightFacade {
                                     //console.log( "final array" + data);
                                     //console.log( "final array" + JSON.stringify(datafile));
                                 }
-                                if (fs.existsSync(id.concat(".txt"))){
+                                if(datafile.length === 0) { //handle Bender
+                                    let ans : InsightResponse = {
+                                        code : 400,
+                                        body : "the operation failed. error : no real data"};
+                                    reject(ans) // errorat prom all
+                                }
+                                else if (fs.existsSync(id.concat(".txt"))){
                                     fs.writeFileSync( id.concat(".txt"),JSON.stringify(datafile)); // overwrite file to disk
                                     let ans : InsightResponse = {
                                         code : 201,

@@ -20,7 +20,9 @@ describe("DataSpec", function () {
         var ir: InsightFacade = null;
         var zip: any = fs.readFileSync("courses.zip", "base64");
         var zip2: any = fs.readFileSync("courses.zip", "UTF8");
-        /*
+        var norealdatazip : any = fs.readFileSync("coursesnorealdata.zip", "base64");
+        var notzip: any = fs.readFileSync("dummyfile.txt", "base64");
+            /*
         var ans1 : InsightResponse = {
             code : 204,
             body : "the operation was successful and the id was new (not added in this session or was previously cached)."
@@ -41,6 +43,20 @@ describe("DataSpec", function () {
         ir = null;
     });
 
+    it("Add not zip file", function () {
+        return ir.addDataset("courses",notzip)
+            .then(function (value: InsightResponse) {
+                Log.test('Code: ' + value.code);
+                Log.test('Body: ' + value.body);
+                expect.fail();
+                //expect(value.code).to.equal(ans1.code);
+                //expect(value.body).to.equal(ans1.body);
+            }).catch(function (err : InsightResponse) {
+                Log.test('Code: ' + err.code);
+                Log.test('Body: ' + err.body);
+            })
+    });
+
     it("Add firs time", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
@@ -52,6 +68,20 @@ describe("DataSpec", function () {
                 Log.test('Code: ' + err.code);
                 Log.test('Body: ' + err.body);
                 expect.fail();
+            })
+    });
+
+    it("Add no real data time", function () {
+        return ir.addDataset("courses",norealdatazip)
+            .then(function (value: InsightResponse) {
+                Log.test('Code: ' + value.code);
+                Log.test('Body: ' + value.body);
+                expect.fail();
+                //expect(value.code).to.equal(ans1.code);
+                //expect(value.body).to.equal(ans1.body);
+            }).catch(function (err : InsightResponse) {
+                Log.test('Code: ' + err.code);
+                Log.test('Body: ' + err.body);
             })
     });
 
