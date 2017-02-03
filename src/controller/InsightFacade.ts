@@ -115,20 +115,39 @@ export default class InsightFacade implements IInsightFacade {
                                     //console.log( "final array" + data);
                                     //console.log( "final array" + JSON.stringify(datafile));
                                 }
-                                fs.writeFileSync("tolong.txt",JSON.stringify(datafile)); // write file to disk
-                                fulfill(0);
+                                if (fs.existsSync(id.concat(".txt"))){
+                                    fs.writeFileSync( id.concat(".txt"),JSON.stringify(datafile)); // overwrite file to disk
+                                    let ans : InsightResponse = {
+                                        code : 201,
+                                        body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                    fulfill(ans);
+                                }
+                                else {
+                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // write file to disk
+                                    let ans: InsightResponse = {
+                                        code: 204,
+                                        body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                    };
+                                    fulfill(ans);
+                                }
                             })
                             .catch(function (err: any) {
-                                console.log('error at prom all');
-                                console.log(err);
-                                reject('prom.all went wrong') // errorat prom all
+                                //console.log('error at prom all');
+                                //console.log(err);
+                                let ans : InsightResponse = {
+                                code : 400,
+                                body : "the operation failed. error : no such id at zip file "};
+                                reject(ans) // errorat prom all
 
                             })
                 })
                 .catch(function (err: any) {
-                    console.log('error at loadasynch');
-                    console.log(err);
-                    reject('loadasych err') // error at loadasynch
+                    //console.log('error at loadasynch');
+                    //console.log(err);
+                    let ans : InsightResponse = {
+                    code : 400,
+                    body : "the operation failed. error : invalid zip file "};
+                    reject(ans) // error at loadasynch
                 })
 
 
@@ -136,7 +155,23 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
-        return null;
+        return new Promise(function(fulfill, reject) {
+            if (fs.existsSync(id.concat(".txt"))) {
+                fs.unlinkSync(id.concat(".txt")); // delete file on disk
+                let ans: InsightResponse = {
+                    code: 204,
+                    body: "the operation was successful."
+                };
+                fulfill(ans);
+            }
+            else {
+                let ans: InsightResponse = {
+                    code: 404,
+                    body: "the operation was unsuccessful because the delete was for a resource that was not previously added."
+                };
+                reject(ans);
+            }
+        })
     }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
