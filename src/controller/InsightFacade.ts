@@ -337,7 +337,38 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     };
                         break;
-                    case'NOT':;
+                    case'NOT':{
+                        var thingsGreaterThan = WHERE[<any>contents];
+                        // Log.test("IT REACHED HERE" + Object.keys(files));
+                        // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                        var filesKey = Object.keys(files);
+                        for (var j = 0; j < filesKey.length; j++) {
+                            var file = files[<any>filesKey[<any>j]];
+                            var fileKey = Object.keys(file);
+                            // Log.test("files = " + filesKey.length);
+                            // Log.test("THE KEYS ARE" + fileKey);
+                            // Log.test("FILEKEY LENGTH " + fileKey.length);
+                            for (var k = 0; k < fileKey.length; k++) {
+                                var key = file[<any>fileKey[<any>k]];
+                                // Log.test("THIS IS SOMETHING = " + key);
+                                var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                                for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                    // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        Log.test("Filekey " + fileKey[k] + "Equals to " + thingsGreaterThanKey[<any>l]);
+                                        // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                        // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
+                                        if (key != thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
+                                            Log.test("THIS ONE IS PUSHED" + key);
+                                            returnedArray.push(file);
+                                            // Log.test("THE REASON ISSSS" + returnedArray);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };;
                     default: break;
                 }
             }
