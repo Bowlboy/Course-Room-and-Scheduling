@@ -118,21 +118,24 @@ export default class InsightFacade implements IInsightFacade {
                                 if(datafile.length === 0) { //handle Bender
                                     let ans : InsightResponse = {
                                         code : 400,
-                                        body : "the operation failed. error : no real data"};
+                                        //body : "error : no real data"};
+                                        body : JSON.parse('{"error" : "no real data"}')};
                                     reject(ans) // errorat prom all
                                 }
                                 else if (fs.existsSync(id.concat(".txt"))){
                                     fs.writeFileSync( id.concat(".txt"),JSON.stringify(datafile)); // overwrite file to disk
                                     let ans : InsightResponse = {
                                         code : 201,
-                                        body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                        //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                        body : JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')};
                                     fulfill(ans);
                                 }
                                 else {
                                     fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // write file to disk
                                     let ans: InsightResponse = {
                                         code: 204,
-                                        body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                        //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                        body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
                                     };
                                     fulfill(ans);
                                 }
@@ -142,7 +145,8 @@ export default class InsightFacade implements IInsightFacade {
                                 //console.log(err);
                                 let ans : InsightResponse = {
                                 code : 400,
-                                body : "the operation failed. error : no such id at zip file "};
+                                //body : "error : no such id at zip file"};
+                                body : JSON.parse('{"error" : "no such id at zip file "}')};
                                 reject(ans) // errorat prom all
 
                             })
@@ -152,7 +156,8 @@ export default class InsightFacade implements IInsightFacade {
                     //console.log(err);
                     let ans : InsightResponse = {
                     code : 400,
-                    body : "the operation failed. error : invalid zip file "};
+                    //body : "error : invalid zip file"};
+                    body : JSON.parse('{"error" : "invalid zip file"}')};
                     reject(ans) // error at loadasynch
                 })
 
@@ -166,14 +171,16 @@ export default class InsightFacade implements IInsightFacade {
                 fs.unlinkSync(id.concat(".txt")); // delete file on disk
                 let ans: InsightResponse = {
                     code: 204,
-                    body: "the operation was successful."
+                    //body: "the operation was successful."
+                    body: JSON.parse('{"success" : "the operation was successful."}')
                 };
                 fulfill(ans);
             }
             else {
                 let ans: InsightResponse = {
                     code: 404,
-                    body: "the operation was unsuccessful because the delete was for a resource that was not previously added."
+                    //body: "the operation was unsuccessful because the delete was for a resource that was not previously added."
+                    body: JSON.parse('{"error" : "the operation was unsuccessful because the delete was for a resource that was not previously added."}')
                 };
                 reject(ans);
             }

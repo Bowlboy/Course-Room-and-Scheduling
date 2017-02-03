@@ -47,13 +47,13 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",notzip)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 expect.fail();
                 //expect(value.code).to.equal(ans1.code);
                 //expect(value.body).to.equal(ans1.body);
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
             })
     });
 
@@ -61,12 +61,12 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 //expect(value.code).to.equal(ans1.code);
                 //expect(value.body).to.equal(ans1.body);
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             })
     });
@@ -75,13 +75,13 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",norealdatazip)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 expect.fail();
                 //expect(value.code).to.equal(ans1.code);
                 //expect(value.body).to.equal(ans1.body);
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
             })
     });
 
@@ -89,12 +89,12 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 //expect(value.code).to.equal(201);
                 //expect(value.body).to.equal('the operation was successful and the id already existed (was added in this session or was previously cached).');
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             })
     });
@@ -103,11 +103,11 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",zip2)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 expect.fail();
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 //expect(err.code).to.equal(400);
                 //expect(err.body).to.equal('not base64 zip file');
             })
@@ -117,11 +117,11 @@ describe("DataSpec", function () {
         return ir.addDataset("courses",null)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 expect.fail();
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 //expect(err.code).to.equal(400);
                 //expect(err.body).to.equal('not base64 zip file');
             })
@@ -131,12 +131,12 @@ describe("DataSpec", function () {
         return ir.removeDataset("courses")
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 //expect(value.code).to.equal(204);
                 //expect(value.body).to.equal('the operation was successful.');
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             })
     });
@@ -145,11 +145,11 @@ describe("DataSpec", function () {
         return ir.removeDataset("courses")
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);
-                Log.test('Body: ' + value.body);
+                Log.test('Body: ' + JSON.stringify(value.body));
                 expect.fail();
             }).catch(function (err : InsightResponse) {
                 Log.test('Code: ' + err.code);
-                Log.test('Body: ' + err.body);
+                Log.test('Body: ' + JSON.stringify(err.body));
                 //expect(err.code).to.equal(404);
                 //expect(err.body).to.equal('the operation was unsuccessful because the delete was for a resource that was not previously added.');
             })
