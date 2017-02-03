@@ -20,11 +20,12 @@ describe("DataSpec", function () {
         var ir: InsightFacade = null;
         var zip: any = fs.readFileSync("courses.zip", "base64");
         var zip2: any = fs.readFileSync("courses.zip", "UTF8");
+        /*
         var ans1 : InsightResponse = {
             code : 204,
             body : "the operation was successful and the id was new (not added in this session or was previously cached)."
         };
-      /*  fs.readFileSync("courses.zip", "base64", function (err: any, data: any) {
+        fs.readFileSync("courses.zip", "base64", function (err: any, data: any) {
             if (err) {
                 throw err;
             }

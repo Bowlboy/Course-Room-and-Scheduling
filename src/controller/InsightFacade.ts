@@ -5,9 +5,9 @@ import {IInsightFacade, InsightResponse, QueryRequest} from "./IInsightFacade";
 
 import Log from "../Util";
 
-var r = require('request');
+//var r = require('request');
 var js = require("jszip");
-var rp = require('request-promise-native');
+//var rp = require('request-promise-native');
 var fs = require("fs");
 
 export default class InsightFacade implements IInsightFacade {
@@ -34,7 +34,7 @@ export default class InsightFacade implements IInsightFacade {
             js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64'
                 .then(function (zip: any) {
                     // console.log(zip);
-                    console.log('success loadAsyc');
+                    //console.log('success loadAsyc');
                     var lof = Object.keys(zip.files);
                     //console.log(lof);
                     for (let entry of lof) {
