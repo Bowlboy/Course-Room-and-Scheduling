@@ -35,7 +35,7 @@ describe("DataSpec", function () {
     afterEach(function () {
         ir = null;
     });
-
+/*
     it("Add firs time", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
@@ -49,7 +49,7 @@ describe("DataSpec", function () {
                 expect.fail();
             })
     });
-/*
+
     it("Add second time", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
