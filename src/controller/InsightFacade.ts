@@ -193,8 +193,17 @@ export default class InsightFacade implements IInsightFacade {
             var contents = wherekey[<any>i];
             // Log.test("CONTENT IS " + contents);
             switch(contents) {
-                case'AND':;
-                case'OR':;
+                case'AND': ;
+                case'OR':
+                    var OR = WHERE[<any>"OR"];
+                    var orkey = Object.keys(OR);
+                    var tempArr1: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>orkey, <any>OR);
+                    var tempArrKey = Object.keys(tempArr1);
+                    for (var x = 0; x < tempArrKey.length; x++) {
+                        returnedArray.push(tempArr1[<any>x]);
+                    }
+                    break;
+
                 case'LT':{
                     var thingsGreaterThan = WHERE[<any>contents];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
@@ -363,8 +372,9 @@ export default class InsightFacade implements IInsightFacade {
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
         var readFromDisk = fs.readFileSync('./dummyfile.txt', "UTF8");
-        var returnedArray: String[] = [];
+
         var files = JSON.parse(readFromDisk);
+        var returnedArray: String[] = [];
         return new Promise(function(fulfill, reject) {
 
             var content = query.content;
@@ -378,7 +388,11 @@ export default class InsightFacade implements IInsightFacade {
 
             //The for loop is arbitrarily deep, how to recurse? Make helper function
 
-           returnedArray = this.queryHelper(files, wherekey, WHERE);
+            var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
+            var newArrKey = Object.keys(newArr);
+            for (var o = 0; o < newArrKey.length; o++) {
+                returnedArray.push(newArr[<any>newArrKey[<any>o]]);
+            }
 
             // OPTIONS not implemented yet
             // for (var option of OPTIONS) {
@@ -391,7 +405,7 @@ export default class InsightFacade implements IInsightFacade {
             // }
             var ke = Object.keys(returnedArray);
             for (var i = 0; i < ke.length; i++) {
-                Log.test("THE CONTENT OF THE ARRAY ARE " + returnedArray[<any>ke[<any>i]]);
+                Log.test("THE CONTENT OF THE ARRAY ARE " + ke[<any>i]);
             }
             let myIR = {code: 0, body: returnedArray};
             fulfill(myIR);
