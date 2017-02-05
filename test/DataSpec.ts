@@ -10,9 +10,7 @@ import InsightFacade from "../src/controller/InsightFacade";
 
 
 
-var r = require('request');
 var JSZip = require("jszip");
-var rp = require('request-promise-native');
 var fs = require("fs");
 
 describe("DataSpec", function () {
@@ -57,7 +55,7 @@ describe("DataSpec", function () {
             })
     });
 
-    it("Add firs time", function () {
+     it("Add firs time", function () {
         return ir.addDataset("courses",zip)
             .then(function (value: InsightResponse) {
                 Log.test('Code: ' + value.code);

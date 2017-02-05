@@ -5,9 +5,7 @@ import {IInsightFacade, InsightResponse, QueryRequest} from "./IInsightFacade";
 
 import Log from "../Util";
 
-//var r = require('request');
 var js = require("jszip");
-//var rp = require('request-promise-native');
 var fs = require("fs");
 
 export default class InsightFacade implements IInsightFacade {
@@ -200,20 +198,20 @@ export default class InsightFacade implements IInsightFacade {
                     var AND = WHERE[<any>"AND"];
                     var objLeft = AND[0];
                     var arrObjLeft = Object.keys(objLeft);
-                    Log.test("objLeft" + objLeft);
+                    // Log.test("objLeft" + objLeft);
                     var objRight = AND[1];
                     var arrObjRight = Object.keys(objRight);
-                    Log.test("objRight" + objRight);
+                    // Log.test("objRight" + objRight);
                     var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
                     var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
 
-                    Log.test("ArrayLeft = " + ArrayLeft);
-                    Log.test("ArrayRight = " + ArrayRight);
+                    // Log.test("ArrayLeft = " + ArrayLeft);
+                    // Log.test("ArrayRight = " + ArrayRight);
 
                     for (var smth of ArrayLeft) {
                         for (var smth2 of ArrayRight) {
                             if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                Log.test("SMTH 1 IS PUSHEDD" + Object.keys(smth));
+                                // Log.test("SMTH 1 IS PUSHEDD" + Object.keys(smth));
                                 returnedArray.push(smth);
                             }
                         }
@@ -244,26 +242,26 @@ export default class InsightFacade implements IInsightFacade {
                     var OR = WHERE[<any>"OR"];
                     var objLeft = OR[0];
                     var arrObjLeft = Object.keys(objLeft);
-                    Log.test("objLeft" + objLeft);
+                    // Log.test("objLeft" + objLeft);
                     var objRight = OR[1];
                     var arrObjRight = Object.keys(objRight);
-                    Log.test("objRight" + objRight);
+                    // Log.test("objRight" + objRight);
                     var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
                     var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
 
-                    Log.test("ArrayLeft = " + ArrayLeft);
-                    Log.test("ArrayRight = " + ArrayRight);
+                    // Log.test("ArrayLeft = " + ArrayLeft);
+                    // Log.test("ArrayRight = " + ArrayRight);
 
                     for (var smth of ArrayLeft) {
                         var contains = 0;
                         for (var smth2 of returnedArray) {
-                            Log.test("smth2 " + smth2);
+                            // Log.test("smth2 " + smth2);
                             if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
                                 contains = 1;
                             }
                         }
                         if (contains == 0) {
-                            Log.test(smth[<any>"courses_uuid"] + "|||||||||||||");
+                            // Log.test(smth[<any>"courses_uuid"] + "|||||||||||||");
                             returnedArray.push(smth);
                         }
                     }
@@ -271,13 +269,13 @@ export default class InsightFacade implements IInsightFacade {
                     for (var smth3 of ArrayRight) {
                         var contains = 0;
                         for (var smth4 of returnedArray) {
-                            Log.test("smth3 " + smth3);
+                            // Log.test("smth3 " + smth3);
                             if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
                                     contains = 1;
                             }
                         }
                         if (contains == 0) {
-                            Log.test(smth3[<any>"courses_uuid"] + "|||||||||||||");
+                            // Log.test(smth3[<any>"courses_uuid"] + "|||||||||||||");
                             returnedArray.push(smth3);
                         }
                 }
@@ -338,7 +336,7 @@ export default class InsightFacade implements IInsightFacade {
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
                                     if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                         // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        Log.test("THIS ONE IS PUSHED" + key);
+                                        // Log.test("THIS ONE IS PUSHED" + key);
                                         returnedArray.push(file);
                                         // Log.test("THE REASON ISSSS" + returnedArray);
                                     }
@@ -371,7 +369,7 @@ export default class InsightFacade implements IInsightFacade {
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
                                     if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                         // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        Log.test("THIS ONE IS PUSHED" + key);
+                                        // Log.test("THIS ONE IS PUSHED" + key);
                                         returnedArray.push(file);
                                         // Log.test("THE REASON ISSSS" + returnedArray);
                                     }
@@ -403,7 +401,7 @@ export default class InsightFacade implements IInsightFacade {
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
                                     if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                         // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        Log.test("THIS ONE IS PUSHED" + key);
+                                        // Log.test("THIS ONE IS PUSHED" + key);
                                         returnedArray.push(file);
                                         // Log.test("THE REASON ISSSS" + returnedArray);
                                     }
@@ -436,7 +434,7 @@ export default class InsightFacade implements IInsightFacade {
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
                                     if (key != thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                         // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        Log.test("THIS ONE IS PUSHED" + key);
+                                        // Log.test("THIS ONE IS PUSHED" + key);
                                         returnedArray.push(file);
                                         // Log.test("THE REASON ISSSS" + returnedArray);
                                     }
@@ -444,7 +442,7 @@ export default class InsightFacade implements IInsightFacade {
                             }
                         }
                     }
-                };;
+                };
                 default: break;
             }
         }
@@ -463,7 +461,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var WHERE = content[<any>"WHERE"];
             var wherekey = Object.keys(WHERE);
-            Log.test("WHEREE = " + wherekey);
+            // Log.test("WHEREE = " + wherekey);
             var OPTIONS = content[<any>"OPTIONS"];
             // Log.test("OPTIONS = " + Object.keys(OPTIONS));
 
