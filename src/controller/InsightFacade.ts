@@ -191,21 +191,101 @@ export default class InsightFacade implements IInsightFacade {
         var returnedArray: String[] = [];
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
-            // Log.test("CONTENT IS " + contents);
+            var conte = Object.keys(WHERE);
+            // Log.test("Where????? " + conte);
+            // Log.test("CONTENT IS " + contents + " WHEREKEY " + WHERE);
             switch(contents) {
-                case'AND': ;
-                case'OR':
-                    var OR = WHERE[<any>"OR"];
-                    var orkey = Object.keys(OR);
-                    var tempArr1: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>orkey, <any>OR);
-                    var tempArrKey = Object.keys(tempArr1);
-                    for (var x = 0; x < tempArrKey.length; x++) {
-                        returnedArray.push(tempArr1[<any>x]);
+                case'AND': {
+                    // var tempArrWhere2:String[] = [];
+                    var AND = WHERE[<any>"AND"];
+                    var objLeft = AND[0];
+                    var arrObjLeft = Object.keys(objLeft);
+                    Log.test("objLeft" + objLeft);
+                    var objRight = AND[1];
+                    var arrObjRight = Object.keys(objRight);
+                    Log.test("objRight" + objRight);
+                    var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                    var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                    Log.test("ArrayLeft = " + ArrayLeft);
+                    Log.test("ArrayRight = " + ArrayRight);
+
+                    for (var smth of ArrayLeft) {
+                        for (var smth2 of ArrayRight) {
+                            if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                Log.test("SMTH 1 IS PUSHEDD" + Object.keys(smth));
+                                returnedArray.push(smth);
+                            }
+                        }
                     }
+                    var contains = 0;
+                    for (var smth3 of ArrayRight) {
+                        for (var smth4 of ArrayLeft) {
+                            if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                for (var smth5 of returnedArray) {
+                                    if (returnedArray.length == 0) {
+                                        returnedArray.push(smth3);
+                                    }
+                                    else if (smth3[<any>"courses_uuid"] == smth5[<any>"courses_uuid"]) {
+                                        contains = 1;
+                                    }
+                                }
+                                if (contains == 0) {
+                                    Log.test("SMTH 2 IS PUSHEDD" + Object.keys(smth3));
+                                    returnedArray.push(smth3);
+                                }
+                            }
+                        }
+                    }
+                }
+                    break;
+                case'OR': {
+                    // var tempArrWhere2:String[] = [];
+                    var OR = WHERE[<any>"OR"];
+                    var objLeft = OR[0];
+                    var arrObjLeft = Object.keys(objLeft);
+                    Log.test("objLeft" + objLeft);
+                    var objRight = OR[1];
+                    var arrObjRight = Object.keys(objRight);
+                    Log.test("objRight" + objRight);
+                    var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                    var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                    Log.test("ArrayLeft = " + ArrayLeft);
+                    Log.test("ArrayRight = " + ArrayRight);
+
+                    for (var smth of ArrayLeft) {
+                        var contains = 0;
+                        for (var smth2 of returnedArray) {
+                            Log.test("smth2 " + smth2);
+                            if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                contains = 1;
+                            }
+                        }
+                        if (contains == 0) {
+                            Log.test(smth[<any>"courses_uuid"] + "|||||||||||||");
+                            returnedArray.push(smth);
+                        }
+                    }
+
+                    for (var smth3 of ArrayRight) {
+                        var contains = 0;
+                        for (var smth4 of returnedArray) {
+                            Log.test("smth3 " + smth3);
+                            if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                    contains = 1;
+                            }
+                        }
+                        if (contains == 0) {
+                            Log.test(smth3[<any>"courses_uuid"] + "|||||||||||||");
+                            returnedArray.push(smth3);
+                        }
+                }
+                }
                     break;
 
                 case'LT':{
-                    var thingsGreaterThan = WHERE[<any>contents];
+                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
                     // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
@@ -237,7 +317,7 @@ export default class InsightFacade implements IInsightFacade {
                 };
                     break;
                 case'GT': {
-                    var thingsGreaterThan = WHERE[<any>contents];
+                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
                     // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
@@ -269,7 +349,7 @@ export default class InsightFacade implements IInsightFacade {
                 };
                     break;
                 case'EQ':{
-                    var thingsGreaterThan = WHERE[<any>contents];
+                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
                     // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
@@ -283,6 +363,7 @@ export default class InsightFacade implements IInsightFacade {
                             var key = file[<any>fileKey[<any>k]];
                             // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
+                            // Log.test("THINGS GREATER THAN KEY = " + thingsGreaterThanKey);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
@@ -301,7 +382,7 @@ export default class InsightFacade implements IInsightFacade {
                 };
                     break;
                 case'IS':{
-                    var thingsGreaterThan = WHERE[<any>contents];
+                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
                     // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
@@ -333,7 +414,7 @@ export default class InsightFacade implements IInsightFacade {
                 };
                     break;
                 case'NOT':{
-                    var thingsGreaterThan = WHERE[<any>contents];
+                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
                     // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
@@ -382,7 +463,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var WHERE = content[<any>"WHERE"];
             var wherekey = Object.keys(WHERE);
-            // Log.test("WHEREE = " + wherekey);
+            Log.test("WHEREE = " + wherekey);
             var OPTIONS = content[<any>"OPTIONS"];
             // Log.test("OPTIONS = " + Object.keys(OPTIONS));
 
@@ -405,7 +486,7 @@ export default class InsightFacade implements IInsightFacade {
             // }
             var ke = Object.keys(returnedArray);
             for (var i = 0; i < ke.length; i++) {
-                Log.test("THE CONTENT OF THE ARRAY ARE " + ke[<any>i]);
+                // Log.test("THE CONTENT OF THE ARRAY ARE " + ke[<any>i]);
             }
             let myIR = {code: 0, body: returnedArray};
             fulfill(myIR);

@@ -17,11 +17,11 @@ let q2:string = '{"WHERE":{"LT":{"courses_avg":40}},"OPTIONS":{"COLUMNS":["cours
 let q3:string = '{"WHERE":{"EQ":{"courses_avg":80}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q4:string = '{"WHERE":{"IS":{"courses_instructor": "Reid Holmes"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q5:string = '{"WHERE":{"NOT":{"courses_fail": 100}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
-let q6:string = '{"WHERE":{"AND":[{"courses_fail": 100},{"courses_audit": 80}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
-let q7:string = '{"WHERE":{"OR":[{"courses_fail": 100},{"courses_audit": 100}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q6:string = '{"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_title": "Software Eng"}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q7:string = '{"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 
 let obj1:any = {"couses_dept": "CPSC", "courses_id": "310", "courses_avg": 80, "courses_instructor": "Reid Holmes", "courses_title": "Software Eng", "courses_pass": 5, "courses_fail": 100, "courses_audit": 1, "courses_uuid": "CPSC310-201"};
-let obj2:any = {"couses_dept": "COMM", "courses_id": "465", "courses_avg": 30, "courses_instructor": "Barack Obama", "courses_title": "Marketing", "courses_pass": 999, "courses_fail": 100, "courses_audit": 80, "courses_uuid": "COMM465-201"};
+let obj2:any = {"couses_dept": "COMM", "courses_id": "465", "courses_avg": 30, "courses_instructor": "Barack Obama", "courses_title": "Marketing", "courses_pass": 999, "courses_fail": 100, "courses_audit": 100, "courses_uuid": "COMM465-201"};
 let obj3:any = {"couses_dept": "CPSC", "courses_id": "110", "courses_avg": 100, "courses_instructor": "Donald Trump", "courses_title": "Dr. Racket", "courses_pass": 100, "courses_fail": 999, "courses_audit": 100, "courses_uuid": "CPSC110-201"};
 
 describe("QuerySpec", function () {
@@ -149,7 +149,7 @@ describe("QuerySpec", function () {
     });
 
     it("Test OR", function () {
-        return myIR.performQuery(query1).then(function (response: InsightResponse) {
+        return myIR.performQuery(query7).then(function (response: InsightResponse) {
             Log.test('The Response is: ' + Object.keys(response.body));
             var testerArray: String[] = [];
             testerArray.push(obj1);
