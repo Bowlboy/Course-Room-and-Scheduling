@@ -5,9 +5,7 @@ import {IInsightFacade, InsightResponse, QueryRequest} from "./IInsightFacade";
 
 import Log from "../Util";
 
-//var r = require('request');
 var js = require("jszip");
-//var rp = require('request-promise-native');
 var fs = require("fs");
 
 export default class InsightFacade implements IInsightFacade {
