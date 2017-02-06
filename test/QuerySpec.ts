@@ -167,7 +167,7 @@ describe("QuerySpec", function () {
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseIS);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -181,7 +181,7 @@ describe("QuerySpec", function () {
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseNOT);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -216,14 +216,14 @@ describe("QuerySpec", function () {
 
     it("Test DEPTH 2", function () {
         return myIR.performQuery(query8).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseDepth2);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -338,7 +338,7 @@ describe("QuerySpec", function () {
 
     it("Test Kampret", function () {
         return myIR.performQuery(query18).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
