@@ -440,9 +440,38 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
+                                    var tgt:string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
+                                    var ke:string = key;
+                                    // Log.test(tgt + "{}{}{}{}" + ke);
+                                    var firstChar:string = tgt.substring(0,1);
+                                    var lastChar:string = tgt.substring(tgt.length-1, tgt.length);
+                                    if (firstChar == "*" && lastChar == "*") {
+                                        tgt = tgt.substring(1,tgt.length-1);
+                                        if (ke.includes(tgt)) {
+                                            returnedArray.push(file);
+                                        }
+                                    }
+                                    else if (firstChar == "*" && lastChar != "*") {
+                                        tgt = tgt.substring(1,tgt.length);
+                                        if (tgt.length <= ke.length) {
+                                            if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
+                                                returnedArray.push(file);
+                                            }
+                                        }
+                                    }
+                                    else if (firstChar != "*" && lastChar == "*") {
+                                        tgt = tgt.substring(0,tgt.length-1);
+                                        if (tgt.length <= ke.length) {
+                                            if (ke.substring(0, tgt.length) == tgt) {
+                                                returnedArray.push(file);
+                                            }
+                                        }
+                                    }
+                                    // Log.test(firstChar + "?><>?><>?" + lastChar);
+                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<
+                                    // any>thingsGreaterThanKey[<any>k]]);
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                    else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                         // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
                                         // Log.test("THIS ONE IS PUSHED" + key);
                                         returnedArray.push(file);

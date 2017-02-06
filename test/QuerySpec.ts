@@ -26,6 +26,11 @@ let q11:string = '{"WHERE": {"GREATERTHAN":{"courses_avg": 81}},"OPTIONS":{"COLU
 let q12:string = '{"WHERE": {},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
 let q13:string = '{"WHERE": {"GREATER THAN":{"courses_avg": 81}},"OPTIONS":{}}';
 let q14:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"EQ":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_uuid", "FORM":"TABLE"}}';
+let q15:string = '{"WHERE":{"IS":{"courses_instructor": "*id Holmes"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q16:string = '{"WHERE":{"IS":{"courses_instructor": "Reid Holm*"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q17:string = '{"WHERE":{"IS":{"courses_instructor": "*id Hol*"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+
+
 
 let obj1:any = {"couses_dept": "CPSC", "courses_id": "310", "courses_avg": 80, "courses_instructor": "Reid Holmes", "courses_title": "Software Eng", "courses_pass": 5, "courses_fail": 100, "courses_audit": 1, "courses_uuid": "CPSC310-201"};
 let obj2:any = {"couses_dept": "COMM", "courses_id": "465", "courses_avg": 30, "courses_instructor": "Barack Obama", "courses_title": "Marketing", "courses_pass": 999, "courses_fail": 100, "courses_audit": 100, "courses_uuid": "COMM465-201"};
@@ -72,6 +77,12 @@ describe("QuerySpec", function () {
     query13  = {content: q13};
     let query14: QueryRequest;
     query14  = {content: q14};
+    let query15: QueryRequest;
+    query15  = {content: q15};
+    let query16: QueryRequest;
+    query16  = {content: q16};
+    let query17: QueryRequest;
+    query17  = {content: q17};
     var testerArray: String[] = [];
 
 
@@ -281,6 +292,45 @@ describe("QuerySpec", function () {
         })
     });
 
+    it("Test * IS", function () {
+        return myIR.performQuery(query15).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            var testerArray: String[] = [];
+            testerArray.push(obj1);
+            // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
+            expect(response.body).to.equal(responseIS);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+    it("Test IS *", function () {
+        return myIR.performQuery(query16).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            var testerArray: String[] = [];
+            testerArray.push(obj1);
+            // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
+            expect(response.body).to.equal(responseIS);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+    it("Test * IS *", function () {
+        return myIR.performQuery(query17).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            var testerArray: String[] = [];
+            testerArray.push(obj1);
+            // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
+            expect(response.body).to.equal(responseIS);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
 });
 /**
  * Created by nicoa on 2017-01-31.
