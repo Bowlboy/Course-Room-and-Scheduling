@@ -18,11 +18,21 @@ let q3:string = '{"WHERE":{"EQ":{"courses_avg":80}},"OPTIONS":{"COLUMNS":["cours
 let q4:string = '{"WHERE":{"IS":{"courses_instructor": "Reid Holmes"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q5:string = '{"WHERE":{"NOT":{"courses_fail": 100}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q6:string = '{"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_title": "Software Eng"}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
-let q7:string = '{"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q7:string = '{"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}}';
+let q8:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"EQ":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 
 let obj1:any = {"couses_dept": "CPSC", "courses_id": "310", "courses_avg": 80, "courses_instructor": "Reid Holmes", "courses_title": "Software Eng", "courses_pass": 5, "courses_fail": 100, "courses_audit": 1, "courses_uuid": "CPSC310-201"};
 let obj2:any = {"couses_dept": "COMM", "courses_id": "465", "courses_avg": 30, "courses_instructor": "Barack Obama", "courses_title": "Marketing", "courses_pass": 999, "courses_fail": 100, "courses_audit": 100, "courses_uuid": "COMM465-201"};
 let obj3:any = {"couses_dept": "CPSC", "courses_id": "110", "courses_avg": 100, "courses_instructor": "Donald Trump", "courses_title": "Dr. Racket", "courses_pass": 100, "courses_fail": 999, "courses_audit": 100, "courses_uuid": "CPSC110-201"};
+
+let responseGT:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":100}]}';
+let responseLT:string = '{"render":"TABLE","results":[{"courses_dept":"COMM","courses_avg":30}]}';
+let responseEQ:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80}]}';
+let responseIS:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80}]}';
+let responseNOT:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":100}]}';
+let responseAND:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80}]}';
+let responseOR:string = '{"render":"TABLE","results":[{"courses_dept":"COMM","courses_avg":30},{"courses_dept":"CPSC","courses_avg":80},{"courses_dept":"CPSC","courses_avg":100}]}';
+let responseDepth2:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80},{"courses_dept":"CPSC","courses_avg":100}]}';
 
 describe("QuerySpec", function () {
 
@@ -42,6 +52,8 @@ describe("QuerySpec", function () {
     query6  = {content: q6};
     let query7: QueryRequest;
     query7  = {content: q7};
+    let query8: QueryRequest;
+    query8  = {content: q8};
     var testerArray: String[] = [];
 
 
@@ -75,9 +87,9 @@ describe("QuerySpec", function () {
 
     it("Test GT", function () {
         return myIR.performQuery(query1).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseGT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -86,11 +98,11 @@ describe("QuerySpec", function () {
 
     it("Test LT", function () {
         return myIR.performQuery(query2).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj2);
             // testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseLT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -99,11 +111,11 @@ describe("QuerySpec", function () {
 
     it("Test EQ", function () {
         return myIR.performQuery(query3).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseEQ);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -112,11 +124,11 @@ describe("QuerySpec", function () {
 
     it("Test IS", function () {
         return myIR.performQuery(query4).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseIS);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -125,11 +137,11 @@ describe("QuerySpec", function () {
 
     it("Test NOT", function () {
         return myIR.performQuery(query5).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj3);
             // testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseNOT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -138,10 +150,10 @@ describe("QuerySpec", function () {
 
     it("Test AND", function () {
         return myIR.performQuery(query6).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj2);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseAND);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
@@ -150,12 +162,25 @@ describe("QuerySpec", function () {
 
     it("Test OR", function () {
         return myIR.performQuery(query7).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + Object.keys(response.body));
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj2);
             testerArray.push(obj3);
-            expect(Object.keys(response.body)).to.deep.equal(Object.keys(testerArray));
+            expect(response.body).to.equal(responseOR);
+        }).catch(function (err) {
+            Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+    it("Test DEPTH 2", function () {
+        return myIR.performQuery(query8).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            var testerArray: String[] = [];
+            testerArray.push(obj1);
+            testerArray.push(obj3);
+            expect(response.body).to.equal(responseDepth2);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();

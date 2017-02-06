@@ -191,7 +191,7 @@ export default class InsightFacade implements IInsightFacade {
             var contents = wherekey[<any>i];
             var conte = Object.keys(WHERE);
             // Log.test("Where????? " + conte);
-            // Log.test("CONTENT IS " + contents + " WHEREKEY " + WHERE);
+            // Log.test("CONTENT IS " + contents + " WHEREKEY " + conte);
             switch(contents) {
                 case'AND': {
                     // var tempArrWhere2:String[] = [];
@@ -229,7 +229,7 @@ export default class InsightFacade implements IInsightFacade {
                                     }
                                 }
                                 if (contains == 0) {
-                                    Log.test("SMTH 2 IS PUSHEDD" + Object.keys(smth3));
+                                    // Log.test("SMTH 2 IS PUSHEDD" + Object.keys(smth3));
                                     returnedArray.push(smth3);
                                 }
                             }
@@ -429,7 +429,7 @@ export default class InsightFacade implements IInsightFacade {
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    Log.test("Filekey " + fileKey[k] + "Equals to " + thingsGreaterThanKey[<any>l]);
+                                    // Log.test("Filekey " + fileKey[k] + "Equals to " + thingsGreaterThanKey[<any>l]);
                                     // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
                                     // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
                                     if (key != thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
@@ -446,7 +446,23 @@ export default class InsightFacade implements IInsightFacade {
                 default: break;
             }
         }
+        // Log.test("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + returnedArray);
         return returnedArray;
+    }
+
+    sorter(beforeArray: String[], order: any): String[] {
+        var sortedArray: String[] = [];
+        // Log.test("CHECKPOINT 1" + order);
+
+        sortedArray = beforeArray.slice(0);
+        sortedArray.sort((leftSide, rightSide): number => {
+            // Log.test("left = " + leftSide[<any>order] + "right + " + rightSide[<any>order]);
+            if (leftSide[<any>order] < rightSide[<any>order]) return -1;
+            if (leftSide[<any>order] > rightSide[<any>order]) return 1;
+            return 0;
+        });
+
+        return sortedArray;
     }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
@@ -473,20 +489,57 @@ export default class InsightFacade implements IInsightFacade {
                 returnedArray.push(newArr[<any>newArrKey[<any>o]]);
             }
 
-            // OPTIONS not implemented yet
-            // for (var option of OPTIONS) {
-            //     switch(option) {
-            //         case'COLUMNS':;
-            //         case'ORDER':;
-            //         case'FORM':;
-            //         default: break;
-            //     }
-            // }
             var ke = Object.keys(returnedArray);
             for (var i = 0; i < ke.length; i++) {
                 // Log.test("THE CONTENT OF THE ARRAY ARE " + ke[<any>i]);
             }
-            let myIR = {code: 0, body: returnedArray};
+
+            var COLUMNS = OPTIONS[<any>"COLUMNS"];
+            var ORDER = OPTIONS[<any>"ORDER"];
+            var FORM = OPTIONS[<any>"FORM"];
+
+            var noCols = Object.keys(COLUMNS).length;
+
+            // Log.test("Checkpoint 1");
+
+            var passedArray: String[] = [];
+
+
+            // Log.test("Checkpoint 2");
+
+            for (var smth of returnedArray) {
+
+                // Log.test("Checkpoint 3");
+                let eachPassedArray : any = {};
+                for (var column of COLUMNS) {
+                    eachPassedArray[column] = "";
+                }
+
+                // Log.test("eachPassedArrayKey " + Object.keys(eachPassedArray));
+
+                // Log.test("Checkpoint 4");
+                var smthKey = Object.keys(smth);
+                for (var n = 0; n < smthKey.length; n++) {
+                    // Log.test("Checkpoint 5");
+                    var eachPassedArrayKey = Object.keys(eachPassedArray);
+                    for (var o = 0; o < eachPassedArrayKey.length; o++) {
+                        // Log.test("Checkpoint 6");
+                        // Log.test(smthKey[<any>n] + "||||||||||||||||||||" + [eachPassedArrayKey[<any>o]]);
+                        if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
+                            // Log.test("Checkpoint 7");
+                            // Log.test("smthkey + " + <any>smthKey[<any>n]);
+                            // Log.test("smth + " + smth[<any>smthKey[<any>n]]);
+                            eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
+                        }
+                    }
+                }
+                passedArray.push(eachPassedArray);
+            }
+            var sortedArray: String[] = InsightFacade.prototype.sorter(passedArray, ORDER);
+
+            let body = {render: FORM, results: sortedArray};
+            var body1 = JSON.stringify(body);
+            let myIR = {code: 0, body: body1};
             fulfill(myIR);
         })
     }
