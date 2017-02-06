@@ -552,7 +552,6 @@ export default class InsightFacade implements IInsightFacade {
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
         var readFromDisk = fs.readFileSync('./courses.txt', "UTF8");
-
         var files = JSON.parse(readFromDisk);
         var returnedArray: String[] = [];
         return new Promise(function(fulfill, reject) {

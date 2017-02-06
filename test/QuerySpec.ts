@@ -29,6 +29,7 @@ let q14:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"c
 let q15:string = '{"WHERE":{"IS":{"courses_instructor": "*id Holmes"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q16:string = '{"WHERE":{"IS":{"courses_instructor": "Reid Holm*"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q17:string = '{"WHERE":{"IS":{"courses_instructor": "*id Hol*"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q18:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_avg": 80}},{"EQ":{"courses_avg": 30}},{"EQ":{"courses_avg": 100}}]}, {"IS":{"courses_dept": "CPSC"}}, {"LT":{"courses_pass":99}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 
 
 
@@ -44,6 +45,7 @@ let responseNOT:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","c
 let responseAND:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80}]}';
 let responseOR:string = '{"render":"TABLE","results":[{"courses_dept":"COMM","courses_avg":30},{"courses_dept":"CPSC","courses_avg":80},{"courses_dept":"CPSC","courses_avg":100}]}';
 let responseDepth2:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80},{"courses_dept":"CPSC","courses_avg":100}]}';
+let responseCacatMental:string = '{"render":"TABLE","results":[{"courses_dept":"CPSC","courses_avg":80}]}';
 
 describe("QuerySpec", function () {
 
@@ -83,6 +85,8 @@ describe("QuerySpec", function () {
     query16  = {content: q16};
     let query17: QueryRequest;
     query17  = {content: q17};
+    let query18: QueryRequest;
+    query18  = {content: q18};
     var testerArray: String[] = [];
 
 
@@ -326,6 +330,19 @@ describe("QuerySpec", function () {
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseIS);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+    it("Test Kampret", function () {
+        return myIR.performQuery(query18).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            var testerArray: String[] = [];
+            // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
+            expect(response.body).to.equal(responseCacatMental);
         }).catch(function (err) {
             // Log.test('Error: ' + err);
             expect.fail();
