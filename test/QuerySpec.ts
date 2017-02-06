@@ -20,6 +20,12 @@ let q5:string = '{"WHERE":{"NOT":{"courses_fail": 100}},"OPTIONS":{"COLUMNS":["c
 let q6:string = '{"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_title": "Software Eng"}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q7:string = '{"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}}';
 let q8:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"EQ":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q9:string = 'THIS IS AN INVALID QUERY';
+let q10:string = '{"WHERE": {"GT":{"WRONGDATASETS_avg": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
+let q11:string = '{"WHERE": {"GREATERTHAN":{"courses_avg": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
+let q12:string = '{"WHERE": {},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
+let q13:string = '{"WHERE": {"GREATER THAN":{"courses_avg": 81}},"OPTIONS":{}}';
+let q14:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"EQ":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_uuid", "FORM":"TABLE"}}';
 
 let obj1:any = {"couses_dept": "CPSC", "courses_id": "310", "courses_avg": 80, "courses_instructor": "Reid Holmes", "courses_title": "Software Eng", "courses_pass": 5, "courses_fail": 100, "courses_audit": 1, "courses_uuid": "CPSC310-201"};
 let obj2:any = {"couses_dept": "COMM", "courses_id": "465", "courses_avg": 30, "courses_instructor": "Barack Obama", "courses_title": "Marketing", "courses_pass": 999, "courses_fail": 100, "courses_audit": 100, "courses_uuid": "COMM465-201"};
@@ -54,6 +60,18 @@ describe("QuerySpec", function () {
     query7  = {content: q7};
     let query8: QueryRequest;
     query8  = {content: q8};
+    let query9: QueryRequest;
+    query9  = {content: q9};
+    let query10: QueryRequest;
+    query10  = {content: q10};
+    let query11: QueryRequest;
+    query11  = {content: q11};
+    let query12: QueryRequest;
+    query12  = {content: q12};
+    let query13: QueryRequest;
+    query13  = {content: q13};
+    let query14: QueryRequest;
+    query14  = {content: q14};
     var testerArray: String[] = [];
 
 
@@ -89,6 +107,7 @@ describe("QuerySpec", function () {
         return myIR.performQuery(query1).then(function (response: InsightResponse) {
             Log.test('The Response is: ' + response.body);
             testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseGT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -102,6 +121,7 @@ describe("QuerySpec", function () {
             var testerArray: String[] = [];
             testerArray.push(obj2);
             // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseLT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -115,6 +135,7 @@ describe("QuerySpec", function () {
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseEQ);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -128,6 +149,7 @@ describe("QuerySpec", function () {
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseIS);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -141,6 +163,7 @@ describe("QuerySpec", function () {
             var testerArray: String[] = [];
             testerArray.push(obj3);
             // testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseNOT);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -153,6 +176,7 @@ describe("QuerySpec", function () {
             Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj2);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseAND);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -167,6 +191,7 @@ describe("QuerySpec", function () {
             testerArray.push(obj1);
             testerArray.push(obj2);
             testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseOR);
         }).catch(function (err) {
             Log.test('Error: ' + err);
@@ -180,12 +205,82 @@ describe("QuerySpec", function () {
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj3);
+            expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseDepth2);
         }).catch(function (err) {
             Log.test('Error: ' + err);
             expect.fail();
         })
     });
+
+
+    it("Test Failed Query", function () {
+        return myIR.performQuery(query9).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(err.body).to.equal('"error": "There is an error processing the query"');
+        })
+    });
+
+    it("Test 2 Datasets", function () {
+        return myIR.performQuery(query10).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(err.body).to.equal('"error": "More than one dataset is used"');
+        })
+    });
+
+    it("Test Wrong Key", function () {
+        return myIR.performQuery(query11).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(err.body).to.equal('"error": "Wrong Key"');
+        })
+    });
+
+
+    it("Test No Where", function () {
+        return myIR.performQuery(query12).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(424);
+            expect(err.body).to.equal('"missing": ["WHERE"]');
+        })
+    });
+
+    it("Test No Options", function () {
+        return myIR.performQuery(query13).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(424);
+            expect(err.body).to.equal('"missing": ["OPTIONS"]');
+        })
+    });
+
+    it("Test No ORDER in COLUMN", function () {
+        return myIR.performQuery(query14).then(function (response: InsightResponse) {
+            Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(424);
+            expect(err.body).to.equal('"missing": ["Sort column in COLUMNS]"');
+        })
+    });
+
 });
 /**
  * Created by nicoa on 2017-01-31.

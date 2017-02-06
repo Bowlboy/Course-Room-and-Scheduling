@@ -281,7 +281,6 @@ export default class InsightFacade implements IInsightFacade {
                 }
                 }
                     break;
-
                 case'LT':{
                     var thingsGreaterThan = WHERE[<any>conte[<any>i]];
                     // Log.test("IT REACHED HERE" + Object.keys(files));
@@ -298,6 +297,17 @@ export default class InsightFacade implements IInsightFacade {
                             // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                var split = thingsGreaterThanKey[<any>l];
+                                // Log.test("split = " + split);
+                                var splits = split.split("_");
+                                // Log.test("splits = " + splits);
+                                if (splits[0] != "courses") {
+                                    // Log.test("Reached Here!!");
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'err400';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                     // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
@@ -330,6 +340,17 @@ export default class InsightFacade implements IInsightFacade {
                             // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                var split = thingsGreaterThanKey[<any>l];
+                                // Log.test("split = " + split);
+                                var splits = split.split("_");
+                                // Log.test("splits = " + splits);
+                                if (splits[0] != "courses") {
+                                    // Log.test("Reached Here!!");
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'err400';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                     // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
@@ -363,6 +384,17 @@ export default class InsightFacade implements IInsightFacade {
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             // Log.test("THINGS GREATER THAN KEY = " + thingsGreaterThanKey);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                var split = thingsGreaterThanKey[<any>l];
+                                // Log.test("split = " + split);
+                                var splits = split.split("_");
+                                // Log.test("splits = " + splits);
+                                if (splits[0] != "courses") {
+                                    // Log.test("Reached Here!!");
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'err400';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                     // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
@@ -395,6 +427,17 @@ export default class InsightFacade implements IInsightFacade {
                             // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                var split = thingsGreaterThanKey[<any>l];
+                                // Log.test("split = " + split);
+                                var splits = split.split("_");
+                                // Log.test("splits = " + splits);
+                                if (splits[0] != "courses") {
+                                    // Log.test("Reached Here!!");
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'err400';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                     // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
@@ -427,6 +470,17 @@ export default class InsightFacade implements IInsightFacade {
                             // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                                var split = thingsGreaterThanKey[<any>l];
+                                // Log.test("split = " + split);
+                                var splits = split.split("_");
+                                // Log.test("splits = " + splits);
+                                if (splits[0] != "courses") {
+                                    // Log.test("Reached Here!!");
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'err400';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
                                 // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                     // Log.test("Filekey " + fileKey[k] + "Equals to " + thingsGreaterThanKey[<any>l]);
@@ -443,7 +497,13 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                 };
-                default: break;
+                break;
+                default:{
+                        var errorArray: String[] = [];
+                        let rejectIR = 'err4001';
+                        errorArray.push(rejectIR);
+                        return errorArray;
+                    }
             }
         }
         // Log.test("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + returnedArray);
@@ -465,20 +525,41 @@ export default class InsightFacade implements IInsightFacade {
         return sortedArray;
     }
 
+    helper(str: any) {
+        try {JSON.parse(str);}
+        catch (e) {
+            return false;
+        }
+        return true;
+    }
+
     performQuery(query: QueryRequest): Promise <InsightResponse> {
-        var readFromDisk = fs.readFileSync('./dummyfile.txt', "UTF8");
+
+        var readFromDisk = fs.readFileSync('./courses.txt', "UTF8");
 
         var files = JSON.parse(readFromDisk);
         var returnedArray: String[] = [];
         return new Promise(function(fulfill, reject) {
 
             var content = query.content;
+            if (InsightFacade.prototype.helper(content) == false) {
+                let rejectIR = {code: 400, body: '"error": "There is an error processing the query"'};
+                reject(rejectIR);
+            }
             content = JSON.parse(content);
 
             var WHERE = content[<any>"WHERE"];
             var wherekey = Object.keys(WHERE);
+            if (wherekey.length == 0) {
+                let rejectIR = {code: 424, body: '"missing": ["WHERE"]'};
+                reject(rejectIR);
+            }
             // Log.test("WHEREE = " + wherekey);
             var OPTIONS = content[<any>"OPTIONS"];
+            if (Object.keys(OPTIONS).length == 0) {
+                let rejectIR = {code: 424, body: '"missing": ["OPTIONS"]'};
+                reject(rejectIR);
+            }
             // Log.test("OPTIONS = " + Object.keys(OPTIONS));
 
             //The for loop is arbitrarily deep, how to recurse? Make helper function
@@ -486,6 +567,16 @@ export default class InsightFacade implements IInsightFacade {
             var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
             var newArrKey = Object.keys(newArr);
             for (var o = 0; o < newArrKey.length; o++) {
+                // Log.test("newarrkey " + newArr[<any>newArrKey[<any>o]]);
+                if (newArr[<any>newArrKey[<any>o]] == 'err4001') {
+                        let rejectIR = {code: 400, body: '"error": "Wrong Key"'};
+                        reject(rejectIR);
+                    }
+                else if (newArr[<any>newArrKey[<any>o]] == 'err400') {
+                    let rejectIR = {code: 400, body: '"error": "More than one dataset is used"'};
+                    reject(rejectIR);
+                }
+
                 returnedArray.push(newArr[<any>newArrKey[<any>o]]);
             }
 
@@ -498,12 +589,25 @@ export default class InsightFacade implements IInsightFacade {
             var ORDER = OPTIONS[<any>"ORDER"];
             var FORM = OPTIONS[<any>"FORM"];
 
-            var noCols = Object.keys(COLUMNS).length;
+            if (COLUMNS.length == 0 || ORDER.length == 0 || FORM.length == 0) {
+                let rejectIR = {code: 400, body: '"error": "OPTIONS option not complete"'};
+                reject(rejectIR);
+            }
 
+            var con = 1;
+                for (var colu of COLUMNS) {
+                    // Log.test("ord " + ORDER + "colu" + colu);
+                    if (ORDER == colu) {
+                        con = 0;
+                }
+            }
+            if (con == 1) {
+                let rejectIR = {code: 424, body: '"missing": ["Sort column in COLUMNS]"'};
+                reject(rejectIR);
+            }
             // Log.test("Checkpoint 1");
 
             var passedArray: String[] = [];
-
 
             // Log.test("Checkpoint 2");
 
@@ -539,7 +643,7 @@ export default class InsightFacade implements IInsightFacade {
 
             let body = {render: FORM, results: sortedArray};
             var body1 = JSON.stringify(body);
-            let myIR = {code: 0, body: body1};
+            let myIR = {code: 200, body: body1};
             fulfill(myIR);
         })
     }
