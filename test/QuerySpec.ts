@@ -105,88 +105,88 @@ describe("QuerySpec", function () {
 
     it("Test GT", function () {
         return myIR.performQuery(query1).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseGT);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test LT", function () {
         return myIR.performQuery(query2).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj2);
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseLT);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test EQ", function () {
         return myIR.performQuery(query3).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseEQ);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test IS", function () {
         return myIR.performQuery(query4).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseIS);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test NOT", function () {
         return myIR.performQuery(query5).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj3);
             // testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseNOT);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test AND", function () {
         return myIR.performQuery(query6).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj2);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseAND);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test OR", function () {
         return myIR.performQuery(query7).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj2);
@@ -194,21 +194,21 @@ describe("QuerySpec", function () {
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseOR);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
 
     it("Test DEPTH 2", function () {
         return myIR.performQuery(query8).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseDepth2);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -216,10 +216,10 @@ describe("QuerySpec", function () {
 
     it("Test Failed Query", function () {
         return myIR.performQuery(query9).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
             expect(err.body).to.equal('"error": "There is an error processing the query"');
         })
@@ -227,10 +227,10 @@ describe("QuerySpec", function () {
 
     it("Test 2 Datasets", function () {
         return myIR.performQuery(query10).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
             expect(err.body).to.equal('"error": "More than one dataset is used"');
         })
@@ -238,10 +238,10 @@ describe("QuerySpec", function () {
 
     it("Test Wrong Key", function () {
         return myIR.performQuery(query11).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
             expect(err.body).to.equal('"error": "Wrong Key"');
         })
@@ -250,10 +250,10 @@ describe("QuerySpec", function () {
 
     it("Test No Where", function () {
         return myIR.performQuery(query12).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(424);
             expect(err.body).to.equal('"missing": ["WHERE"]');
         })
@@ -261,10 +261,10 @@ describe("QuerySpec", function () {
 
     it("Test No Options", function () {
         return myIR.performQuery(query13).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(424);
             expect(err.body).to.equal('"missing": ["OPTIONS"]');
         })
@@ -272,10 +272,10 @@ describe("QuerySpec", function () {
 
     it("Test No ORDER in COLUMN", function () {
         return myIR.performQuery(query14).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + response.body);
+            // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
-            Log.test('Error: ' + err.body);
+            // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(424);
             expect(err.body).to.equal('"missing": ["Sort column in COLUMNS]"');
         })
