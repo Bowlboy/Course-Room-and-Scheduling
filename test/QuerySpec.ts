@@ -16,10 +16,10 @@ let q1:string = '{"WHERE": {"GT":{"courses_avg": 81}},"OPTIONS":{"COLUMNS": ["co
 let q2:string = '{"WHERE":{"LT":{"courses_avg":40}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q3:string = '{"WHERE":{"EQ":{"courses_avg":80}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q4:string = '{"WHERE":{"IS":{"courses_instructor": "Reid Holmes"}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
-let q5:string = '{"WHERE":{"NOT":{"courses_fail": 100}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
-let q6:string = '{"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_title": "Software Eng"}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q5:string = '{"WHERE":{"NOT":{"EQ":{"courses_fail": 100}}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q6:string = '{"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"IS":{"courses_title": "Software Eng"}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q7:string = '{"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}}';
-let q8:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"EQ":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
+let q8:string = '{"WHERE":{"AND":[{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}}]}, {"IS":{"courses_dept": "CPSC"}}]}, "OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}}';
 let q9:string = 'THIS IS AN INVALID QUERY';
 let q10:string = '{"WHERE": {"GT":{"WRONGDATASETS_avg": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
 let q11:string = '{"WHERE": {"GREATERTHAN":{"courses_avg": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}}';
@@ -163,7 +163,7 @@ describe("QuerySpec", function () {
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseIS);
         }).catch(function (err) {
-            // Log.test('Error: ' + err);
+            Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -177,7 +177,7 @@ describe("QuerySpec", function () {
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseNOT);
         }).catch(function (err) {
-            // Log.test('Error: ' + err);
+            Log.test('Error: ' + err);
             expect.fail();
         })
     });
@@ -212,14 +212,14 @@ describe("QuerySpec", function () {
 
     it("Test DEPTH 2", function () {
         return myIR.performQuery(query8).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + response.body);
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             testerArray.push(obj1);
             testerArray.push(obj3);
             expect(response.code).to.equal(200);
             expect(response.body).to.equal(responseDepth2);
         }).catch(function (err) {
-            // Log.test('Error: ' + err);
+            Log.test('Error: ' + err);
             expect.fail();
         })
     });

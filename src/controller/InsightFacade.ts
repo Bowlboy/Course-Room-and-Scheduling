@@ -190,134 +190,182 @@ export default class InsightFacade implements IInsightFacade {
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
             var conte = Object.keys(WHERE);
-            // Log.test("Where????? " + conte);
-            // Log.test("CONTENT IS " + contents + " WHEREKEY " + conte);
             switch(contents) {
                 case'AND': {
-                    // var tempArrWhere2:String[] = [];
                     var AND = WHERE[<any>"AND"];
-                    var objLeft = AND[0];
-                    var arrObjLeft = Object.keys(objLeft);
-                    // Log.test("objLeft" + objLeft);
-                    var objRight = AND[1];
-                    var arrObjRight = Object.keys(objRight);
-                    // Log.test("objRight" + objRight);
-                    var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                    var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
-
-                    // Log.test("ArrayLeft = " + ArrayLeft);
-                    // Log.test("ArrayRight = " + ArrayRight);
-
-                    for (var smth of ArrayLeft) {
-                        for (var smth2 of ArrayRight) {
-                            if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                // Log.test("SMTH 1 IS PUSHEDD" + Object.keys(smth));
-                                returnedArray.push(smth);
-                            }
+                    if (AND.length == 0) {
+                        var errorArray: String[] = [];
+                        let rejectIR = 'errAND';
+                        errorArray.push(rejectIR);
+                        return errorArray;
+                    }
+                    else if (AND.length == 1) {
+                        var Obj = AND[0];
+                        var arrObj = Object.keys(Obj);
+                        var ArrayOne: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObj, <any>Obj);
+                        for (var smth of ArrayOne) {
+                            returnedArray.push(smth);
                         }
                     }
-                    var contains = 0;
-                    for (var smth3 of ArrayRight) {
-                        for (var smth4 of ArrayLeft) {
-                            if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
-                                for (var smth5 of returnedArray) {
-                                    if (returnedArray.length == 0) {
-                                        returnedArray.push(smth3);
-                                    }
-                                    else if (smth3[<any>"courses_uuid"] == smth5[<any>"courses_uuid"]) {
-                                        contains = 1;
-                                    }
-                                }
-                                if (contains == 0) {
-                                    // Log.test("SMTH 2 IS PUSHEDD" + Object.keys(smth3));
-                                    returnedArray.push(smth3);
+                    else if (AND.length == 2) {
+                        var objLeft = AND[0];
+                        var arrObjLeft = Object.keys(objLeft);
+                        var objRight = AND[1];
+                        var arrObjRight = Object.keys(objRight);
+                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                        for (var smth of ArrayLeft) {
+                            for (var smth2 of ArrayRight) {
+                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                    returnedArray.push(smth);
                                 }
                             }
                         }
                     }
-                }
+                    else {
+                        var objLeft = AND[0];
+                        var arrObjLeft = Object.keys(objLeft);
+
+                        var theRest: String[] = [];
+                        for (var u = 1; u < AND.length; u++) {
+                            theRest.push(AND[<any>u]);
+                        }
+
+                        let objRight = {"AND": theRest};
+                        var arrObjRight = Object.keys(objRight);
+                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                        for (var smth of ArrayLeft) {
+                            for (var smth2 of ArrayRight) {
+                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                    returnedArray.push(smth);
+                                }
+                            }
+                        }
+                    }
+                };
                     break;
                 case'OR': {
-                    // var tempArrWhere2:String[] = [];
                     var OR = WHERE[<any>"OR"];
-                    var objLeft = OR[0];
-                    var arrObjLeft = Object.keys(objLeft);
-                    // Log.test("objLeft" + objLeft);
-                    var objRight = OR[1];
-                    var arrObjRight = Object.keys(objRight);
-                    // Log.test("objRight" + objRight);
-                    var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                    var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
-
-                    // Log.test("ArrayLeft = " + ArrayLeft);
-                    // Log.test("ArrayRight = " + ArrayRight);
-
-                    for (var smth of ArrayLeft) {
-                        var contains = 0;
-                        for (var smth2 of returnedArray) {
-                            // Log.test("smth2 " + smth2);
-                            if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                contains = 1;
-                            }
-                        }
-                        if (contains == 0) {
-                            // Log.test(smth[<any>"courses_uuid"] + "|||||||||||||");
+                    if (OR.length == 0) {
+                        var errorArray: String[] = [];
+                        let rejectIR = 'errOR';
+                        errorArray.push(rejectIR);
+                        return errorArray;
+                    }
+                    else if (OR.length == 1) {
+                        var Obj = OR[0];
+                        var arrObj = Object.keys(Obj);
+                        var ArrayOne: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObj, <any>Obj);
+                        for (var smth of ArrayOne) {
                             returnedArray.push(smth);
                         }
                     }
 
-                    for (var smth3 of ArrayRight) {
-                        var contains = 0;
-                        for (var smth4 of returnedArray) {
-                            // Log.test("smth3 " + smth3);
-                            if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                    else if (OR.length == 2) {
+                        var objLeft = OR[0];
+                        var arrObjLeft = Object.keys(objLeft);
+                        var objRight = OR[1];
+                        var arrObjRight = Object.keys(objRight);
+                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                        for (var smth of ArrayLeft) {
+                            var contains = 0;
+                            for (var smth2 of returnedArray) {
+                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
                                     contains = 1;
+                                }
+                            }
+                            if (contains == 0) {
+                                returnedArray.push(smth);
                             }
                         }
-                        if (contains == 0) {
-                            // Log.test(smth3[<any>"courses_uuid"] + "|||||||||||||");
-                            returnedArray.push(smth3);
+
+                        for (var smth3 of ArrayRight) {
+                            var contains = 0;
+                            for (var smth4 of returnedArray) {
+                                if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                    contains = 1;
+                                }
+                            }
+                            if (contains == 0) {
+                                returnedArray.push(smth3);
+                            }
                         }
-                }
-                }
+                    }
+                    else {
+                        var objLeft = OR[0];
+                        var arrObjLeft = Object.keys(objLeft);
+
+                        var theRest: String[] = [];
+                        for (var u = 1; u < OR.length; u++) {
+                            theRest.push(OR[<any>u]);
+                        }
+
+                        let objRight = {"OR": theRest};
+                        var arrObjRight = Object.keys(objRight);
+                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
+                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
+
+                        for (var smth of ArrayLeft) {
+                            var contains = 0;
+                            for (var smth2 of returnedArray) {
+                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                    contains = 1;
+                                }
+                            }
+                            if (contains == 0) {
+                                returnedArray.push(smth);
+                            }
+                        }
+
+                        for (var smth3 of ArrayRight) {
+                            var contains = 0;
+                            for (var smth4 of returnedArray) {
+                                if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                    contains = 1;
+                                }
+                            }
+                            if (contains == 0) {
+                                returnedArray.push(smth3);
+                            }
+                        }
+                    }
+                };
                     break;
                 case'LT':{
                     var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    // Log.test("IT REACHED HERE" + Object.keys(files));
-                    // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
                         var fileKey = Object.keys(file);
-                        // Log.test("files = " + filesKey.length);
-                        // Log.test("THE KEYS ARE" + fileKey);
-                        // Log.test("FILEKEY LENGTH " + fileKey.length);
                         for (var k = 0; k < fileKey.length; k++) {
                             var key = file[<any>fileKey[<any>k]];
-                            // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 var split = thingsGreaterThanKey[<any>l];
-                                // Log.test("split = " + split);
                                 var splits = split.split("_");
-                                // Log.test("splits = " + splits);
                                 if (splits[0] != "courses") {
-                                    // Log.test("Reached Here!!");
                                     var errorArray: String[] = [];
                                     let rejectIR = 'err400';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
-                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
-                                    // Log.test("KEY LT" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    if (key < thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                        // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        // Log.test("THIS ONE IS PUSHED LT" + key);
-                                        returnedArray.push(file);
-                                        // Log.test("THE REASON ISSSS" + returnedArray);
+                                if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        if (key < thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            returnedArray.push(file);
+                                        }
                                     }
+                                }
+                                else {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errnum';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
                                 }
                             }
                         }
@@ -326,41 +374,34 @@ export default class InsightFacade implements IInsightFacade {
                     break;
                 case'GT': {
                     var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    // Log.test("IT REACHED HERE" + Object.keys(files));
-                    // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
                         var fileKey = Object.keys(file);
-                        // Log.test("files = " + filesKey.length);
-                        // Log.test("THE KEYS ARE" + fileKey);
-                        // Log.test("FILEKEY LENGTH " + fileKey.length);
                         for (var k = 0; k < fileKey.length; k++) {
                             var key = file[<any>fileKey[<any>k]];
-                            // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 var split = thingsGreaterThanKey[<any>l];
-                                // Log.test("split = " + split);
                                 var splits = split.split("_");
-                                // Log.test("splits = " + splits);
                                 if (splits[0] != "courses") {
-                                    // Log.test("Reached Here!!");
                                     var errorArray: String[] = [];
                                     let rejectIR = 'err400';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
-                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
-                                    // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                        // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        // Log.test("THIS ONE IS PUSHED" + key);
-                                        returnedArray.push(file);
-                                        // Log.test("THE REASON ISSSS" + returnedArray);
+                                if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            returnedArray.push(file);
+                                        }
                                     }
+                                }
+                                else {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errnum';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
                                 }
                             }
                         }
@@ -369,43 +410,34 @@ export default class InsightFacade implements IInsightFacade {
                     break;
                 case'EQ':{
                     var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    // Log.test("IT REACHED HERE" + Object.keys(files));
-                    // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
                         var fileKey = Object.keys(file);
-                        // Log.test("files = " + filesKey.length);
-                        // Log.test("THE KEYS ARE" + fileKey);
-                        // Log.test("FILEKEY LENGTH " + fileKey.length);
                         for (var k = 0; k < fileKey.length; k++) {
                             var key = file[<any>fileKey[<any>k]];
-                            // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
-                            // Log.test("THINGS GREATER THAN KEY = " + thingsGreaterThanKey);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 var split = thingsGreaterThanKey[<any>l];
-                                // Log.test("split = " + split);
                                 var splits = split.split("_");
-                                // Log.test("splits = " + splits);
                                 if (splits[0] != "courses") {
-                                    // Log.test("Reached Here!!");
                                     var errorArray: String[] = [];
                                     let rejectIR = 'err400';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
-                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
-                                    // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                        // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        // Log.test("THIS ONE IS PUSHED" + key);
-                                        returnedArray.push(file);
-                                        // Log.test("THE REASON ISSSS" + returnedArray);
+                                if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[ < any > l]] === "number") {
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            returnedArray.push(file);
+                                        }
                                     }
                                 }
+                                else {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errnum';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;}
                             }
                         }
                     }
@@ -413,69 +445,53 @@ export default class InsightFacade implements IInsightFacade {
                     break;
                 case'IS':{
                     var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    // Log.test("IT REACHED HERE" + Object.keys(files));
-                    // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
                     var filesKey = Object.keys(files);
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
                         var fileKey = Object.keys(file);
-                        // Log.test("files = " + filesKey.length);
-                        // Log.test("THE KEYS ARE" + fileKey);
-                        // Log.test("FILEKEY LENGTH " + fileKey.length);
                         for (var k = 0; k < fileKey.length; k++) {
                             var key = file[<any>fileKey[<any>k]];
-                            // Log.test("THIS IS SOMETHING = " + key);
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 var split = thingsGreaterThanKey[<any>l];
-                                // Log.test("split = " + split);
-                                var splits = split.split("_");
-                                // Log.test("splits = " + splits);
-                                if (splits[0] != "courses") {
-                                    // Log.test("Reached Here!!");
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'err400';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
-                                // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
-                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    var tgt:string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
-                                    var ke:string = key;
-                                    // Log.test(tgt + "{}{}{}{}" + ke);
-                                    var firstChar:string = tgt.substring(0,1);
-                                    var lastChar:string = tgt.substring(tgt.length-1, tgt.length);
-                                    if (firstChar == "*" && lastChar == "*") {
-                                        tgt = tgt.substring(1,tgt.length-1);
-                                        if (ke.includes(tgt)) {
+                                if (typeof thingsGreaterThan[<any>split] === "string") {
+                                    var splits = split.split("_");
+                                    if (splits[0] != "courses") {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'err400';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        var tgt: string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
+                                        var ke: string = key;
+                                        var firstChar: string = tgt.substring(0, 1);
+                                        var lastChar: string = tgt.substring(tgt.length - 1, tgt.length);
+                                        if (firstChar == "*" && lastChar == "*") {
+                                            tgt = tgt.substring(1, tgt.length - 1);
+                                            if (ke.includes(tgt)) {
+                                                returnedArray.push(file);
+                                            }
+                                        }
+                                        else if (firstChar == "*" && lastChar != "*") {
+                                            tgt = tgt.substring(1, tgt.length);
+                                            if (tgt.length <= ke.length) {
+                                                if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
+                                                    returnedArray.push(file);
+                                                }
+                                            }
+                                        }
+                                        else if (firstChar != "*" && lastChar == "*") {
+                                            tgt = tgt.substring(0, tgt.length - 1);
+                                            if (tgt.length <= ke.length) {
+                                                if (ke.substring(0, tgt.length) == tgt) {
+                                                    returnedArray.push(file);
+                                                }
+                                            }
+                                        }
+                                        else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
                                             returnedArray.push(file);
                                         }
-                                    }
-                                    else if (firstChar == "*" && lastChar != "*") {
-                                        tgt = tgt.substring(1,tgt.length);
-                                        if (tgt.length <= ke.length) {
-                                            if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
-                                                returnedArray.push(file);
-                                            }
-                                        }
-                                    }
-                                    else if (firstChar != "*" && lastChar == "*") {
-                                        tgt = tgt.substring(0,tgt.length-1);
-                                        if (tgt.length <= ke.length) {
-                                            if (ke.substring(0, tgt.length) == tgt) {
-                                                returnedArray.push(file);
-                                            }
-                                        }
-                                    }
-                                    // Log.test(firstChar + "?><>?><>?" + lastChar);
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<
-                                    // any>thingsGreaterThanKey[<any>k]]);
-                                    // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                        // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        // Log.test("THIS ONE IS PUSHED" + key);
-                                        returnedArray.push(file);
-                                        // Log.test("THE REASON ISSSS" + returnedArray);
                                     }
                                 }
                             }
@@ -483,46 +499,22 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 };
                     break;
-                case'NOT':{
-                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    // Log.test("IT REACHED HERE" + Object.keys(files));
-                    // Log.test("HELLO WOTTTT = " + thingsGreaterThan);
+                case'NOT': {
+                    var NOT = WHERE[<any>"NOT"];
+                    var notkey = Object.keys(NOT);
+                    var Array:String [] = InsightFacade.prototype.queryHelper(<any>files, <any>notkey, <any>NOT);
+
                     var filesKey = Object.keys(files);
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
-                        var fileKey = Object.keys(file);
-                        // Log.test("files = " + filesKey.length);
-                        // Log.test("THE KEYS ARE" + fileKey);
-                        // Log.test("FILEKEY LENGTH " + fileKey.length);
-                        for (var k = 0; k < fileKey.length; k++) {
-                            var key = file[<any>fileKey[<any>k]];
-                            // Log.test("THIS IS SOMETHING = " + key);
-                            var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
-                            for (var l = 0; l < thingsGreaterThanKey.length; l++) {
-                                var split = thingsGreaterThanKey[<any>l];
-                                // Log.test("split = " + split);
-                                var splits = split.split("_");
-                                // Log.test("splits = " + splits);
-                                if (splits[0] != "courses") {
-                                    // Log.test("Reached Here!!");
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'err400';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
-                                // Log.test("TESTER BLABLABLA" + thingsGreaterThanKey[<any>k] + "::::" + fileKey[i]);
-                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    // Log.test("Filekey " + fileKey[k] + "Equals to " + thingsGreaterThanKey[<any>l]);
-                                    // Log.test('CHECKPOINT 1' + thingsGreaterThan[<any>thingsGreaterThanKey[<any>k]]);
-                                    // Log.test("KEY" + key + ":::::::::" + thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]);
-                                    if (key != thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                        // Log.test("Does it reach here? " + WHERE[<any>wherekey[0]]);
-                                        // Log.test("THIS ONE IS PUSHED" + key);
-                                        returnedArray.push(file);
-                                        // Log.test("THE REASON ISSSS" + returnedArray);
-                                    }
-                                }
+                        var contains = 0;
+                        for (var smth of Array) {
+                            if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
+                                contains = 1;
                             }
+                        }
+                        if (contains == 0) {
+                            returnedArray.push(file);
                         }
                     }
                 };
@@ -535,22 +527,17 @@ export default class InsightFacade implements IInsightFacade {
                     }
             }
         }
-        // Log.test("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + returnedArray);
         return returnedArray;
     }
 
     sorter(beforeArray: String[], order: any): String[] {
         var sortedArray: String[] = [];
-        // Log.test("CHECKPOINT 1" + order);
-
         sortedArray = beforeArray.slice(0);
         sortedArray.sort((leftSide, rightSide): number => {
-            // Log.test("left = " + leftSide[<any>order] + "right + " + rightSide[<any>order]);
             if (leftSide[<any>order] < rightSide[<any>order]) return -1;
             if (leftSide[<any>order] > rightSide[<any>order]) return 1;
             return 0;
         });
-
         return sortedArray;
     }
 
@@ -583,35 +570,37 @@ export default class InsightFacade implements IInsightFacade {
                 let rejectIR = {code: 424, body: '"missing": ["WHERE"]'};
                 reject(rejectIR);
             }
-            // Log.test("WHEREE = " + wherekey);
             var OPTIONS = content[<any>"OPTIONS"];
             if (Object.keys(OPTIONS).length == 0) {
                 let rejectIR = {code: 424, body: '"missing": ["OPTIONS"]'};
                 reject(rejectIR);
             }
-            // Log.test("OPTIONS = " + Object.keys(OPTIONS));
-
-            //The for loop is arbitrarily deep, how to recurse? Make helper function
 
             var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
             var newArrKey = Object.keys(newArr);
             for (var o = 0; o < newArrKey.length; o++) {
-                // Log.test("newarrkey " + newArr[<any>newArrKey[<any>o]]);
                 if (newArr[<any>newArrKey[<any>o]] == 'err4001') {
-                        let rejectIR = {code: 400, body: '"error": "Wrong Key"'};
-                        reject(rejectIR);
-                    }
+                    let rejectIR = {code: 400, body: '"error": "Wrong Key"'};
+                    reject(rejectIR);
+                }
                 else if (newArr[<any>newArrKey[<any>o]] == 'err400') {
                     let rejectIR = {code: 400, body: '"error": "More than one dataset is used"'};
                     reject(rejectIR);
                 }
+                else if (newArr[<any>newArrKey[<any>o]] == 'errAND') {
+                    let rejectIR = {code: 424, body: '"missing": "And input not enough"'};
+                    reject(rejectIR);
+                }
+                else if (newArr[<any>newArrKey[<any>o]] == 'errOR') {
+                    let rejectIR = {code: 424, body: '"missing": "Or input not enough"'};
+                    reject(rejectIR);
+                }
+                else if (newArr[<any>newArrKey[<any>o]] == 'err400num') {
+                    let rejectIR = {code: 400, body: '"error": "Invalid query: EQ value should be a number"'};
+                    reject(rejectIR);
+                }
 
                 returnedArray.push(newArr[<any>newArrKey[<any>o]]);
-            }
-
-            var ke = Object.keys(returnedArray);
-            for (var i = 0; i < ke.length; i++) {
-                // Log.test("THE CONTENT OF THE ARRAY ARE " + ke[<any>i]);
             }
 
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
@@ -619,13 +608,12 @@ export default class InsightFacade implements IInsightFacade {
             var FORM = OPTIONS[<any>"FORM"];
 
             if (COLUMNS.length == 0 || ORDER.length == 0 || FORM.length == 0) {
-                let rejectIR = {code: 400, body: '"error": "OPTIONS option not complete"'};
+                let rejectIR = {code: 400, body: '"error": "OPTIONS/ORDER/FORM option not complete"'};
                 reject(rejectIR);
             }
 
             var con = 1;
                 for (var colu of COLUMNS) {
-                    // Log.test("ord " + ORDER + "colu" + colu);
                     if (ORDER == colu) {
                         con = 0;
                 }
@@ -634,34 +622,20 @@ export default class InsightFacade implements IInsightFacade {
                 let rejectIR = {code: 424, body: '"missing": ["Sort column in COLUMNS]"'};
                 reject(rejectIR);
             }
-            // Log.test("Checkpoint 1");
 
             var passedArray: String[] = [];
 
-            // Log.test("Checkpoint 2");
-
             for (var smth of returnedArray) {
-
-                // Log.test("Checkpoint 3");
-                let eachPassedArray : any = {};
+                let eachPassedArray: any = {};
                 for (var column of COLUMNS) {
                     eachPassedArray[column] = "";
                 }
 
-                // Log.test("eachPassedArrayKey " + Object.keys(eachPassedArray));
-
-                // Log.test("Checkpoint 4");
                 var smthKey = Object.keys(smth);
                 for (var n = 0; n < smthKey.length; n++) {
-                    // Log.test("Checkpoint 5");
                     var eachPassedArrayKey = Object.keys(eachPassedArray);
                     for (var o = 0; o < eachPassedArrayKey.length; o++) {
-                        // Log.test("Checkpoint 6");
-                        // Log.test(smthKey[<any>n] + "||||||||||||||||||||" + [eachPassedArrayKey[<any>o]]);
                         if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
-                            // Log.test("Checkpoint 7");
-                            // Log.test("smthkey + " + <any>smthKey[<any>n]);
-                            // Log.test("smth + " + smth[<any>smthKey[<any>n]]);
                             eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
                         }
                     }
