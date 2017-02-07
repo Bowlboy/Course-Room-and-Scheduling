@@ -558,7 +558,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var content = query.content;
             if (InsightFacade.prototype.helper(content) == false) {
-                let rejectIR = {code: 400, body: '"error": "There is an error processing the query"'};
+                let rejectIR = {code: 400, body: JSON.parse('{"error": "There is an error processing the query"}')};
                 reject(rejectIR);
             }
             content = JSON.parse(content);
@@ -566,12 +566,12 @@ export default class InsightFacade implements IInsightFacade {
             var WHERE = content[<any>"WHERE"];
             var wherekey = Object.keys(WHERE);
             if (wherekey.length == 0) {
-                let rejectIR = {code: 424, body: '"missing": ["WHERE"]'};
+                let rejectIR = {code: 424, body: JSON.parse('{"missing": ["WHERE"]}')};
                 reject(rejectIR);
             }
             var OPTIONS = content[<any>"OPTIONS"];
             if (Object.keys(OPTIONS).length == 0) {
-                let rejectIR = {code: 424, body: '"missing": ["OPTIONS"]'};
+                let rejectIR = {code: 424, body: JSON.parse('{"missing": ["OPTIONS"]}')};
                 reject(rejectIR);
             }
 
@@ -579,23 +579,23 @@ export default class InsightFacade implements IInsightFacade {
             var newArrKey = Object.keys(newArr);
             for (var o = 0; o < newArrKey.length; o++) {
                 if (newArr[<any>newArrKey[<any>o]] == 'err4001') {
-                    let rejectIR = {code: 400, body: '"error": "Wrong Key"'};
+                    let rejectIR = {code: 400, body: JSON.parse('{"error": "Wrong Key"}')};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'err400') {
-                    let rejectIR = {code: 400, body: '"error": "More than one dataset is used"'};
+                    let rejectIR = {code: 400, body: JSON.parse('{"error": "More than one dataset is used"}')};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'errAND') {
-                    let rejectIR = {code: 424, body: '"missing": "And input not enough"'};
+                    let rejectIR = {code: 424, body: JSON.parse('{"missing": "And input not enough"}')};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'errOR') {
-                    let rejectIR = {code: 424, body: '"missing": "Or input not enough"'};
+                    let rejectIR = {code: 424, body: JSON.parse('{"missing": "Or input not enough"}')};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'err400num') {
-                    let rejectIR = {code: 400, body: '"error": "Invalid query: EQ value should be a number"'};
+                    let rejectIR = {code: 400, body: JSON.parse('{"error": "Invalid query: EQ value should be a number"}')};
                     reject(rejectIR);
                 }
 
@@ -607,7 +607,7 @@ export default class InsightFacade implements IInsightFacade {
             var FORM = OPTIONS[<any>"FORM"];
 
             if (COLUMNS.length == 0 || ORDER.length == 0 || FORM.length == 0) {
-                let rejectIR = {code: 400, body: '"error": "OPTIONS/ORDER/FORM option not complete"'};
+                let rejectIR = {code: 400, body: JSON.parse('{"error": "OPTIONS/ORDER/FORM option not complete"}')};
                 reject(rejectIR);
             }
 
@@ -618,7 +618,8 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
             if (con == 1) {
-                let rejectIR = {code: 424, body: '"missing": ["Sort column in COLUMNS]"'};
+                let rejectIR = {code: 424, body: JSON.parse('{"missing": ["Sort column in COLUMNS]"}')};
+                // '{"error" : "no real data"}'
                 reject(rejectIR);
             }
 
@@ -645,7 +646,7 @@ export default class InsightFacade implements IInsightFacade {
 
             let body = {render: FORM, results: sortedArray};
             var body1 = JSON.stringify(body);
-            let myIR = {code: 200, body: body1};
+            let myIR = {code: 200, body: JSON.parse(body1)};
             fulfill(myIR);
         })
     }
