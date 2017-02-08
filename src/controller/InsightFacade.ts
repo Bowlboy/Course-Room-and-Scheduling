@@ -574,7 +574,8 @@ export default class InsightFacade implements IInsightFacade {
                 let rejectIR = {code: 424, body: '"missing": ["OPTIONS"]'};
                 reject(rejectIR);
             }
-
+//ERROR 400 NOT 424
+            // Make reror object not string;
             var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
             var newArrKey = Object.keys(newArr);
             for (var o = 0; o < newArrKey.length; o++) {
@@ -643,7 +644,7 @@ export default class InsightFacade implements IInsightFacade {
             }
             var sortedArray: String[] = InsightFacade.prototype.sorter(passedArray, ORDER);
 
-            let body = {render: FORM, results: sortedArray};
+            let body = {render: FORM, result: sortedArray};
             var body1 = JSON.stringify(body);
             let myIR = {code: 200, body: body1};
             fulfill(myIR);
