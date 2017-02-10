@@ -330,7 +330,7 @@ describe("QuerySpec", function () {
     });
     it("Test * IS *", function () {
         return myIR.performQuery(query17).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + response.body);
+            Log.test('The Response is: ' + JSON.stringify(response.body));
             // Log.test("Response code " + response.code);
             var testerArray: String[] = [];
             testerArray.push(obj1);
@@ -345,7 +345,7 @@ describe("QuerySpec", function () {
 
     it("Test Kampret", function () {
         return myIR.performQuery(query18).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + response.body);
+            Log.test('The Response is: ' + JSON.stringify(response.body));
             // Log.test("Response code " + response.code);
             var testerArray: String[] = [];
             // testerArray.push(obj3);
