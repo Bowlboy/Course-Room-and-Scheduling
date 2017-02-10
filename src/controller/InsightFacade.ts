@@ -555,7 +555,7 @@ export default class InsightFacade implements IInsightFacade {
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
-        var readFromDisk = fs.readFileSync('./dummyfile.txt', "UTF8");
+        var readFromDisk = fs.readFileSync('./courses.txt', "UTF8");
         var files = JSON.parse(readFromDisk);
         var returnedArray: String[] = [];
         return new Promise(function(fulfill, reject) {
@@ -650,7 +650,7 @@ export default class InsightFacade implements IInsightFacade {
             var sortedArray: String[] = InsightFacade.prototype.sorter(passedArray, ORDER);
 
             // Log.test("Array = " + sortedArray);
-            let body = {render: FORM, result: sortedArray};
+            let body = {whatsupp: FORM, whatsupman: sortedArray};
             var body1 = JSON.stringify(body);
             let myIR = {code: 200, body: body};
             fulfill(myIR);
