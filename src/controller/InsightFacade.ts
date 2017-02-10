@@ -7,6 +7,8 @@ import Log from "../Util";
 
 var js = require("jszip");
 var fs = require("fs");
+var coursesresult : any[] = [];
+var roomsresult : any[] = [];
 
 export default class InsightFacade implements IInsightFacade {
 
@@ -121,6 +123,7 @@ export default class InsightFacade implements IInsightFacade {
                                     reject(ans) // errorat prom all
                                 }
                                 else if (fs.existsSync(id.concat(".txt"))){
+                                    coursesresult = datafile;
                                     fs.writeFileSync( id.concat(".txt"),JSON.stringify(datafile)); // overwrite file to disk
                                     let ans : InsightResponse = {
                                         code : 201,
@@ -129,6 +132,7 @@ export default class InsightFacade implements IInsightFacade {
                                     fulfill(ans);
                                 }
                                 else {
+                                    coursesresult = datafile;
                                     fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // write file to disk
                                     let ans: InsightResponse = {
                                         code: 204,
