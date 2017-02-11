@@ -7,8 +7,8 @@ import Log from "../Util";
 
 var js = require("jszip");
 var fs = require("fs");
-var coursesresult : any[] = [];
-var roomsresult : any[] = [];
+var coursesresult : string[] = [];
+var roomsresult : string[] = [];
 
 export default class InsightFacade implements IInsightFacade {
 
