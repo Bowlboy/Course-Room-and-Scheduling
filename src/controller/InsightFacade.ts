@@ -545,13 +545,13 @@ export default class InsightFacade implements IInsightFacade {
         return sortedArray;
     }
 
-    helper(str: any) {
-        try {JSON.parse(str);}
-        catch (e) {
-            return false;
-        }
-        return true;
-    }
+    // helper(str: any) {
+    //     try {JSON.parse(str);}
+    //     catch (e) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
@@ -561,10 +561,10 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise(function(fulfill, reject) {
 
             var content = query.content;
-            if (InsightFacade.prototype.helper(content) == false) {
-                let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
-                reject(rejectIR);
-            }
+            // if (InsightFacade.prototype.helper(content) == false) {
+            //     let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
+            //     reject(rejectIR);
+            // }
             content = JSON.parse(content);
 
             var WHERE = content[<any>"WHERE"];
@@ -650,9 +650,8 @@ export default class InsightFacade implements IInsightFacade {
             var sortedArray: String[] = InsightFacade.prototype.sorter(passedArray, ORDER);
 
             // Log.test("Array = " + sortedArray);
-            let body = {whatsupp: FORM, whatsupman: sortedArray};
-            var body1 = JSON.stringify(body);
-            let myIR = {code: 200, body: body};
+            let body:any = {render: FORM, result: sortedArray};
+            let myIR:any = {code: 200, body: body};
             fulfill(myIR);
         })
     }
