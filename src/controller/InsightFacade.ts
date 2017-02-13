@@ -545,13 +545,13 @@ export default class InsightFacade implements IInsightFacade {
         return sortedArray;
     }
 
-    // helper(str: any) {
-    //     try {JSON.parse(str);}
-    //     catch (e) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
+    helper(str: any) {
+        try {JSON.parse(str);}
+        catch (e) {
+            return false;
+        }
+        return true;
+    }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
@@ -561,21 +561,21 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise(function(fulfill, reject) {
 
             var content = query.content;
-            // if (InsightFacade.prototype.helper(content) == false) {
-            //     let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
-            //     reject(rejectIR);
-            // }
+            if (InsightFacade.prototype.helper(content) == false) {
+                let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
+                reject(rejectIR);
+            }
             content = JSON.parse(content);
 
             var WHERE = content[<any>"WHERE"];
             var wherekey = Object.keys(WHERE);
             if (wherekey.length == 0) {
-                let rejectIR = {code: 424, body: {"missing": ["WHERE"]}};
+                let rejectIR = {code: 400, body: {"missing": ["WHERE"]}};
                 reject(rejectIR);
             }
             var OPTIONS = content[<any>"OPTIONS"];
             if (Object.keys(OPTIONS).length == 0) {
-                let rejectIR = {code: 424, body: {"missing": ["OPTIONS"]}};
+                let rejectIR = {code: 400, body: {"missing": ["OPTIONS"]}};
                 reject(rejectIR);
             }
 //ERROR 400 NOT 424
@@ -592,11 +592,11 @@ export default class InsightFacade implements IInsightFacade {
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'errAND') {
-                    let rejectIR = {code: 424, body: {"missing": "And input not enough"}};
+                    let rejectIR = {code: 400, body: {"missing": "And input not enough"}};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'errOR') {
-                    let rejectIR = {code: 424, body: {"missing": "Or input not enough"}};
+                    let rejectIR = {code: 400, body: {"missing": "Or input not enough"}};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'err400num') {
