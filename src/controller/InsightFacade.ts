@@ -560,7 +560,9 @@ export default class InsightFacade implements IInsightFacade {
         var returnedArray: String[] = [];
         return new Promise(function(fulfill, reject) {
 
-            var content = query.content;
+
+            var content = query.toLocaleString();
+            // Log.test("CONTENT" + content);
             if (InsightFacade.prototype.helper(content) == false) {
                 let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
                 reject(rejectIR);
