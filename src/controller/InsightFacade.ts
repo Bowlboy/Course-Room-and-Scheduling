@@ -506,6 +506,12 @@ export default class InsightFacade implements IInsightFacade {
                 case'NOT': {
                     var NOT = WHERE[<any>"NOT"];
                     var notkey = Object.keys(NOT);
+                    if (notkey[<any>0] == "NOT") {
+                        var notnot = NOT[<any>"NOT"];
+                        var notnotkey = Object.keys(notnot);
+                        returnedArray = InsightFacade.prototype.queryHelper(<any>files, <any>notnotkey, <any>notnot);
+                        break;
+                    }
                     var Array:String [] = InsightFacade.prototype.queryHelper(<any>files, <any>notkey, <any>NOT);
 
                     var filesKey = Object.keys(files);
@@ -545,13 +551,13 @@ export default class InsightFacade implements IInsightFacade {
         return sortedArray;
     }
 
-    helper(str: any) {
-        try {JSON.parse(str);}
-        catch (e) {
-            return false;
-        }
-        return true;
-    }
+    // helper(str: any) {
+    //     try {JSON.parse(str);}
+    //     catch (e) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
@@ -561,23 +567,23 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise(function(fulfill, reject) {
 
 
-            var content = query.toLocaleString();
+            // var content = query.toLocaleString();
             // Log.test("CONTENT" + content);
-            if (InsightFacade.prototype.helper(content) == false) {
-                let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
-                reject(rejectIR);
-            }
-            content = JSON.parse(content);
+            // if (InsightFacade.prototype.helper(content) == false) {
+            //     let rejectIR = {code: 400, body: {error: "There is an error processing the query"}};
+            //     reject(rejectIR);
+            // }
+            // content = JSON.parse(content);
 
-            var WHERE = content[<any>"WHERE"];
+            var WHERE = query.WHERE;
             var wherekey = Object.keys(WHERE);
             if (wherekey.length == 0) {
-                let rejectIR = {code: 400, body: {"missing": ["WHERE"]}};
+                let rejectIR = {code: 400, body: {error: ["WHERE"]}};
                 reject(rejectIR);
             }
-            var OPTIONS = content[<any>"OPTIONS"];
+            var OPTIONS = query.OPTIONS;
             if (Object.keys(OPTIONS).length == 0) {
-                let rejectIR = {code: 400, body: {"missing": ["OPTIONS"]}};
+                let rejectIR = {code: 400, body: {error: ["OPTIONS"]}};
                 reject(rejectIR);
             }
 //ERROR 400 NOT 424
@@ -590,7 +596,7 @@ export default class InsightFacade implements IInsightFacade {
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'err400') {
-                    let rejectIR = {code: 400, body: {"error": "More than one dataset is used"}};
+                    let rejectIR = {code: 424, body: {"error": "More than one dataset is used"}};
                     reject(rejectIR);
                 }
                 else if (newArr[<any>newArrKey[<any>o]] == 'errAND') {
