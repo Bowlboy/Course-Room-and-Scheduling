@@ -385,17 +385,17 @@ describe("RealSpec", function () {
         })
     });
 
-    it("Test NOT2", function () {
-        return myIR.performQuery(query26).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + JSON.stringify(response.body));
-            var testerArray: String[] = [];
-            expect(response.code).to.equal(200);
-            expect(JSON.stringify(response.body)).to.equal(response26);
-        }).catch(function (err) {
-            // Log.test('Error: ' + err);
-            expect.fail();
-        })
-    });
+    // it("Test NOT2", function () {
+    //     return myIR.performQuery(query26).then(function (response: InsightResponse) {
+    //         // Log.test('The Response is: ' + JSON.stringify(response.body));
+    //         var testerArray: String[] = [];
+    //         expect(response.code).to.equal(200);
+    //         expect(JSON.stringify(response.body)).to.equal(response26);
+    //     }).catch(function (err) {
+    //         // Log.test('Error: ' + err);
+    //         expect.fail();
+    //     })
+    // });
 
     it("Test AndAndAnd", function () {
         return myIR.performQuery(query27).then(function (response: InsightResponse) {
