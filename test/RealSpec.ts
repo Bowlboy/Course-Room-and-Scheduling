@@ -15,11 +15,12 @@ let responseGT:string = '{"render":"TABLE","result":[{"courses_dept":"cnps","cou
 let responseLT:string = '{"render":"TABLE","result":[{"courses_dept":"frst","courses_avg":0},{"courses_dept":"lfs","courses_avg":0},{"courses_dept":"lfs","courses_avg":0},{"courses_dept":"wood","courses_avg":1},{"courses_dept":"busi","courses_avg":4},{"courses_dept":"busi","courses_avg":4},{"courses_dept":"fopr","courses_avg":4.5},{"courses_dept":"civl","courses_avg":33},{"courses_dept":"phil","courses_avg":33.2},{"courses_dept":"hist","courses_avg":34},{"courses_dept":"educ","courses_avg":39.03},{"courses_dept":"educ","courses_avg":39.03}]}';
 let responseEQ:string = '{"render":"TABLE","result":[{"courses_dept":"germ","courses_avg":80},{"courses_dept":"apbi","courses_avg":80},{"courses_dept":"apsc","courses_avg":80},{"courses_dept":"arbc","courses_avg":80},{"courses_dept":"arbc","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arch","courses_avg":80},{"courses_dept":"arth","courses_avg":80},{"courses_dept":"arth","courses_avg":80},{"courses_dept":"ba","courses_avg":80},{"courses_dept":"bafi","courses_avg":80},{"courses_dept":"bahr","courses_avg":80},{"courses_dept":"bait","courses_avg":80},{"courses_dept":"bait","courses_avg":80},{"courses_dept":"bama","courses_avg":80},{"courses_dept":"bams","courses_avg":80},{"courses_dept":"bams","courses_avg":80},{"courses_dept":"bams","courses_avg":80},{"courses_dept":"bams","courses_avg":80},{"courses_dept":"basc","courses_avg":80},{"courses_dept":"biol","courses_avg":80},{"courses_dept":"biol","courses_avg":80},{"courses_dept":"biol","courses_avg":80},{"courses_dept":"busi","courses_avg":80},{"courses_dept":"busi","courses_avg":80},{"courses_dept":"busi","courses_avg":80},{"courses_dept":"busi","courses_avg":80},{"courses_dept":"chbe","courses_avg":80},{"courses_dept":"chbe","courses_avg":80},{"courses_dept":"chin","courses_avg":80},{"courses_dept":"chin","courses_avg":80},{"courses_dept":"civl","courses_avg":80},{"courses_dept":"civl","courses_avg":80},{"courses_dept":"civl","courses_avg":80},{"courses_dept":"civl","courses_avg":80},{"courses_dept":"cnps","courses_avg":80},{"courses_dept":"comm","courses_avg":80},{"courses_dept":"comm","courses_avg":80},{"courses_dept":"comm","courses_avg":80},{"courses_dept":"comm","courses_avg":80},{"courses_dept":"cpsc","courses_avg":80},{"courses_dept":"cpsc","courses_avg":80},{"courses_dept":"dent","courses_avg":80},{"courses_dept":"dent","courses_avg":80},{"courses_dept":"dent","courses_avg":80},{"courses_dept":"dent","courses_avg":80},{"courses_dept":"econ","courses_avg":80},{"courses_dept":"eece","courses_avg":80},{"courses_dept":"eece","courses_avg":80},{"courses_dept":"engl","courses_avg":80},{"courses_dept":"engl","courses_avg":80},{"courses_dept":"eosc","courses_avg":80},{"courses_dept":"eosc","courses_avg":80},{"courses_dept":"eosc","courses_avg":80},{"courses_dept":"eosc","courses_avg":80},{"courses_dept":"epse","courses_avg":80},{"courses_dept":"fist","courses_avg":80},{"courses_dept":"fist","courses_avg":80},{"courses_dept":"food","courses_avg":80},{"courses_dept":"food","courses_avg":80},{"courses_dept":"food","courses_avg":80},{"courses_dept":"food","courses_avg":80},{"courses_dept":"fre","courses_avg":80},{"courses_dept":"fre","courses_avg":80},{"courses_dept":"frst","courses_avg":80},{"courses_dept":"frst","courses_avg":80},{"courses_dept":"frst","courses_avg":80},{"courses_dept":"geog","courses_avg":80},{"courses_dept":"geog","courses_avg":80},{"courses_dept":"apsc","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"germ","courses_avg":80},{"courses_dept":"hgse","courses_avg":80},{"courses_dept":"hgse","courses_avg":80},{"courses_dept":"iar","courses_avg":80},{"courses_dept":"isci","courses_avg":80},{"courses_dept":"isci","courses_avg":80},{"courses_dept":"ital","courses_avg":80},{"courses_dept":"ital","courses_avg":80},{"courses_dept":"kin","courses_avg":80},{"courses_dept":"kin","courses_avg":80},{"courses_dept":"korn","courses_avg":80},{"courses_dept":"korn","courses_avg":80},{"courses_dept":"korn","courses_avg":80},{"courses_dept":"law","courses_avg":80},{"courses_dept":"law","courses_avg":80},{"courses_dept":"libe","courses_avg":80},{"courses_dept":"libe","courses_avg":80},{"courses_dept":"lled","courses_avg":80},{"courses_dept":"lled","courses_avg":80},{"courses_dept":"math","courses_avg":80},{"courses_dept":"math","courses_avg":80},{"courses_dept":"math","courses_avg":80},{"courses_dept":"math","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"mech","courses_avg":80},{"courses_dept":"medi","courses_avg":80},{"courses_dept":"mtrl","courses_avg":80},{"courses_dept":"mtrl","courses_avg":80},{"courses_dept":"mtrl","courses_avg":80},{"courses_dept":"mtrl","courses_avg":80},{"courses_dept":"mtrl","courses_avg":80},{"courses_dept":"musc","courses_avg":80},{"courses_dept":"musc","courses_avg":80},{"courses_dept":"nrsc","courses_avg":80},{"courses_dept":"nurs","courses_avg":80},{"courses_dept":"nurs","courses_avg":80},{"courses_dept":"nurs","courses_avg":80},{"courses_dept":"obst","courses_avg":80},{"courses_dept":"phar","courses_avg":80},{"courses_dept":"phar","courses_avg":80},{"courses_dept":"phar","courses_avg":80},{"courses_dept":"phar","courses_avg":80},{"courses_dept":"punj","courses_avg":80},{"courses_dept":"rmes","courses_avg":80},{"courses_dept":"rmes","courses_avg":80},{"courses_dept":"russ","courses_avg":80},{"courses_dept":"soil","courses_avg":80},{"courses_dept":"soil","courses_avg":80},{"courses_dept":"sowk","courses_avg":80},{"courses_dept":"sowk","courses_avg":80},{"courses_dept":"sowk","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"thtr","courses_avg":80},{"courses_dept":"visa","courses_avg":80},{"courses_dept":"visa","courses_avg":80},{"courses_dept":"visa","courses_avg":80},{"courses_dept":"wood","courses_avg":80},{"courses_dept":"wood","courses_avg":80}]}';
 let responseIS:string = '{"render":"TABLE","result":[{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":70.9},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":71.14},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":74},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":74.88},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":75.56}]}';
-
 let responseNOT:string = '{"render":"TABLE","result":[{"courses_dept":"math","courses_avg":66.48,"courses_uuid":34036},{"courses_dept":"math","courses_avg":66.83,"courses_uuid":34013},{"courses_dept":"math","courses_avg":68.16,"courses_uuid":72980},{"courses_dept":"math","courses_avg":68.86,"courses_uuid":89990},{"courses_dept":"comm","courses_avg":72.25,"courses_uuid":81443}]}';
 let responseAND:string = '{"render":"TABLE","result":[{"courses_fail":100,"courses_dept":"comm","courses_avg":72.25},{"courses_fail":100,"courses_dept":"math","courses_avg":68.86},{"courses_fail":100,"courses_dept":"math","courses_avg":66.83},{"courses_fail":100,"courses_dept":"math","courses_avg":66.48},{"courses_fail":100,"courses_dept":"math","courses_avg":68.16}]}';
 let responseOR:string = '{"render":"TABLE","result":[{"courses_dept":"comm","courses_avg":72.25},{"courses_dept":"math","courses_avg":68.86},{"courses_dept":"math","courses_avg":66.83},{"courses_dept":"math","courses_avg":66.48},{"courses_dept":"math","courses_avg":68.16}]}';
 let response14:string = '{"render":"TABLE","result":[{"courses_dept":"cpsc","courses_uuid":1256,"courses_avg":72.28},{"courses_dept":"cpsc","courses_uuid":49856,"courses_avg":71.22},{"courses_dept":"cpsc","courses_uuid":62349,"courses_avg":73.25},{"courses_dept":"cpsc","courses_uuid":83395,"courses_avg":72.63}]}';
+let response26:string = '{"render":"TABLE","result":[{"courses_dept":"cnps","courses_avg":99.19},{"courses_dept":"comm","courses_avg":72.25},{"courses_dept":"crwr","courses_avg":98},{"courses_dept":"crwr","courses_avg":98},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"epse","courses_avg":98.7},{"courses_dept":"epse","courses_avg":98.36},{"courses_dept":"epse","courses_avg":98.8},{"courses_dept":"epse","courses_avg":98.08},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"math","courses_avg":68.86},{"courses_dept":"math","courses_avg":66.83},{"courses_dept":"math","courses_avg":66.48},{"courses_dept":"math","courses_avg":68.16},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"spph","courses_avg":98.98},{"courses_dept":"spph","courses_avg":98.98}]}';
+let response27:string = '{"render":"TABLE","result":[{"courses_fail":100,"courses_dept":"comm","courses_avg":72.25},{"courses_fail":100,"courses_dept":"math","courses_avg":68.86},{"courses_fail":100,"courses_dept":"math","courses_avg":66.83},{"courses_fail":100,"courses_dept":"math","courses_avg":66.48},{"courses_fail":100,"courses_dept":"math","courses_avg":68.16}]}';
 
 describe("RealSpec", function () {
 
@@ -55,7 +56,6 @@ describe("RealSpec", function () {
     query16  = {"WHERE":{"IS":{"courses_instructor":"aiello, willi*"}},"OPTIONS":{"COLUMNS":["courses_dept","courses_instructor", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
     let query17: QueryRequest;
     query17  = {"WHERE":{"IS":{"courses_instructor":"*ello, willi*"}},"OPTIONS":{"COLUMNS":["courses_dept","courses_instructor", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
-
     let query18: QueryRequest;
     query18  = {WHERE: {GT:{"courses_avg": "GT"}},OPTIONS:{COLUMNS: ["courses_dept", "courses_avg", "courses_title"], ORDER:"courses_dept", FORM:"TABLE"}};
     let query19: QueryRequest;
@@ -64,6 +64,19 @@ describe("RealSpec", function () {
     query20  = {WHERE:{"EQ":{"courses_avg":"eq"}},OPTIONS:{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
     let query21: QueryRequest;
     query21  = {"WHERE":{"IS":{"courses_instructor":99}},"OPTIONS":{"COLUMNS":["courses_dept","courses_instructor", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
+    let query22: QueryRequest;
+    query22  = {"WHERE": {"LT":{"courses_average": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query23: QueryRequest;
+    query23  = {"WHERE": {"LT":{"coursesavg": 81}},"OPTIONS":{"COLUMNS": ["courses_dept", "courses_avg"], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query24: QueryRequest;
+    query24  = {"WHERE":{"AND":[]},"OPTIONS":{"COLUMNS":["courses_fail", "courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query25: QueryRequest;
+    query25  = {"WHERE":{"OR":[]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query26: QueryRequest;
+    query26  = {"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}},{"NOT": {"LT":{"courses_avg": 98}}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query27: QueryRequest;
+    query27  = {"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_fail": 100}},{"EQ":{"courses_fail": 100}}]},"OPTIONS":{"COLUMNS":["courses_fail", "courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -326,6 +339,76 @@ describe("RealSpec", function () {
             expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in IS"}');
         })
     });
+
+    it("Test errKey", function () {
+        return myIR.performQuery(query22).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in LT"}');
+        })
+    });
+
+    it("Test errKey2", function () {
+        return myIR.performQuery(query23).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in LT"}');
+        })
+    });
+
+    it("Test errAND", function () {
+        return myIR.performQuery(query24).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in AND"}');
+        })
+
+    });
+
+    it("Test errOR", function () {
+        return myIR.performQuery(query25).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in OR"}');
+        })
+    });
+
+    it("Test NOT2", function () {
+        return myIR.performQuery(query26).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            var testerArray: String[] = [];
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(response26);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+    it("Test AndAndAnd", function () {
+        return myIR.performQuery(query27).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            var testerArray: String[] = [];
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(response27);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
 });
 /**
  * Created by nicoa on 2017-01-31.

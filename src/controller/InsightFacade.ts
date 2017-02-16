@@ -190,6 +190,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     queryHelper(files: any, wherekey: any, WHERE: any): String[] {
+        var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid"];
         var returnedArray: String[] = [];
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
@@ -199,7 +200,7 @@ export default class InsightFacade implements IInsightFacade {
                     var AND = WHERE[<any>"AND"];
                     if (AND.length == 0) {
                         var errorArray: String[] = [];
-                        let rejectIR = 'errAND';
+                        let rejectIR = 'errAnd';
                         errorArray.push(rejectIR);
                         return errorArray;
                     }
@@ -255,7 +256,7 @@ export default class InsightFacade implements IInsightFacade {
                     var OR = WHERE[<any>"OR"];
                     if (OR.length == 0) {
                         var errorArray: String[] = [];
-                        let rejectIR = 'errOR';
+                        let rejectIR = 'errOr';
                         errorArray.push(rejectIR);
                         return errorArray;
                     }
@@ -356,12 +357,26 @@ export default class InsightFacade implements IInsightFacade {
                                 var split = thingsLessThanKey[<any>l];
                                 var splits = split.split("_");
 
+                                if (splits.length != 2) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+
                                 if (splits[0] != "courses") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+
                                 if (typeof thingsLessThan[<any>thingsLessThanKey[<any>l]] === "number") {
                                     if (fileKey[k] == thingsLessThanKey[<any>l]) {
                                         if (key < thingsLessThan[<any>thingsLessThanKey[<any>l]]) {
@@ -395,12 +410,26 @@ export default class InsightFacade implements IInsightFacade {
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
                                 var split = thingsGreaterThanKey[<any>l];
                                 var splits = split.split("_");
+                                if (splits.length != 2) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+
                                 if (splits[0] != "courses") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+
                                 if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
                                     if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                         if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
@@ -434,9 +463,23 @@ export default class InsightFacade implements IInsightFacade {
                             for (var l = 0; l < thingsEqualToKey.length; l++) {
                                 var split = thingsEqualToKey[<any>l];
                                 var splits = split.split("_");
+
+                                if (splits.length != 2) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+
                                 if (splits[0] != "courses") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
+                                    errorArray.push(rejectIR);
+                                    return errorArray;
+                                }
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    var errorArray: String[] = [];
+                                    let rejectIR = 'errLT';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
@@ -474,9 +517,23 @@ export default class InsightFacade implements IInsightFacade {
                                 var split = thingsISKey[<any>l];
                                 if (typeof thingsIS[<any>split] === "string") {
                                     var splits = split.split("_");
+
+                                    if (splits.length != 2) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+
                                     if (splits[0] != "courses") {
                                         var errorArray: String[] = [];
                                         let rejectIR = 'errDataset';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+                                    if (strings.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
                                         errorArray.push(rejectIR);
                                         return errorArray;
                                     }
@@ -538,6 +595,7 @@ export default class InsightFacade implements IInsightFacade {
                     for (var j = 0; j < filesKey.length; j++) {
                         var file = files[<any>filesKey[<any>j]];
                         var contains = 0;
+
                         for (var smth of Array) {
                             if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
                                 contains = 1;
@@ -619,12 +677,24 @@ export default class InsightFacade implements IInsightFacade {
                     let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
                     reject(rejectIR);
                 }
+                else if (newArr[<any>newArrKey[<any>o]] == 'errAnd') {
+                    let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
+                    reject(rejectIR);
+                }
+                else if (newArr[<any>newArrKey[<any>o]] == 'errOr') {
+                    let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
+                    reject(rejectIR);
+                }
                 returnedArray.push(newArr[<any>newArrKey[<any>o]]);
             }
 
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
             var FORM = OPTIONS[<any>"FORM"];
+            if (FORM[<any>Object.keys(FORM)[0]] == "TABLE") {
+                let rejectIR = {code:400, body: {error: "Wrong FORM"}};
+                reject(rejectIR);
+            }
             if (Object.keys(FORM).length == 0) {
                 let rejectIR = {code:400, body: {error: "Missing FORM"}};
                 reject(rejectIR);
