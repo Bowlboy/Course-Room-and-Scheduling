@@ -691,12 +691,8 @@ export default class InsightFacade implements IInsightFacade {
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
             var FORM = OPTIONS[<any>"FORM"];
-            if (FORM[<any>Object.keys(FORM)[0]] == "TABLE") {
-                let rejectIR = {code:400, body: {error: "Wrong FORM"}};
-                reject(rejectIR);
-            }
-            if (Object.keys(FORM).length == 0) {
-                let rejectIR = {code:400, body: {error: "Missing FORM"}};
+            if (FORM != "TABLE") {
+                let rejectIR = {code:400, body: {error: "Something is wrong in FORM"}};
                 reject(rejectIR);
             }
 

@@ -19,8 +19,10 @@ let responseNOT:string = '{"render":"TABLE","result":[{"courses_dept":"math","co
 let responseAND:string = '{"render":"TABLE","result":[{"courses_fail":100,"courses_dept":"comm","courses_avg":72.25},{"courses_fail":100,"courses_dept":"math","courses_avg":68.86},{"courses_fail":100,"courses_dept":"math","courses_avg":66.83},{"courses_fail":100,"courses_dept":"math","courses_avg":66.48},{"courses_fail":100,"courses_dept":"math","courses_avg":68.16}]}';
 let responseOR:string = '{"render":"TABLE","result":[{"courses_dept":"comm","courses_avg":72.25},{"courses_dept":"math","courses_avg":68.86},{"courses_dept":"math","courses_avg":66.83},{"courses_dept":"math","courses_avg":66.48},{"courses_dept":"math","courses_avg":68.16}]}';
 let response14:string = '{"render":"TABLE","result":[{"courses_dept":"cpsc","courses_uuid":1256,"courses_avg":72.28},{"courses_dept":"cpsc","courses_uuid":49856,"courses_avg":71.22},{"courses_dept":"cpsc","courses_uuid":62349,"courses_avg":73.25},{"courses_dept":"cpsc","courses_uuid":83395,"courses_avg":72.63}]}';
-let response26:string = '{"render":"TABLE","result":[{"courses_dept":"cnps","courses_avg":99.19},{"courses_dept":"comm","courses_avg":72.25},{"courses_dept":"crwr","courses_avg":98},{"courses_dept":"crwr","courses_avg":98},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"epse","courses_avg":98.7},{"courses_dept":"epse","courses_avg":98.36},{"courses_dept":"epse","courses_avg":98.8},{"courses_dept":"epse","courses_avg":98.08},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"math","courses_avg":68.86},{"courses_dept":"math","courses_avg":66.83},{"courses_dept":"math","courses_avg":66.48},{"courses_dept":"math","courses_avg":68.16},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"spph","courses_avg":98.98},{"courses_dept":"spph","courses_avg":98.98}]}';
+let response26:string = '{"render":"TABLE","result":[{"courses_dept":"cnps","courses_avg":99.19},{"courses_dept":"comm","courses_avg":72.25},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"eece","courses_avg":98.75},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.76},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.45},{"courses_dept":"epse","courses_avg":98.08},{"courses_dept":"epse","courses_avg":98.7},{"courses_dept":"epse","courses_avg":98.36},{"courses_dept":"epse","courses_avg":98.8},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"epse","courses_avg":98.58},{"courses_dept":"math","courses_avg":68.16},{"courses_dept":"math","courses_avg":66.48},{"courses_dept":"math","courses_avg":66.83},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"math","courses_avg":99.78},{"courses_dept":"math","courses_avg":68.86},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.71},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.21},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.5},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"nurs","courses_avg":98.58},{"courses_dept":"spph","courses_avg":98.98},{"courses_dept":"spph","courses_avg":98.98}]}';
 let response27:string = '{"render":"TABLE","result":[{"courses_fail":100,"courses_dept":"comm","courses_avg":72.25},{"courses_fail":100,"courses_dept":"math","courses_avg":68.86},{"courses_fail":100,"courses_dept":"math","courses_avg":66.83},{"courses_fail":100,"courses_dept":"math","courses_avg":66.48},{"courses_fail":100,"courses_dept":"math","courses_avg":68.16}]}';
+let responsePartialEllo = '{"render":"TABLE","result":[{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":66.12},{"courses_dept":"phys","courses_instructor":"pavan, marcello","courses_avg":70.55},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":75.77},{"courses_dept":"phys","courses_instructor":"pavan, marcello","courses_avg":75.78},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.03},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.14},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.2},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.88},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":79.98},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.01},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.47},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.83},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":81.56},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":83.04},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.11},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.73},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.81},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.98},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":87.13},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.13},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.69},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.82},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":96.59}]}';
+let responseMiddleEllo = '{"render":"TABLE","result":[{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":66.12},{"courses_dept":"phys","courses_instructor":"pavan, marcello","courses_avg":70.55},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":70.9},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":71.14},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":74},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":74.88},{"courses_dept":"phys","courses_instructor":"koster, evert;pavan, marcello;rieger, georg","courses_avg":74.94},{"courses_dept":"cpsc","courses_instructor":"aiello, william","courses_avg":75.56},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":75.77},{"courses_dept":"phys","courses_instructor":"pavan, marcello","courses_avg":75.78},{"courses_dept":"scie","courses_instructor":"booth, kellogg;oberg, gunilla","courses_avg":76.13},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.03},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.14},{"courses_dept":"phys","courses_instructor":"pavan, marcello;rieger, georg","courses_avg":77.15},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.2},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":77.88},{"courses_dept":"phys","courses_instructor":"pavan, marcello;rieger, georg","courses_avg":78.82},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":79.98},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.01},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.47},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":80.83},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":81.56},{"courses_dept":"isci","courses_instructor":"kellogg, jonathan","courses_avg":83},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":83.04},{"courses_dept":"cpsc","courses_instructor":"booth, kellogg","courses_avg":83.67},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.11},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.73},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.81},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":85.98},{"courses_dept":"isci","courses_instructor":"evans, robert;kellogg, jonathan","courses_avg":86.56},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":87.13},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.13},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.69},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":90.82},{"courses_dept":"mine","courses_instructor":"veiga, marcello","courses_avg":96.59}]}';
 
 describe("RealSpec", function () {
 
@@ -73,9 +75,15 @@ describe("RealSpec", function () {
     let query25: QueryRequest;
     query25  = {"WHERE":{"OR":[]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
     let query26: QueryRequest;
-    query26  = {"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}},{"NOT": {"LT":{"courses_avg": 98}}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    query26  = {"WHERE":{"OR":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_audit": 100}},{"GT":{"courses_avg": 98}}]},"OPTIONS":{"COLUMNS":["courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
     let query27: QueryRequest;
     query27  = {"WHERE":{"AND":[{"EQ":{"courses_fail": 100}},{"EQ":{"courses_fail": 100}},{"EQ":{"courses_fail": 100}}]},"OPTIONS":{"COLUMNS":["courses_fail", "courses_dept", "courses_avg" ], "ORDER":"courses_dept", "FORM":"TABLE"}};
+    let query28: QueryRequest;
+    query28  = {WHERE: {GT:{"courses_avg": 98}},OPTIONS:{COLUMNS: ["courses_dept", "courses_avg", "courses_title"], ORDER:"courses_dept", FORM:88}};
+    let query29: QueryRequest;
+    query29 = {"WHERE":{"IS":{"courses_instructor":"*ello"}},"OPTIONS":{"COLUMNS":["courses_dept","courses_instructor", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
+    let query30: QueryRequest;
+    query30 = {"WHERE":{"IS":{"courses_instructor":"*ello*"}},"OPTIONS":{"COLUMNS":["courses_dept","courses_instructor", "courses_avg" ], "ORDER":"courses_avg", "FORM":"TABLE"}};
 
 
     function sanityCheck(response: InsightResponse) {
@@ -385,17 +393,17 @@ describe("RealSpec", function () {
         })
     });
 
-    // it("Test NOT2", function () {
-    //     return myIR.performQuery(query26).then(function (response: InsightResponse) {
-    //         // Log.test('The Response is: ' + JSON.stringify(response.body));
-    //         var testerArray: String[] = [];
-    //         expect(response.code).to.equal(200);
-    //         expect(JSON.stringify(response.body)).to.equal(response26);
-    //     }).catch(function (err) {
-    //         // Log.test('Error: ' + err);
-    //         expect.fail();
-    //     })
-    // });
+    it("Test OR3", function () {
+        return myIR.performQuery(query26).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            var testerArray: String[] = [];
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(response26);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
 
     it("Test AndAndAnd", function () {
         return myIR.performQuery(query27).then(function (response: InsightResponse) {
@@ -403,6 +411,41 @@ describe("RealSpec", function () {
             var testerArray: String[] = [];
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(response27);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+    it("Test errFORM", function () {
+        return myIR.performQuery(query28).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"Something is wrong in FORM"}');
+        })
+    });
+
+    it("Test PartialEllo", function () {
+        return myIR.performQuery(query29).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            var testerArray: String[] = [];
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(responsePartialEllo);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+    it("Test MiddleEllo", function () {
+        return myIR.performQuery(query30).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            var testerArray: String[] = [];
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(responseMiddleEllo);
         }).catch(function (err) {
             // Log.test('Error: ' + err);
             expect.fail();
