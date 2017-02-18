@@ -193,7 +193,7 @@ describe("RealSpec", function () {
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseOR);
         }).catch(function (err) {
-            // Log.test('Error: ' + err);
+            Log.test('Error: ' + err);
             expect.fail();
         })
     });

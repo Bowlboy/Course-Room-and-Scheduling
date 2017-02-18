@@ -190,7 +190,8 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     queryHelper(files: any, wherekey: any, WHERE: any): String[] {
-        var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid"];
+        var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid", "year"];
+        var roomString: String[] = ["fullname", "shortname", "number", "name", "address", "lat", "lon", "seats", "type", "furniture", "href"];
         var returnedArray: String[] = [];
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
@@ -222,8 +223,16 @@ export default class InsightFacade implements IInsightFacade {
 
                         for (var smth of ArrayLeft) {
                             for (var smth2 of ArrayRight) {
-                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                    returnedArray.push(smth);
+
+                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
+                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                        returnedArray.push(smth);
+                                    }
+                                }
+                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
+                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
+                                        returnedArray.push(smth);
+                                    }
                                 }
                             }
                         }
@@ -244,8 +253,16 @@ export default class InsightFacade implements IInsightFacade {
 
                         for (var smth of ArrayLeft) {
                             for (var smth2 of ArrayRight) {
-                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                    returnedArray.push(smth);
+
+                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
+                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                        returnedArray.push(smth);
+                                    }
+                                }
+                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
+                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
+                                        returnedArray.push(smth);
+                                    }
                                 }
                             }
                         }
@@ -280,8 +297,16 @@ export default class InsightFacade implements IInsightFacade {
                         for (var smth of ArrayLeft) {
                             var contains = 0;
                             for (var smth2 of returnedArray) {
-                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                    contains = 1;
+
+                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
+                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                        contains = 1;
+                                    }
+                                }
+                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
+                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
+                                        contains = 1;
+                                    }
                                 }
                             }
                             if (contains == 0) {
@@ -292,8 +317,16 @@ export default class InsightFacade implements IInsightFacade {
                         for (var smth3 of ArrayRight) {
                             var contains = 0;
                             for (var smth4 of returnedArray) {
-                                if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
-                                    contains = 1;
+
+                                if (Object.keys(smth4).indexOf("courses_uuid") > -1) {
+                                    if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                        contains = 1;
+                                    }
+                                }
+                                if (Object.keys(smth4).indexOf("rooms_href") > -1) {
+                                    if (smth3[<any>"rooms_href"] == smth4[<any>"rooms_href"]) {
+                                        contains = 1;
+                                    }
                                 }
                             }
                             if (contains == 0) {
@@ -318,8 +351,16 @@ export default class InsightFacade implements IInsightFacade {
                         for (var smth of ArrayLeft) {
                             var contains = 0;
                             for (var smth2 of returnedArray) {
-                                if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                    contains = 1;
+
+                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
+                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
+                                        contains = 1;
+                                    }
+                                }
+                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
+                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
+                                        contains = 1;
+                                    }
                                 }
                             }
                             if (contains == 0) {
@@ -330,8 +371,16 @@ export default class InsightFacade implements IInsightFacade {
                         for (var smth3 of ArrayRight) {
                             var contains = 0;
                             for (var smth4 of returnedArray) {
-                                if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
-                                    contains = 1;
+
+                                if (Object.keys(smth4).indexOf("courses_uuid") > -1) {
+                                    if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
+                                        contains = 1;
+                                    }
+                                }
+                                if (Object.keys(smth4).indexOf("rooms_href") > -1) {
+                                    if (smth3[<any>"rooms_href"] == smth4[<any>"rooms_href"]) {
+                                        contains = 1;
+                                    }
                                 }
                             }
                             if (contains == 0) {
@@ -364,17 +413,27 @@ export default class InsightFacade implements IInsightFacade {
                                     return errorArray;
                                 }
 
-                                if (splits[0] != "courses") {
+                                if (splits[0] != "courses" && splits[0] != "rooms") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                if (strings.indexOf(splits[1]) < 0) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                if (splits[0] == "courses") {
+                                    if (strings.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+                                }
+                                else if (splits[0] == "rooms") {
+                                    if (roomString.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
                                 }
 
                                 if (typeof thingsLessThan[<any>thingsLessThanKey[<any>l]] === "number") {
@@ -417,18 +476,29 @@ export default class InsightFacade implements IInsightFacade {
                                     return errorArray;
                                 }
 
-                                if (splits[0] != "courses") {
+                                if (splits[0] != "courses" && splits[0] != "rooms") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                if (strings.indexOf(splits[1]) < 0) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                if (splits[0] == "courses") {
+                                    if (strings.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
                                 }
+                                else if (splits[0] == "rooms") {
+                                    if (roomString.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+                                }
+
 
                                 if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
                                     if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
@@ -471,18 +541,29 @@ export default class InsightFacade implements IInsightFacade {
                                     return errorArray;
                                 }
 
-                                if (splits[0] != "courses") {
+                                if (splits[0] != "courses" && splits[0] != "rooms") {
                                     var errorArray: String[] = [];
                                     let rejectIR = 'errDataset';
                                     errorArray.push(rejectIR);
                                     return errorArray;
                                 }
-                                if (strings.indexOf(splits[1]) < 0) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                if (splits[0] == "courses") {
+                                    if (strings.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
                                 }
+                                else if (splits[0] == "rooms") {
+                                    if (roomString.indexOf(splits[1]) < 0) {
+                                        var errorArray: String[] = [];
+                                        let rejectIR = 'errLT';
+                                        errorArray.push(rejectIR);
+                                        return errorArray;
+                                    }
+                                }
+
                                 if (typeof thingsEqualTo[<any>thingsEqualToKey[ < any > l]] === "number") {
                                     if (fileKey[k] == thingsEqualToKey[<any>l]) {
                                         if (key == thingsEqualTo[<any>thingsEqualToKey[<any>l]]) {
@@ -525,18 +606,29 @@ export default class InsightFacade implements IInsightFacade {
                                         return errorArray;
                                     }
 
-                                    if (splits[0] != "courses") {
+                                    if (splits[0] != "courses" && splits[0] != "rooms") {
                                         var errorArray: String[] = [];
                                         let rejectIR = 'errDataset';
                                         errorArray.push(rejectIR);
                                         return errorArray;
                                     }
-                                    if (strings.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
+                                    if (splits[0] == "courses") {
+                                        if (strings.indexOf(splits[1]) < 0) {
+                                            var errorArray: String[] = [];
+                                            let rejectIR = 'errLT';
+                                            errorArray.push(rejectIR);
+                                            return errorArray;
+                                        }
                                     }
+                                    else if (splits[0] == "rooms") {
+                                        if (roomString.indexOf(splits[1]) < 0) {
+                                            var errorArray: String[] = [];
+                                            let rejectIR = 'errLT';
+                                            errorArray.push(rejectIR);
+                                            return errorArray;
+                                        }
+                                    }
+
                                     if (fileKey[k] == thingsISKey[<any>l]) {
                                         var tgt: string = thingsIS[<any>thingsISKey[<any>l]];
                                         var ke: string = key;
@@ -598,6 +690,9 @@ export default class InsightFacade implements IInsightFacade {
 
                         for (var smth of Array) {
                             if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
+                                contains = 1;
+                            }
+                            if (file[<any>"rooms_href"] == smth[<any>"rooms_href"]) {
                                 contains = 1;
                             }
                         }
