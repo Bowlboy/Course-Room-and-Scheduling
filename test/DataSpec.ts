@@ -15,7 +15,7 @@ var fs = require("fs");
 
 describe("DataSpec", function () {
 
-    var ir: InsightFacade = null;
+   /* var ir: InsightFacade = null;
     var zip: any = fs.readFileSync("courses.zip", "base64");
     var zip2: any = fs.readFileSync("courses.zip", "UTF8");
     var norealdatazip: any = fs.readFileSync("coursesnorealdata.zip", "base64");
@@ -261,5 +261,5 @@ describe("DataSpec", function () {
                 //Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             });
-    });
+    });*/
 });
