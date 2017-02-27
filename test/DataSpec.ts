@@ -32,7 +32,7 @@ describe("DataSpec", function () {
         ir = null;
     });
 
-    it("remove courses txt before running test", function () {
+    /*it("remove courses txt before running test", function () {
         return ir.removeDataset("courses")
             .then(function (value) {
                 console.log("course.txt deleted at start test");
@@ -240,7 +240,7 @@ describe("DataSpec", function () {
                 expect(err.code).to.equal(404);
             });
     });
-   /* it("Add cour data for query spec", function () {
+   it("Add cour data for query spec", function () {
         return ir.addDataset("courses", zip)
             .then(function (value) {
                 Log.test('Code: ' + value.code);
