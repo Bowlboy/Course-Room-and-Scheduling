@@ -7,6 +7,8 @@ import Log from "../Util";
 
 var js = require("jszip");
 var fs = require("fs");
+var p5 = require('parse5');
+var http = require('http');
 var coursesresult : string[] = [];
 var roomsresult : string[] = [];
 
@@ -16,39 +18,239 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace('InsightFacadeImpl::init()');
     }
 
-    // json.xip.parse
-    // key = whatever we need string_string, values = their values
-    // array of object in which eac obj contain key,val of the 8 things
-    // id = dataset id
-    // content = the zip file
-    // get to courses
-    // at the courses, itireate through it, and for each file create new promise to get the data,
-    // then use promise.all to get all of the data for each file, then construct the format
-    // cache it in array form
+    roomhelper (node: any, name: any) : any {
+        var lor = node.childNodes;
+        if (lor) {
+            for (let child of lor) {
+                var loa = child.attrs;
+                if (loa) {
+                    for (let val of loa) {
+                        //console.log(val.value);
+                        //console.log(val);
+                        //console.log(child.attrs);
+                        if (val.value == name) {
+                            //console.log("found it");
+                            return child;
+                        }
+                        else {
+                            //console.log("iterating");
+                            let inner = this.roomhelper(child, name);
+                            if (typeof inner !== "undefined") { // ensure goes to all the loop
+                                return inner;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
     addDataset(id: string, content: string): Promise<InsightResponse> {
         return new Promise(function (fulfill, reject) { // create a new insight response nad do fulfill or reject that thing
-            let someProm: Promise<any>[] = [];
-            //console.log(id);
-            //console.log(typeof content);
-            //console.log(content);
-            js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64' // should handle non zip file???
-                .then(function (zip: any) {
-                    // console.log(zip);
-                    //console.log('success loadAsyc');
-                    var lof = Object.keys(zip.files);
-                    //console.log(lof);
-                    for (let entry of lof) {
-                       //console.log(entry);
-                       if( entry !== id.concat("/")) {
-                           someProm.push(zip.file(entry).async("text"));
-                       }
-                    }
-                    //console.log(someProm.length);
+            if (id === "rooms") {
+                //console.log("masuk rooms");
+                let someProm: Promise<any>[] = [];
+                js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64' // should handle non zip file???
+                    .then(function (zip: any) {
+                        //console.log('masuk load');
+                        //console.log(zip);
+                        //console.log('success loadAsyc');
+                        var losn: any[] = []; // list of short name
+                        var lof = Object.keys(zip.files);
+                        //console.log(lof);
+                        for (let entry of lof) {
+                            if (entry !== "campus/" && entry !== "index.htm" &&
+                                entry !== "campus/.DS_Store" && entry !== "campus/discover/" &&
+                                entry !== "campus/discover/.DS_Store" && entry !== "campus/discover/buildings-and-classrooms/" &&
+                                entry !== "campus/discover/buildings-and-classrooms/.DS_Store") {
+                                //console.log(entry);
+                                losn.push(entry.split('/')[3]);
+                                someProm.push(zip.file(entry).async("text"));
+                            }
+                        }
+                        Promise.all(someProm)
+                            .then(function (val: any) {
+                                let dataroom: any[] = [];
+                                var i = 0; // use losn[i] to get the shortname
+
+                                for (let entry of val) { // each entry is content of each file
+                                    let doc = p5.parse(entry);
+
+                                    var addrnode = InsightFacade.prototype.roomhelper (doc, 'field-content');
+                                    var addr = addrnode.childNodes[0].value; // rooms_address
+
+                                    var modad = addr.split(" ").join('%20');
+                                    //console.log(modad);
+                                    /*http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res : any) => {
+                                     console.log(res);
+                                     }).on('error', (e : any) => {
+                                     console.log(e);
+                                     });*/
+                                    var latitude = 0;
+                                    var longitude = 0;
+                                    http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res :any) => {
+                                        const statusCode = res.statusCode;
+                                        const contentType = res.headers['content-type'];
+
+                                        let error;
+                                        if (statusCode !== 200) {
+                                            error = new Error(`Request Failed.\n` +
+                                                `Status Code: ${statusCode}`);
+                                        } else if (!/^application\/json/.test(contentType)) {
+                                            error = new Error(`Invalid content-type.\n` +
+                                                `Expected application/json but received ${contentType}`);
+                                        }
+                                        if (error) {
+                                            //console.log(error.message);
+                                            // consume response data to free up memory
+                                            res.resume();
+                                            return;
+                                        }
+
+                                        res.setEncoding('utf8');
+                                        let rawData = '';
+                                        res.on('data', (chunk : any) => rawData += chunk);
+                                        res.on('end', () => {
+                                            try {
+                                                let parsedData = JSON.parse(rawData);
+                                                latitude = parsedData.lat;
+                                                longitude = parsedData.lon;
+                                                //console.log(parsedData);
+                                                //console.log(latitude);
+                                                //console.log(longitude);
+                                            } catch (e) {
+                                                console.log(e.message);
+                                            }
+                                        });
+                                    }).on('error', (e :any) => {
+                                        //console.log(`Got error: ${e.message}`);
+                                    });
+
+
+                                    var fnamenode = InsightFacade.prototype.roomhelper (doc, 'building-info');
+                                    var fname = fnamenode.childNodes[1].childNodes[0].childNodes[0].value; // rooms_fullname
+
+                                    var sname = losn[i]; // rooms_shortname
+
+                                    var tor = InsightFacade.prototype.roomhelper (doc, 'views-table cols-5 table');
+                                    //console.log(tor);
+                                    if (typeof tor !=="undefined") {
+                                        var loc = tor.childNodes[3].childNodes; // tbody
+                                        //console.log(loc);
+                                        // lat ; lon
+                                        for (let anak of loc) {
+                                            //console.log('masuk');
+                                            if (anak.nodeName == "tr") {
+                                                let dpr: any = {}; // each row is a new room object
+                                                //console.log('new obj');
+                                                dpr["rooms_address"] = addr;
+                                                dpr["rooms_fullname"] = fname;
+                                                dpr["rooms_shortname"] = sname;
+                                                var numroom = anak.childNodes[1].childNodes[1].childNodes[0].value; // rooms_number
+                                                dpr["rooms_number"] = numroom;
+                                                var nameroom = sname.concat("_", numroom); // rooms_name
+                                                dpr["rooms_name"] = nameroom;
+                                                var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
+                                                var seatroom = Number(str.replace(/\s+/g, ''));
+                                                dpr["rooms_seat"] = seatroom;
+                                                var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
+                                                var furroom = str1.replace(/\s+/g, '');
+                                                dpr["rooms_furniture"] = furroom;
+                                                var str2 = anak.childNodes[7].childNodes[0].value; // rooms_type /n rem
+                                                var tyroom = str2.replace(/\s+/g, '');
+                                                dpr["rooms_type"] = tyroom;
+                                                var ref = anak.childNodes[9].childNodes[1].attrs;
+                                                var refroom;
+                                                if (ref) {
+                                                    for (let val of ref) {
+                                                        refroom = val.value; // rooms_href
+                                                    }
+                                                }
+                                                dpr["rooms_href"] = refroom;
+                                                dpr["rooms_lat"] = latitude;
+                                                dpr["rooms_lot"] = longitude;
+                                                dataroom.push(dpr);
+                                            }
+                                        }
+                                    }
+                                    i++;
+                                }
+                                //console.log(dataroom);
+                                //fulfill(0);
+                                if (dataroom.length === 0) { //handle Bender
+                                    let ans: InsightResponse = {
+                                        code: 400,
+                                        //body : "error : no real data"};
+                                        body: JSON.parse('{"error" : "no real data"}')
+                                    };
+                                    reject(ans) // errorat prom all
+                                }
+                                else if (fs.existsSync(id.concat(".txt"))) {
+                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // overwrite file to disk
+                                    roomsresult = dataroom;
+                                    let ans: InsightResponse = {
+                                        code: 201,
+                                        //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                        body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
+                                    };
+                                    fulfill(ans);
+                                }
+                                else {
+                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // write file to disk
+                                    roomsresult = dataroom;
+                                    let ans: InsightResponse = {
+                                        code: 204,
+                                        //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                        body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
+                                    };
+                                    fulfill(ans);
+                                }
+                            })
+                            .catch(function (err: any) {
+                                //console.log('masuk error prom all');
+                                let ans: InsightResponse = {
+                                    code: 400,
+                                    //body : "error : no such id at zip file"};
+                                    body: JSON.parse('{"error" : "no such id at zip file "}')
+                                };
+                                reject(ans) // errorat prom all
+                            })
+
+                    })
+                    .catch(function (err: any) {
+                        //console.log('masuk error zip');
+                        let ans: InsightResponse = {
+                            code: 400,
+                            //body : "error : invalid zip file"};
+                            body: JSON.parse('{"error" : "invalid zip file"}')
+                        };
+                        reject(ans) // error at loadasynch
+                    })
+            }
+            else if (id === "courses") {
+                let someProm: Promise<any>[] = [];
+                //console.log(id);
+                //console.log(typeof content);
+                //console.log(content);
+                js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64' // should handle non zip file???
+                    .then(function (zip: any) {
+                        // console.log(zip);
+                        //console.log('success loadAsyc');
+                        var lof = Object.keys(zip.files);
+                        //console.log(lof);
+                        for (let entry of lof) {
+                            //console.log(entry);
+                            if (entry !== id.concat("/")) {
+                                someProm.push(zip.file(entry).async("text"));
+                            }
+                        }
+                        //console.log(someProm.length);
                         Promise.all(someProm)       // get all the data in zip as "string"
                             .then(function (val: any) { // val should be stringas JSON obj
                                 //console.log('inside prom all');
                                 //console.log(val);
-                                let datafile : any[] = [];
+                                let datafile: any[] = [];
                                 //console.log( "initial array" + data);
                                 //console.log( "initial array" + JSON.stringify(datafile));
                                 for (let entry of val) { // each entry is content of each file
@@ -57,22 +259,23 @@ export default class InsightFacade implements IInsightFacade {
                                     //console.log("start of file");
                                     for (let entry1 of data) {
                                         let keys = Object.keys(entry1);
-                                        let dpc : any = {}; // object
+                                        let dpc: any = {}; // object
                                         //let i : number = 0;
                                         //console.log("inital obj :" + JSON.stringify(dpc));
                                         //console.log(keys);
-                                        for (let entry2 of keys){ // YOU NOW HAVE THE KEY; need to m
-                                        //console.log("start of object");atch them
+                                        var check = 0;
+                                        for (let entry2 of keys) { // YOU NOW HAVE THE KEY; need to m
+                                            //console.log("start of object");atch them
                                             // courses_dept = "Subject", courses_id = "Course", courses_avg= "Avg"
                                             // courses_instructor = "Professor", courses_title = "Title"
                                             // courses_pass = "Pass", courses_fail = "Fail", courses_audit = "Audit"
                                             // courses_uuid = "id"
-                                            if (entry2 === "Subject"){ // courses_dept
+                                            if (entry2 === "Subject") { // courses_dept
                                                 //console.log( "dept :" + entry1[entry2]); // print value
                                                 dpc["courses_dept"] = entry1[entry2];
                                                 //dpc.courses_dept = entry1[entry2];
                                             }
-                                            if (entry2 === "Course"){ //courses_id
+                                            if (entry2 === "Course") { //courses_id
                                                 //console.log( "id :" + entry1[entry2]); // print value
                                                 dpc["courses_id"] = entry1[entry2];
                                                 //dpc.courses_id = entry1[entry2];
@@ -106,34 +309,47 @@ export default class InsightFacade implements IInsightFacade {
                                                 dpc["courses_uuid"] = entry1[entry2];
                                                 //console.log( "uuid :" + entry1[entry2]); // print value
                                             }
-                                        //i = i + 1;
+                                            if (entry2 === "Section") { //courses_year if sec overall
+                                                //console.log( "Section :" + entry1[entry2]); // print value
+                                                if (entry1[entry2] === "overall") {
+                                                    dpc["courses_year"] = 1900;
+                                                    check = 1;
+                                                }
+                                            }
+                                            if (entry2 === "Year" && check === 0) { // courses_year
+                                                dpc["courses_year"] = entry1[entry2];
+                                                //console.log( "year :" + entry1[entry2]); // print value
+                                            }
+                                            //i = i + 1;
                                         }
-                                    //console.log("final obj :" + JSON.stringify(dpc));
-                                    //data["result"]= dpc;
-                                    datafile.push(dpc);
+                                        //console.log("final obj :" + JSON.stringify(dpc));
+                                        //data["result"]= dpc;
+                                        datafile.push(dpc);
                                     }
                                     //console.log( "final array" + data);
                                     //console.log( "final array" + JSON.stringify(datafile));
                                 }
-                                if(datafile.length === 0) { //handle Bender
-                                    let ans : InsightResponse = {
-                                        code : 400,
+                                if (datafile.length === 0) { //handle Bender
+                                    let ans: InsightResponse = {
+                                        code: 400,
                                         //body : "error : no real data"};
-                                        body : JSON.parse('{"error" : "no real data"}')};
+                                        body: JSON.parse('{"error" : "no real data"}')
+                                    };
                                     reject(ans) // errorat prom all
                                 }
-                                else if (fs.existsSync(id.concat(".txt"))){
+                                else if (fs.existsSync(id.concat(".txt"))) {
+                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // overwrite file to disk
                                     coursesresult = datafile;
-                                    fs.writeFileSync( id.concat(".txt"),JSON.stringify(datafile)); // overwrite file to disk
-                                    let ans : InsightResponse = {
-                                        code : 201,
+                                    let ans: InsightResponse = {
+                                        code: 201,
                                         //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
-                                        body : JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')};
+                                        body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
+                                    };
                                     fulfill(ans);
                                 }
                                 else {
-                                    coursesresult = datafile;
                                     fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // write file to disk
+                                    coursesresult = datafile;
                                     let ans: InsightResponse = {
                                         code: 204,
                                         //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
@@ -145,25 +361,34 @@ export default class InsightFacade implements IInsightFacade {
                             .catch(function (err: any) {
                                 //console.log('error at prom all');
                                 //console.log(err);
-                                let ans : InsightResponse = {
-                                code : 400,
-                                //body : "error : no such id at zip file"};
-                                body : JSON.parse('{"error" : "no such id at zip file "}')};
+                                let ans: InsightResponse = {
+                                    code: 400,
+                                    //body : "error : no such id at zip file"};
+                                    body: JSON.parse('{"error" : "no such id at zip file "}')
+                                };
                                 reject(ans) // errorat prom all
 
                             })
-                })
-                .catch(function (err: any) {
-                    //console.log('error at loadasynch');
-                    //console.log(err);
-                    let ans : InsightResponse = {
-                    code : 400,
-                    //body : "error : invalid zip file"};
-                    body : JSON.parse('{"error" : "invalid zip file"}')};
-                    reject(ans) // error at loadasynch
-                })
-
-
+                    })
+                    .catch(function (err: any) {
+                        //console.log('error at loadasynch');
+                        //console.log(err);
+                        let ans: InsightResponse = {
+                            code: 400,
+                            //body : "error : invalid zip file"};
+                            body: JSON.parse('{"error" : "invalid zip file"}')
+                        };
+                        reject(ans) // error at loadasynch
+                    })
+            }
+            else {
+                let ans: InsightResponse = {
+                    code: 400,
+                    //body : "error : no real data"};
+                    body: JSON.parse('{"error" : "unsupported id"}')
+                };
+                reject(ans) // errorat prom all
+            }
         })
     }
 
@@ -171,6 +396,12 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise(function(fulfill, reject) {
             if (fs.existsSync(id.concat(".txt"))) {
                 fs.unlinkSync(id.concat(".txt")); // delete file on disk
+                if (id == 'courses') {
+                    coursesresult = [];
+                }
+                if (id == 'rooms') {
+                    roomsresult = [];
+                }
                 let ans: InsightResponse = {
                     code: 204,
                     //body: "the operation was successful."
