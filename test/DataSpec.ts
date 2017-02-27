@@ -240,7 +240,7 @@ describe("DataSpec", function () {
                 expect(err.code).to.equal(404);
             });
     });
-    it("Add cour data for query spec", function () {
+   /* it("Add cour data for query spec", function () {
         return ir.addDataset("courses", zip)
             .then(function (value) {
                 Log.test('Code: ' + value.code);
@@ -261,5 +261,5 @@ describe("DataSpec", function () {
                 Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             });
-    });
+    });*/
 });

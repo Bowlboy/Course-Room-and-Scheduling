@@ -89,7 +89,7 @@ export default class InsightFacade implements IInsightFacade {
                                      });*/
                                     var latitude = 0;
                                     var longitude = 0;
-                                    http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res :any) => {
+                                    /*http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res :any) => {
                                         const statusCode = res.statusCode;
                                         const contentType = res.headers['content-type'];
 
@@ -125,7 +125,7 @@ export default class InsightFacade implements IInsightFacade {
                                         });
                                     }).on('error', (e :any) => {
                                         //console.log(`Got error: ${e.message}`);
-                                    });
+                                    });*/
 
 
                                     var fnamenode = InsightFacade.prototype.roomhelper (doc, 'building-info');
