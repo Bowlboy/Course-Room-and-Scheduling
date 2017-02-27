@@ -153,7 +153,7 @@ export default class InsightFacade implements IInsightFacade {
                                                 dpr["rooms_name"] = nameroom;
                                                 var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
                                                 var seatroom = Number(str.replace(/\s+/g, ''));
-                                                dpr["rooms_seat"] = seatroom;
+                                                dpr["rooms_seats"] = seatroom;
                                                 var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
                                                 var furroom = str1.trim();//str1.replace(/\s+/g, '');
                                                 dpr["rooms_furniture"] = furroom;
