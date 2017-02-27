@@ -959,7 +959,11 @@ export default class InsightFacade implements IInsightFacade {
 
         // var readFromDisk = fs.readFileSync('./courses.txt', "UTF8");
         // var files = JSON.parse(readFromDisk);
-        var files = coursesresult;
+        // if (coursesresult.length != 0 && roomsresult.length == 0) {var files = coursesresult;}
+        // else if (coursesresult.length == 0 && roomsresult.length != 0) {var files = roomsresult;}
+        // else {var files = coursesresult.concat(roomsresult);}
+        var files = roomsresult.concat(coursesresult);
+        // Log.test("files " + JSON.stringify(files));
         var returnedArray: String[] = [];
 
         return new Promise(function(fulfill, reject) {
