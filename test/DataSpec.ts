@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> f2401f2f9c691969833223b0b5a3879ef95a6e79
 /**
  * Created by Winson on 1/25/2017.
  */
@@ -19,11 +15,7 @@ var fs = require("fs");
 
 describe("DataSpec", function () {
 
-<<<<<<< HEAD
     var ir: InsightFacade = null;
-=======
-   /* var ir: InsightFacade = null;
->>>>>>> f2401f2f9c691969833223b0b5a3879ef95a6e79
     var zip: any = fs.readFileSync("courses.zip", "base64");
     var zip2: any = fs.readFileSync("courses.zip", "UTF8");
     var norealdatazip: any = fs.readFileSync("coursesnorealdata.zip", "base64");
@@ -269,9 +261,5 @@ describe("DataSpec", function () {
                 //Log.test('Body: ' + JSON.stringify(err.body));
                 expect.fail();
             });
-<<<<<<< HEAD
     });
-=======
-    });*/
->>>>>>> f2401f2f9c691969833223b0b5a3879ef95a6e79
 });
