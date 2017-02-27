@@ -149,16 +149,16 @@ describe("D2Spec", function () {
         })
     });
 
-    it("Test rooms_type", function () {
-        return myIR.performQuery(query7).then(function (response: InsightResponse) {
-            Log.test('The Response is: ' + JSON.stringify(response.body));
-            expect(response.code).to.equal(200);
-            expect(JSON.stringify(response.body)).to.equal(responseType);
-        }).catch(function (err) {
-            // Log.test('Error: ' + err);
-            expect.fail();
-        })
-    });
+    // it("Test rooms_type", function () {
+    //     return myIR.performQuery(query7).then(function (response: InsightResponse) {
+    //         Log.test('The Response is: ' + JSON.stringify(response.body));
+    //         expect(response.code).to.equal(200);
+    //         expect(JSON.stringify(response.body)).to.equal(responseType);
+    //     }).catch(function (err) {
+    //         // Log.test('Error: ' + err);
+    //         expect.fail();
+    //     })
+    // });
 
     it("Test rooms_furniture", function () {
         return myIR.performQuery(query8).then(function (response: InsightResponse) {
