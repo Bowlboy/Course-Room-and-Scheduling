@@ -920,9 +920,9 @@ export default class InsightFacade implements IInsightFacade {
                         var contains = 0;
 
                         for (var smth of Array) {
-                            if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
-                                contains = 1;
-                            }
+                            // if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
+                            //     contains = 1;
+                            // }
                             if (file[<any>"rooms_href"] == smth[<any>"rooms_href"]) {
                                 contains = 1;
                             }
@@ -957,11 +957,6 @@ export default class InsightFacade implements IInsightFacade {
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
-        // var readFromDisk = fs.readFileSync('./courses.txt', "UTF8");
-        // var files = JSON.parse(readFromDisk);
-        // if (coursesresult.length != 0 && roomsresult.length == 0) {var files = coursesresult;}
-        // else if (coursesresult.length == 0 && roomsresult.length != 0) {var files = roomsresult;}
-        // else {var files = coursesresult.concat(roomsresult);}
         var files = roomsresult.concat(coursesresult);
         // Log.test("files " + JSON.stringify(files));
         var returnedArray: String[] = [];
