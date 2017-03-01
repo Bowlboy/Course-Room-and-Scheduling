@@ -420,10 +420,11 @@ export default class InsightFacade implements IInsightFacade {
         })
     }
 
-    queryHelper(files: any, wherekey: any, WHERE: any): String[] {
+    queryHelper(file: any, datasetChosen: any, WHERE: any): boolean {
         var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid", "year"];
         var roomString: String[] = ["fullname", "shortname", "number", "name", "address", "lat", "lon", "seats", "type", "furniture", "href"];
-        var returnedArray: String[] = [];
+        // var returnedArray: String[] = [];
+        var wherekey = Object.keys(WHERE);
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
             var conte = Object.keys(WHERE);
@@ -431,42 +432,21 @@ export default class InsightFacade implements IInsightFacade {
                 case'AND': {
                     var AND = WHERE[<any>"AND"];
                     if (AND.length == 0) {
-                        var errorArray: String[] = [];
-                        let rejectIR = 'errAnd';
-                        errorArray.push(rejectIR);
-                        return errorArray;
+                        throw new Error("errAND");
+                        // return false;
                     }
                     else if (AND.length == 1) {
                         var Obj = AND[0];
                         var arrObj = Object.keys(Obj);
-                        var ArrayOne: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObj, <any>Obj);
-                        for (var smth of ArrayOne) {
-                            returnedArray.push(smth);
-                        }
+                        return InsightFacade.prototype.queryHelper(<any>file, <any>arrObj, <any>Obj);
                     }
                     else if (AND.length == 2) {
                         var objLeft = AND[0];
                         var arrObjLeft = Object.keys(objLeft);
                         var objRight = AND[1];
                         var arrObjRight = Object.keys(objRight);
-                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
 
-                        for (var smth of ArrayLeft) {
-                            for (var smth2 of ArrayRight) {
-
-                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
-                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                        returnedArray.push(smth);
-                                    }
-                                }
-                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
-                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
-                                        returnedArray.push(smth);
-                                    }
-                                }
-                            }
-                        }
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                     else {
                         var objLeft = AND[0];
@@ -479,42 +459,20 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"AND": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
-
-                        for (var smth of ArrayLeft) {
-                            for (var smth2 of ArrayRight) {
-
-                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
-                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                        returnedArray.push(smth);
-                                    }
-                                }
-                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
-                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
-                                        returnedArray.push(smth);
-                                    }
-                                }
-                            }
-                        }
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                 };
-                    break;
+                    // break;
                 case'OR': {
                     var OR = WHERE[<any>"OR"];
                     if (OR.length == 0) {
-                        var errorArray: String[] = [];
-                        let rejectIR = 'errOr';
-                        errorArray.push(rejectIR);
-                        return errorArray;
+                        throw new Error("errOR");
+                        // return false;
                     }
                     else if (OR.length == 1) {
                         var Obj = OR[0];
                         var arrObj = Object.keys(Obj);
-                        var ArrayOne: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObj, <any>Obj);
-                        for (var smth of ArrayOne) {
-                            returnedArray.push(smth);
-                        }
+                        return InsightFacade.prototype.queryHelper(<any>file, <any>arrObj, <any>Obj);
                     }
 
                     else if (OR.length == 2) {
@@ -522,48 +480,7 @@ export default class InsightFacade implements IInsightFacade {
                         var arrObjLeft = Object.keys(objLeft);
                         var objRight = OR[1];
                         var arrObjRight = Object.keys(objRight);
-                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
-
-                        for (var smth of ArrayLeft) {
-                            var contains = 0;
-                            for (var smth2 of returnedArray) {
-
-                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
-                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                        contains = 1;
-                                    }
-                                }
-                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
-                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
-                                        contains = 1;
-                                    }
-                                }
-                            }
-                            if (contains == 0) {
-                                returnedArray.push(smth);
-                            }
-                        }
-
-                        for (var smth3 of ArrayRight) {
-                            var contains = 0;
-                            for (var smth4 of returnedArray) {
-
-                                if (Object.keys(smth4).indexOf("courses_uuid") > -1) {
-                                    if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
-                                        contains = 1;
-                                    }
-                                }
-                                if (Object.keys(smth4).indexOf("rooms_href") > -1) {
-                                    if (smth3[<any>"rooms_href"] == smth4[<any>"rooms_href"]) {
-                                        contains = 1;
-                                    }
-                                }
-                            }
-                            if (contains == 0) {
-                                returnedArray.push(smth3);
-                            }
-                        }
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                     else {
                         var objLeft = OR[0];
@@ -576,121 +493,51 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"OR": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        var ArrayLeft: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjLeft, <any>objLeft);
-                        var ArrayRight: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>arrObjRight, <any>objRight);
-
-                        for (var smth of ArrayLeft) {
-                            var contains = 0;
-                            for (var smth2 of returnedArray) {
-
-                                if (Object.keys(smth).indexOf("courses_uuid") > -1) {
-                                    if (smth[<any>"courses_uuid"] == smth2[<any>"courses_uuid"]) {
-                                        contains = 1;
-                                    }
-                                }
-                                if (Object.keys(smth).indexOf("rooms_href") > -1) {
-                                    if (smth[<any>"rooms_href"] == smth2[<any>"rooms_href"]) {
-                                        contains = 1;
-                                    }
-                                }
-                            }
-                            if (contains == 0) {
-                                returnedArray.push(smth);
-                            }
-                        }
-
-                        for (var smth3 of ArrayRight) {
-                            var contains = 0;
-                            for (var smth4 of returnedArray) {
-
-                                if (Object.keys(smth4).indexOf("courses_uuid") > -1) {
-                                    if (smth3[<any>"courses_uuid"] == smth4[<any>"courses_uuid"]) {
-                                        contains = 1;
-                                    }
-                                }
-                                if (Object.keys(smth4).indexOf("rooms_href") > -1) {
-                                    if (smth3[<any>"rooms_href"] == smth4[<any>"rooms_href"]) {
-                                        contains = 1;
-                                    }
-                                }
-                            }
-                            if (contains == 0) {
-                                returnedArray.push(smth3);
-                            }
-                        }
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                 };
-                    break;
+                    // break;
                 case'LT':{
-                    var thingsLessThan = WHERE[<any>conte[<any>i]];
-                    var filesKey = Object.keys(files);
+                    var thingsGreaterThan = WHERE[<any>"LT"];
 
-                    for (var j = 0; j < filesKey.length; j++) {
-                        var file = files[<any>filesKey[<any>j]];
-                        var fileKey = Object.keys(file);
+                    var fileKey = Object.keys(file);
 
-                        for (var k = 0; k < fileKey.length; k++) {
-                            var key = file[<any>fileKey[<any>k]];
-                            var thingsLessThanKey = Object.keys(thingsLessThan);
+                    for (var k = 0; k < fileKey.length; k++) {
+                        var key = file[<any>fileKey[<any>k]];
+                        var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
-                            for (var l = 0; l < thingsLessThanKey.length; l++) {
-                                var split = thingsLessThanKey[<any>l];
-                                var splits = split.split("_");
+                        for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                            var split = thingsGreaterThanKey[<any>l];
+                            var splits = split.split("_");
+                            if (splits.length != 2) {
+                                throw new Error ("errLT");
+                                // return false;
+                            }
 
-                                if (splits.length != 2) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
+                            if (splits[0] != datasetChosen) {
+                                throw new Error ("errDataset");
+                                // return false;
+                            }
 
-                                if (splits[0] != "courses" && splits[0] != "rooms") {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errDataset';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
-                                if (splits[0] == "courses") {
-                                    if (strings.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
+                            if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
+                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                    if (key < thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                        return true;
                                     }
+                                    else return false;
                                 }
-                                else if (splits[0] == "rooms") {
-                                    if (roomString.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
-                                }
-
-                                if (typeof thingsLessThan[<any>thingsLessThanKey[<any>l]] === "number") {
-                                    if (fileKey[k] == thingsLessThanKey[<any>l]) {
-                                        if (key < thingsLessThan[<any>thingsLessThanKey[<any>l]]) {
-                                            returnedArray.push(file);
-                                        }
-                                    }
-                                }
-                                else {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
+                            }
+                            else {
+                                throw new Error ("errLT");
+                                // return false;
                             }
                         }
                     }
                 };
-                    break;
+                    // break;
                 case'GT': {
-                    var thingsGreaterThan = WHERE[<any>conte[<any>i]];
-                    var filesKey = Object.keys(files);
+                    var thingsGreaterThan = WHERE[<any>"GT"];
 
-                    for (var j = 0; j < filesKey.length; j++) {
-                        var file = files[<any>filesKey[<any>j]];
                         var fileKey = Object.keys(file);
 
                         for (var k = 0; k < fileKey.length; k++) {
@@ -701,181 +548,110 @@ export default class InsightFacade implements IInsightFacade {
                                 var split = thingsGreaterThanKey[<any>l];
                                 var splits = split.split("_");
                                 if (splits.length != 2) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                    throw new Error ("errGT");
+                                    // return false;
                                 }
 
-                                if (splits[0] != "courses" && splits[0] != "rooms") {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errDataset';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                if (splits[0] != datasetChosen) {
+                                    throw new Error ("errDataset");
+                                    // return false;
                                 }
-                                if (splits[0] == "courses") {
-                                    if (strings.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
-                                }
-                                else if (splits[0] == "rooms") {
-                                    if (roomString.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
-                                }
-
 
                                 if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
                                     if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
                                         if (key > thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                            returnedArray.push(file);
+                                            return true;
                                         }
+                                        else return false;
                                     }
                                 }
                                 else {
                                     var errorArray: String[] = [];
-                                    let rejectIR = 'errGT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
+                                    throw new Error ("errGT");
+                                    // return false;
                                 }
                             }
                         }
-                    }
                 };
-                    break;
+                    // break;
                 case'EQ':{
-                    var thingsEqualTo = WHERE[<any>conte[<any>i]];
-                    var filesKey = Object.keys(files);
+                    var thingsGreaterThan = WHERE[<any>"EQ"];
 
-                    for (var j = 0; j < filesKey.length; j++) {
-                        var file = files[<any>filesKey[<any>j]];
-                        var fileKey = Object.keys(file);
+                    var fileKey = Object.keys(file);
 
-                        for (var k = 0; k < fileKey.length; k++) {
-                            var key = file[<any>fileKey[<any>k]];
-                            var thingsEqualToKey = Object.keys(thingsEqualTo);
+                    for (var k = 0; k < fileKey.length; k++) {
+                        var key = file[<any>fileKey[<any>k]];
+                        var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
-                            for (var l = 0; l < thingsEqualToKey.length; l++) {
-                                var split = thingsEqualToKey[<any>l];
-                                var splits = split.split("_");
+                        for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                            var split = thingsGreaterThanKey[<any>l];
+                            var splits = split.split("_");
+                            if (splits.length != 2) {
+                                throw new Error ("errEQ");
+                                // return false;
+                            }
 
-                                if (splits.length != 2) {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errLT';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
+                            if (splits[0] != datasetChosen) {
+                                throw new Error ("errDataset");
+                                // return false;
+                            }
 
-                                if (splits[0] != "courses" && splits[0] != "rooms") {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errDataset';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
-                                if (splits[0] == "courses") {
-                                    if (strings.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
+                            if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
+                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                    if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                        return true;
                                     }
+                                    else return false;
                                 }
-                                else if (splits[0] == "rooms") {
-                                    if (roomString.indexOf(splits[1]) < 0) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
-                                }
-
-                                if (typeof thingsEqualTo[<any>thingsEqualToKey[ < any > l]] === "number") {
-                                    if (fileKey[k] == thingsEqualToKey[<any>l]) {
-                                        if (key == thingsEqualTo[<any>thingsEqualToKey[<any>l]]) {
-                                            returnedArray.push(file);
-                                        }
-                                    }
-                                }
-                                else {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errEQ';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
+                            }
+                            else {
+                                throw new Error ("errEQ");
+                                // return false;
                             }
                         }
                     }
                 };
-                    break;
+                    // break;
                 case'IS':{
-                    var thingsIS = WHERE[<any>conte[<any>i]];
-                    var filesKey = Object.keys(files);
+                    var thingsGreaterThan = WHERE[<any>"IS"];
 
-                    for (var j = 0; j < filesKey.length; j++) {
-                        var file = files[<any>filesKey[<any>j]];
-                        var fileKey = Object.keys(file);
+                    var fileKey = Object.keys(file);
 
-                        for (var k = 0; k < fileKey.length; k++) {
-                            var key = file[<any>fileKey[<any>k]];
-                            var thingsISKey = Object.keys(thingsIS);
+                    for (var k = 0; k < fileKey.length; k++) {
+                        var key = file[<any>fileKey[<any>k]];
+                        var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
-                            for (var l = 0; l < thingsISKey.length; l++) {
-                                var split = thingsISKey[<any>l];
-                                if (typeof thingsIS[<any>split] === "string") {
-                                    var splits = split.split("_");
+                        for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                            var split = thingsGreaterThanKey[<any>l];
+                            var splits = split.split("_");
+                            if (splits.length != 2) {
+                                throw new Error ("errIS");
+                                // return false;
+                            }
 
-                                    if (splits.length != 2) {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errLT';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
+                            if (splits[0] != datasetChosen) {
+                                throw new Error ("errDataset");
+                                // return false;
+                            }
 
-                                    if (splits[0] != "courses" && splits[0] != "rooms") {
-                                        var errorArray: String[] = [];
-                                        let rejectIR = 'errDataset';
-                                        errorArray.push(rejectIR);
-                                        return errorArray;
-                                    }
-                                    if (splits[0] == "courses") {
-                                        if (strings.indexOf(splits[1]) < 0) {
-                                            var errorArray: String[] = [];
-                                            let rejectIR = 'errLT';
-                                            errorArray.push(rejectIR);
-                                            return errorArray;
-                                        }
-                                    }
-                                    else if (splits[0] == "rooms") {
-                                        if (roomString.indexOf(splits[1]) < 0) {
-                                            var errorArray: String[] = [];
-                                            let rejectIR = 'errLT';
-                                            errorArray.push(rejectIR);
-                                            return errorArray;
-                                        }
-                                    }
-
-                                    if (fileKey[k] == thingsISKey[<any>l]) {
-                                        var tgt: string = thingsIS[<any>thingsISKey[<any>l]];
+                            if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "string") {
+                                if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
+                                        var tgt: string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
                                         var ke: string = key;
                                         var firstChar: string = tgt.substring(0, 1);
                                         var lastChar: string = tgt.substring(tgt.length - 1, tgt.length);
                                         if (firstChar == "*" && lastChar == "*") {
                                             tgt = tgt.substring(1, tgt.length - 1);
                                             if (ke.includes(tgt)) {
-                                                returnedArray.push(file);
+                                                return true;
                                             }
                                         }
                                         else if (firstChar == "*" && lastChar != "*") {
                                             tgt = tgt.substring(1, tgt.length);
                                             if (tgt.length <= ke.length) {
                                                 if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
-                                                    returnedArray.push(file);
+                                                    return true;
                                                 }
                                             }
                                         }
@@ -883,65 +659,48 @@ export default class InsightFacade implements IInsightFacade {
                                             tgt = tgt.substring(0, tgt.length - 1);
                                             if (tgt.length <= ke.length) {
                                                 if (ke.substring(0, tgt.length) == tgt) {
-                                                    returnedArray.push(file);
+                                                    return true;
                                                 }
                                             }
                                         }
-                                        else if (key == thingsIS[<any>thingsISKey[<any>l]]) {
-                                            returnedArray.push(file);
+                                        else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                            return true;
                                         }
+                                        else return false;
                                     }
                                 }
-                                else {
-                                    var errorArray: String[] = [];
-                                    let rejectIR = 'errIs';
-                                    errorArray.push(rejectIR);
-                                    return errorArray;
-                                }
+                            }
+                            else {
+                                throw new Error ("errIS");
+                                // return false;
                             }
                         }
                     }
                 };
-                    break;
+                    // break;
                 case'NOT': {
                     var NOT = WHERE[<any>"NOT"];
                     var notkey = Object.keys(NOT);
                     if (notkey[<any>0] == "NOT") {
                         var notnot = NOT[<any>"NOT"];
                         var notnotkey = Object.keys(notnot);
-                        returnedArray = InsightFacade.prototype.queryHelper(<any>files, <any>notnotkey, <any>notnot);
+                        if (InsightFacade.prototype.queryHelper(<any>file, <any>notnotkey, <any>notnot) == true) {
+                            return true;
+                        };
                         break;
                     }
-                    var Array:String [] = InsightFacade.prototype.queryHelper(<any>files, <any>notkey, <any>NOT);
-
-                    var filesKey = Object.keys(files);
-                    for (var j = 0; j < filesKey.length; j++) {
-                        var file = files[<any>filesKey[<any>j]];
-                        var contains = 0;
-
-                        for (var smth of Array) {
-                            // if (file[<any>"courses_uuid"] == smth[<any>"courses_uuid"]) {
-                            //     contains = 1;
-                            // }
-                            if (file[<any>"rooms_href"] == smth[<any>"rooms_href"]) {
-                                contains = 1;
-                            }
-                        }
-                        if (contains == 0) {
-                            returnedArray.push(file);
-                        }
+                    if (InsightFacade.prototype.queryHelper(<any>file, <any>notkey, <any>NOT) == false) {
+                        return true;
                     }
+                    else {return false;}
                 };
-                    break;
+                    // break;
                 default:{
-                        var errorArray: String[] = [];
-                        let rejectIR = 'errDefault';
-                        errorArray.push(rejectIR);
-                        return errorArray;
+                        throw new Error("errDefault");
+                        // return false;
                     }
             }
         }
-        return returnedArray;
     }
 
     sorter(beforeArray: String[], order: any): String[] {
@@ -957,9 +716,7 @@ export default class InsightFacade implements IInsightFacade {
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
-        var files = roomsresult.concat(coursesresult);
-        // Log.test("files " + JSON.stringify(files));
-        var returnedArray: String[] = [];
+        // var returnedArray: String[] = [];
 
         return new Promise(function(fulfill, reject) {
 
@@ -975,43 +732,69 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
-            var newArrKey = Object.keys(newArr);
-            for (var o = 0; o < newArrKey.length; o++) {
-                if (newArr[<any>newArrKey[<any>o]] == 'errDefault') {
-                    let rejectIR = {code: 400, body: {error: "Wrong Key"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errDataset') {
-                    let rejectIR = {code: 424, body: {missing: "More than one dataset is used"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errLT') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in LT"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errGT') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in GT"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errEQ') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in EQ"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errIs') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errAnd') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
-                    reject(rejectIR);
-                }
-                else if (newArr[<any>newArrKey[<any>o]] == 'errOr') {
-                    let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
-                    reject(rejectIR);
-                }
-                returnedArray.push(newArr[<any>newArrKey[<any>o]]);
+            var order = OPTIONS[<any>"ORDER"];
+            var split = order.split("_");
+            var datasetChosen = "none";
+
+            if (split [0] == "courses") {
+                var files = coursesresult;
+                datasetChosen = "courses";
             }
+            else if (split[0] == "rooms") {
+                var files = roomsresult;
+                datasetChosen = "rooms";
+            }
+            else {
+                let rejectIR = {code: 424, body: {missing: "Wrong dataset introduced"}};
+                reject(rejectIR);
+            }
+
+            var newArr: String[] = [];
+
+            for (var file of files) {
+                try {
+                    if (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>WHERE)) {
+                        newArr.push(file);
+                    }
+                }
+                catch (Error) {
+                    if (Error == 'errDefault') {
+                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errDataset') {
+                        let rejectIR = {code: 424, body: {missing: "More than one dataset is used"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errLT') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in LT"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errGT') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in GT"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errEQ') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in EQ"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errIs') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errAnd') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
+                        reject(rejectIR);
+                    }
+                    else if (Error == 'errOr') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
+                        reject(rejectIR);
+                    }
+
+                }
+            }
+
+            // var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
 
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
@@ -1039,7 +822,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var passedArray: String[] = [];
 
-            for (var smth of returnedArray) {
+            for (var smth of newArr) {
                 let eachPassedArray: any = {};
                 for (var column of COLUMNS) {
                     eachPassedArray[column] = "";

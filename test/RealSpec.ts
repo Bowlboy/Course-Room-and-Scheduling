@@ -180,7 +180,7 @@ describe("RealSpec", function () {
 
     it("Test NOT", function () {
         return myIR.performQuery(query5).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            Log.test('The Response is: ' + JSON.stringify(response.body));
             var testerArray: String[] = [];
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseNOT);
@@ -192,7 +192,7 @@ describe("RealSpec", function () {
 
     it("Test AND", function () {
         return myIR.performQuery(query6).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + response.body);
+            Log.test('The Response is: ' + response.body);
             var testerArray: String[] = [];
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseAND);
@@ -209,7 +209,7 @@ describe("RealSpec", function () {
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseOR);
         }).catch(function (err) {
-            Log.test('Error: ' + err);
+            // Log.test('Error: ' + err);
             expect.fail();
         })
     });
