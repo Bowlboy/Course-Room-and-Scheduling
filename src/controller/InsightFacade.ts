@@ -306,7 +306,7 @@ export default class InsightFacade implements IInsightFacade {
                                                 //console.log( "audit :" + entry1[entry2]); // print value
                                             }
                                             if (entry2 === "id") { //courses_uuid
-                                                dpc["courses_uuid"] = entry1[entry2];
+                                                dpc["courses_uuid"] = entry1[entry2].toString();
                                                 //console.log( "uuid :" + entry1[entry2]); // print value
                                             }
                                             if (entry2 === "Section") { //courses_year if sec overall
