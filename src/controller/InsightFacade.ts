@@ -317,7 +317,7 @@ export default class InsightFacade implements IInsightFacade {
                                                 }
                                             }
                                             if (entry2 === "Year" && check === 0) { // courses_year
-                                                dpc["courses_year"] = entry1[entry2];
+                                                dpc["courses_year"] = Number(entry1[entry2]);
                                                 //console.log( "year :" + entry1[entry2]); // print value
                                             }
                                             //i = i + 1;
