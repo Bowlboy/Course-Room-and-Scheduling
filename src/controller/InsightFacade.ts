@@ -432,13 +432,13 @@ export default class InsightFacade implements IInsightFacade {
                 case'AND': {
                     var AND = WHERE[<any>"AND"];
                     if (AND.length == 0) {
-                        throw new Error("errAND");
+                        throw new TypeError("errAND");
                         // return false;
                     }
                     else if (AND.length == 1) {
                         var Obj = AND[0];
                         var arrObj = Object.keys(Obj);
-                        return InsightFacade.prototype.queryHelper(<any>file, <any>arrObj, <any>Obj);
+                        return InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>Obj);
                     }
                     else if (AND.length == 2) {
                         var objLeft = AND[0];
@@ -446,7 +446,7 @@ export default class InsightFacade implements IInsightFacade {
                         var objRight = AND[1];
                         var arrObjRight = Object.keys(objRight);
 
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                     else {
                         var objLeft = AND[0];
@@ -459,20 +459,19 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"AND": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                 };
-                    // break;
                 case'OR': {
                     var OR = WHERE[<any>"OR"];
                     if (OR.length == 0) {
-                        throw new Error("errOR");
+                        throw new TypeError("errOR");
                         // return false;
                     }
                     else if (OR.length == 1) {
                         var Obj = OR[0];
                         var arrObj = Object.keys(Obj);
-                        return InsightFacade.prototype.queryHelper(<any>file, <any>arrObj, <any>Obj);
+                        return InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>Obj);
                     }
 
                     else if (OR.length == 2) {
@@ -480,7 +479,7 @@ export default class InsightFacade implements IInsightFacade {
                         var arrObjLeft = Object.keys(objLeft);
                         var objRight = OR[1];
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                     else {
                         var objLeft = OR[0];
@@ -493,10 +492,9 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"OR": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>arrObjLeft, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
                     }
                 };
-                    // break;
                 case'LT':{
                     var thingsGreaterThan = WHERE[<any>"LT"];
 
@@ -510,13 +508,24 @@ export default class InsightFacade implements IInsightFacade {
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
-                                throw new Error ("errLT");
+                                throw new TypeError("errLT");
                                 // return false;
                             }
 
                             if (splits[0] != datasetChosen) {
-                                throw new Error ("errDataset");
+                                throw new TypeError("errDataset");
                                 // return false;
+                            }
+
+                            if (datasetChosen == "courses") {
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errLT");
+                                }
+                            }
+                            else if (datasetChosen == "rooms") {
+                                if (roomString.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errLT");
+                                }
                             }
 
                             if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
@@ -528,13 +537,12 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                             }
                             else {
-                                throw new Error ("errLT");
+                                throw new TypeError("errLT");
                                 // return false;
                             }
                         }
                     }
                 };
-                    // break;
                 case'GT': {
                     var thingsGreaterThan = WHERE[<any>"GT"];
 
@@ -548,13 +556,23 @@ export default class InsightFacade implements IInsightFacade {
                                 var split = thingsGreaterThanKey[<any>l];
                                 var splits = split.split("_");
                                 if (splits.length != 2) {
-                                    throw new Error ("errGT");
+                                    throw new TypeError("errGT");
                                     // return false;
                                 }
 
                                 if (splits[0] != datasetChosen) {
-                                    throw new Error ("errDataset");
-                                    // return false;
+                                    throw new TypeError("errDataset");
+                                }
+
+                                if (datasetChosen == "courses") {
+                                    if (strings.indexOf(splits[1]) < 0) {
+                                        throw new Error ("errGT");
+                                    }
+                                }
+                                else if (datasetChosen == "rooms") {
+                                    if (roomString.indexOf(splits[1]) < 0) {
+                                        throw new TypeError("errGT");
+                                    }
                                 }
 
                                 if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
@@ -567,13 +585,12 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                                 else {
                                     var errorArray: String[] = [];
-                                    throw new Error ("errGT");
+                                    throw new TypeError("errGT");
                                     // return false;
                                 }
                             }
                         }
                 };
-                    // break;
                 case'EQ':{
                     var thingsGreaterThan = WHERE[<any>"EQ"];
 
@@ -587,13 +604,24 @@ export default class InsightFacade implements IInsightFacade {
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
-                                throw new Error ("errEQ");
+                                throw new TypeError("errEQ");
                                 // return false;
                             }
 
                             if (splits[0] != datasetChosen) {
-                                throw new Error ("errDataset");
+                                throw new TypeError("errDataset");
                                 // return false;
+                            }
+
+                            if (datasetChosen == "courses") {
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errEQ");
+                                }
+                            }
+                            else if (datasetChosen == "rooms") {
+                                if (roomString.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errEQ");
+                                }
                             }
 
                             if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "number") {
@@ -605,13 +633,12 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                             }
                             else {
-                                throw new Error ("errEQ");
+                                    throw new TypeError("errEQ");
                                 // return false;
                             }
                         }
                     }
                 };
-                    // break;
                 case'IS':{
                     var thingsGreaterThan = WHERE[<any>"IS"];
 
@@ -625,13 +652,24 @@ export default class InsightFacade implements IInsightFacade {
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
-                                throw new Error ("errIS");
+                                throw new TypeError("errIS");
                                 // return false;
                             }
 
                             if (splits[0] != datasetChosen) {
-                                throw new Error ("errDataset");
+                                throw new TypeError("errDataset");
                                 // return false;
+                            }
+
+                            if (datasetChosen == "courses") {
+                                if (strings.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errIS");
+                                }
+                            }
+                            else if (datasetChosen == "rooms") {
+                                if (roomString.indexOf(splits[1]) < 0) {
+                                    throw new TypeError("errIS");
+                                }
                             }
 
                             if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "string") {
@@ -671,33 +709,23 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                             }
                             else {
-                                throw new Error ("errIS");
+                                throw new TypeError("errIS");
                                 // return false;
                             }
                         }
                     }
                 };
-                    // break;
                 case'NOT': {
                     var NOT = WHERE[<any>"NOT"];
                     var notkey = Object.keys(NOT);
                     if (notkey[<any>0] == "NOT") {
                         var notnot = NOT[<any>"NOT"];
-                        var notnotkey = Object.keys(notnot);
-                        if (InsightFacade.prototype.queryHelper(<any>file, <any>notnotkey, <any>notnot) == true) {
-                            return true;
-                        };
-                        break;
+                        return InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>notnot);
                     }
-                    if (InsightFacade.prototype.queryHelper(<any>file, <any>notkey, <any>NOT) == false) {
-                        return true;
-                    }
-                    else {return false;}
+                    return !InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>NOT);
                 };
-                    // break;
                 default:{
-                        throw new Error("errDefault");
-                        // return false;
+                        throw new TypeError("errDefault");
                     }
             }
         }
@@ -737,10 +765,18 @@ export default class InsightFacade implements IInsightFacade {
             var datasetChosen = "none";
 
             if (split [0] == "courses") {
+                if (coursesresult.length == 0) {
+                    let rejectIR = {code: 424, body: {error: ["Missing Dataset"]}};
+                    reject(rejectIR);
+                }
                 var files = coursesresult;
                 datasetChosen = "courses";
             }
             else if (split[0] == "rooms") {
+                if (roomsresult.length == 0) {
+                    let rejectIR = {code: 424, body: {error: ["Missing Dataset"]}};
+                    reject(rejectIR);
+                }
                 var files = roomsresult;
                 datasetChosen = "rooms";
             }
@@ -757,36 +793,36 @@ export default class InsightFacade implements IInsightFacade {
                         newArr.push(file);
                     }
                 }
-                catch (Error) {
-                    if (Error == 'errDefault') {
+                catch (e) {
+                    if ((<Error>e).message == 'errDefault') {
                         let rejectIR = {code: 400, body: {error: "Wrong Key"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errDataset') {
+                    else if ((<Error>e).message == 'errDataset') {
                         let rejectIR = {code: 424, body: {missing: "More than one dataset is used"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errLT') {
+                    else if ((<Error>e).message == 'errLT') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in LT"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errGT') {
+                    else if ((<Error>e).message == 'errGT') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in GT"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errEQ') {
+                    else if ((<Error>e).message == 'errEQ') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in EQ"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errIs') {
+                    else if ((<Error>e).message == 'errIS') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errAnd') {
+                    else if ((<Error>e).message == 'errAND') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
                         reject(rejectIR);
                     }
-                    else if (Error == 'errOr') {
+                    else if ((<Error>e).message == 'errOR') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
                         reject(rejectIR);
                     }
