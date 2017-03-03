@@ -505,6 +505,10 @@ export default class InsightFacade implements IInsightFacade {
                         var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
                         for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+
+                            if (l < 0) {
+                                throw new TypeError("errLT");
+                            }
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
@@ -553,6 +557,10 @@ export default class InsightFacade implements IInsightFacade {
                             var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
                             for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+
+                                if (l < 0) {
+                                    throw new TypeError("errGT");
+                                }
                                 var split = thingsGreaterThanKey[<any>l];
                                 var splits = split.split("_");
                                 if (splits.length != 2) {
@@ -601,6 +609,11 @@ export default class InsightFacade implements IInsightFacade {
                         var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
                         for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+
+                            if (l < 0) {
+                                throw new TypeError("errEQ");
+                            }
+
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
@@ -649,6 +662,9 @@ export default class InsightFacade implements IInsightFacade {
                         var thingsGreaterThanKey = Object.keys(thingsGreaterThan);
 
                         for (var l = 0; l < thingsGreaterThanKey.length; l++) {
+                            if (l > 0) {
+                                throw new TypeError("errIS");
+                            }
                             var split = thingsGreaterThanKey[<any>l];
                             var splits = split.split("_");
                             if (splits.length != 2) {
@@ -674,38 +690,36 @@ export default class InsightFacade implements IInsightFacade {
 
                             if (typeof thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]] === "string") {
                                 if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                    if (fileKey[k] == thingsGreaterThanKey[<any>l]) {
-                                        var tgt: string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
-                                        var ke: string = key;
-                                        var firstChar: string = tgt.substring(0, 1);
-                                        var lastChar: string = tgt.substring(tgt.length - 1, tgt.length);
-                                        if (firstChar == "*" && lastChar == "*") {
-                                            tgt = tgt.substring(1, tgt.length - 1);
-                                            if (ke.includes(tgt)) {
+                                    var tgt: string = thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]];
+                                    var ke: string = key;
+                                    var firstChar: string = tgt.substring(0, 1);
+                                    var lastChar: string = tgt.substring(tgt.length - 1, tgt.length);
+                                    if (firstChar == "*" && lastChar == "*") {
+                                        tgt = tgt.substring(1, tgt.length - 1);
+                                        if (ke.includes(tgt)) {
+                                            return true;
+                                        }
+                                    }
+                                    else if (firstChar == "*" && lastChar != "*") {
+                                        tgt = tgt.substring(1, tgt.length);
+                                        if (tgt.length <= ke.length) {
+                                            if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
                                                 return true;
                                             }
                                         }
-                                        else if (firstChar == "*" && lastChar != "*") {
-                                            tgt = tgt.substring(1, tgt.length);
-                                            if (tgt.length <= ke.length) {
-                                                if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
-                                                    return true;
-                                                }
-                                            }
-                                        }
-                                        else if (firstChar != "*" && lastChar == "*") {
-                                            tgt = tgt.substring(0, tgt.length - 1);
-                                            if (tgt.length <= ke.length) {
-                                                if (ke.substring(0, tgt.length) == tgt) {
-                                                    return true;
-                                                }
-                                            }
-                                        }
-                                        else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
-                                            return true;
-                                        }
-                                        else return false;
                                     }
+                                    else if (firstChar != "*" && lastChar == "*") {
+                                        tgt = tgt.substring(0, tgt.length - 1);
+                                        if (tgt.length <= ke.length) {
+                                            if (ke.substring(0, tgt.length) == tgt) {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                    else if (key == thingsGreaterThan[<any>thingsGreaterThanKey[<any>l]]) {
+                                        return true;
+                                    }
+                                    else return false;
                                 }
                             }
                             else {
@@ -763,6 +777,11 @@ export default class InsightFacade implements IInsightFacade {
             var order = OPTIONS[<any>"ORDER"];
             var split = order.split("_");
             var datasetChosen = "none";
+
+            if (coursesresult.length == 0 && roomsresult.length == 0) {
+                let rejectIR = {code: 424, body: {missing: "No data"}};
+                reject(rejectIR);
+            }
 
             if (split [0] == "courses") {
                 if (coursesresult.length == 0) {
