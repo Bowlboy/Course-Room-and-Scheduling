@@ -446,7 +446,7 @@ export default class InsightFacade implements IInsightFacade {
                         var objRight = AND[1];
                         var arrObjRight = Object.keys(objRight);
 
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
                     }
                     else {
                         var objLeft = AND[0];
@@ -459,7 +459,7 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"AND": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
                     }
                 };
                 case'OR': {
@@ -479,7 +479,7 @@ export default class InsightFacade implements IInsightFacade {
                         var arrObjLeft = Object.keys(objLeft);
                         var objRight = OR[1];
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
                     }
                     else {
                         var objLeft = OR[0];
@@ -492,7 +492,7 @@ export default class InsightFacade implements IInsightFacade {
 
                         let objRight = {"OR": theRest};
                         var arrObjRight = Object.keys(objRight);
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>arrObjRight, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) || InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
                     }
                 };
                 case'LT':{
