@@ -306,7 +306,7 @@ export default class InsightFacade implements IInsightFacade {
                                                 //console.log( "audit :" + entry1[entry2]); // print value
                                             }
                                             if (entry2 === "id") { //courses_uuid
-                                                dpc["courses_uuid"] = entry1[entry2];
+                                                dpc["courses_uuid"] = entry1[entry2].toString();
                                                 //console.log( "uuid :" + entry1[entry2]); // print value
                                             }
                                             if (entry2 === "Section") { //courses_year if sec overall
@@ -317,7 +317,7 @@ export default class InsightFacade implements IInsightFacade {
                                                 }
                                             }
                                             if (entry2 === "Year" && check === 0) { // courses_year
-                                                dpc["courses_year"] = entry1[entry2];
+                                                dpc["courses_year"] = Number(entry1[entry2]);
                                                 //console.log( "year :" + entry1[entry2]); // print value
                                             }
                                             //i = i + 1;
