@@ -20,9 +20,10 @@ let responseAddress = '{"render":"TABLE","result":[{"rooms_fullname":"Hugh Demps
 let responseLat = '{"render":"TABLE","result":[{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1001","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1002","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1003","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1005","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1221","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1402","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1611","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1613","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1615","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/FSC-1617","rooms_lat":49.26044,"rooms_lon":-123.24886},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/OSBO-203A","rooms_lat":49.26047,"rooms_lon":-123.24467},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/OSBO-203B","rooms_lat":49.26047,"rooms_lon":-123.24467},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/OSBO-A","rooms_lat":49.26047,"rooms_lon":-123.24467}]}';
 let responseLon = '{"render":"TABLE","result":[{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-1101","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-1201","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3112","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3114","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3115","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3116","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3118","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3120","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3122","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3124","rooms_lat":49.26229,"rooms_lon":-123.24342},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/PHRM-3208","rooms_lat":49.26229,"rooms_lon":-123.24342}]}';
 let responseSeats = '{"render":"TABLE","result":[{"rooms_seats":325,"rooms_shortname":"WESB","rooms_number":"100"},{"rooms_seats":350,"rooms_shortname":"ESB","rooms_number":"1013"},{"rooms_seats":350,"rooms_shortname":"LSC","rooms_number":"1001"},{"rooms_seats":350,"rooms_shortname":"LSC","rooms_number":"1002"},{"rooms_seats":375,"rooms_shortname":"HEBB","rooms_number":"100"},{"rooms_seats":400,"rooms_shortname":"NIT","rooms_number":"101"},{"rooms_seats":405,"rooms_shortname":"MAUD","rooms_number":"101"},{"rooms_seats":426,"rooms_shortname":"CIRS","rooms_number":"1250"},{"rooms_seats":442,"rooms_shortname":"OSBO","rooms_number":"A"},{"rooms_seats":503,"rooms_shortname":"WOOD","rooms_number":"2"}]}';
-let responseType = '{"render":"TABLE","result":[{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"1001"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"3016"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4002"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4004"},{"rooms_type":"ActiveLearning","rooms_shortname":"ORCH","rooms_number":"4016"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4018"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4062"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4068"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4072"}]}';
+let responseType = '{"render":"TABLE","result":[{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"1001"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"3016"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4002"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4004"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4016"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4018"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4062"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4068"},{"rooms_type":"Active Learning","rooms_shortname":"ORCH","rooms_number":"4072"}]}';
 let responseFurniture = '{"render":"TABLE","result":[{"rooms_type":"Active Learning","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Active Learning","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Active Learning","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Active Learning","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Open Design General Purpose","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Open Design General Purpose","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Open Design General Purpose","rooms_furniture":"Classroom-Hybrid Furniture"},{"rooms_type":"Tiered Large Group","rooms_furniture":"Classroom-Hybrid Furniture"}]}';
 let responseHref = '{"render":"TABLE","result":[{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/WOOD-G66","rooms_type":"Small Group","rooms_furniture":"Classroom-Movable Tables & Chairs"}]}';
+let response10 = '{"render":"TABLE","result":[{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/CIRS-1250"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/ESB-1013"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/HEBB-100"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/LSC-1001"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/LSC-1002"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/OSBO-A"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/WESB-100"},{"rooms_href":"http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/WOOD-2"}]}';
 
 describe("D2Spec", function () {
 
@@ -44,6 +45,8 @@ describe("D2Spec", function () {
     query8 = {"WHERE": {"IS": {"rooms_furniture": "Classroom-Hybrid Furniture"}}, "OPTIONS": {"COLUMNS": ["rooms_type","rooms_furniture"], "ORDER": "rooms_type", "FORM": "TABLE"}};
     let query9: QueryRequest;
     query9 = {"WHERE": {"IS": {"rooms_href": "http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/WOOD-G66"}}, "OPTIONS": {"COLUMNS": ["rooms_href","rooms_type","rooms_furniture"], "ORDER": "rooms_type", "FORM": "TABLE"}};
+    let query10: QueryRequest;
+    query10 = {"WHERE": {"AND": [{"GT": {"rooms_seats": 300}}, {"NOT": {"IS": {"rooms_type": "*studio*"}}}, {"NOT": {"IS": {"rooms_address": "6245 Agronomy Road V6T 1Z4"}}}]}, "OPTIONS": {"COLUMNS": ["rooms_href"], "ORDER": "rooms_href", "FORM": "TABLE"}};
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -149,16 +152,16 @@ describe("D2Spec", function () {
         })
     });
 
-    // it("Test rooms_type", function () {
-    //     return myIR.performQuery(query7).then(function (response: InsightResponse) {
-    //         Log.test('The Response is: ' + JSON.stringify(response.body));
-    //         expect(response.code).to.equal(200);
-    //         expect(JSON.stringify(response.body)).to.equal(responseType);
-    //     }).catch(function (err) {
-    //         // Log.test('Error: ' + err);
-    //         expect.fail();
-    //     })
-    // });
+    it("Test rooms_type", function () {
+        return myIR.performQuery(query7).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(responseType);
+        }).catch(function (err) {
+            // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
 
     it("Test rooms_furniture", function () {
         return myIR.performQuery(query8).then(function (response: InsightResponse) {
@@ -179,6 +182,18 @@ describe("D2Spec", function () {
             expect(JSON.stringify(response.body)).to.equal(responseHref);
         }).catch(function (err) {
             // Log.test('Error: ' + err);
+            expect.fail();
+        })
+    });
+
+
+    it("Test rooms_andandand", function () {
+        return myIR.performQuery(query10).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(response10);
+        }).catch(function (err) {
+            Log.test('Error: ' + err);
             expect.fail();
         })
     });

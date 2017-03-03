@@ -427,7 +427,6 @@ export default class InsightFacade implements IInsightFacade {
         var wherekey = Object.keys(WHERE);
         for (var i = 0; i < wherekey.length; i++) {
             var contents = wherekey[<any>i];
-            var conte = Object.keys(WHERE);
             switch(contents) {
                 case'AND': {
                     var AND = WHERE[<any>"AND"];
@@ -437,20 +436,16 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     else if (AND.length == 1) {
                         var Obj = AND[0];
-                        var arrObj = Object.keys(Obj);
                         return InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>Obj);
                     }
                     else if (AND.length == 2) {
                         var objLeft = AND[0];
-                        var arrObjLeft = Object.keys(objLeft);
                         var objRight = AND[1];
-                        var arrObjRight = Object.keys(objRight);
 
-                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
+                        return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight)));
                     }
                     else {
                         var objLeft = AND[0];
-                        var arrObjLeft = Object.keys(objLeft);
 
                         var theRest: String[] = [];
                         for (var u = 1; u < AND.length; u++) {
@@ -458,7 +453,6 @@ export default class InsightFacade implements IInsightFacade {
                         }
 
                         let objRight = {"AND": theRest};
-                        var arrObjRight = Object.keys(objRight);
                         return (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objLeft) && InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>objRight));
                     }
                 };
@@ -720,6 +714,7 @@ export default class InsightFacade implements IInsightFacade {
                                         return true;
                                     }
                                     else return false;
+                                    return false;
                                 }
                             }
                             else {
