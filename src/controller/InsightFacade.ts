@@ -733,9 +733,9 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     return !InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>NOT);
                 };
-                default:{
-                        throw new TypeError("errDefault");
-                    }
+                default: {
+                    throw new TypeError("errDefault");
+                }
             }
         }
     }
@@ -774,7 +774,7 @@ export default class InsightFacade implements IInsightFacade {
             var datasetChosen = "none";
 
             if (coursesresult.length == 0 && roomsresult.length == 0) {
-                let rejectIR = {code: 424, body: {missing: "No data"}};
+                let rejectIR = {code: 400, body: {missing: "No data"}};
                 reject(rejectIR);
             }
 
