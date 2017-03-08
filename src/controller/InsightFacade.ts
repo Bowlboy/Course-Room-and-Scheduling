@@ -834,11 +834,11 @@ export default class InsightFacade implements IInsightFacade {
     sorterDown(beforeArray: String[], order: any): String[] {
         var sortedArray: String[] = [];
         sortedArray = beforeArray.slice(0);
-        sortedArray.sort((leftSide, rightSide): number => {
-            if (leftSide[<any>order] < rightSide[<any>order]) return -1;
-            if (leftSide[<any>order] > rightSide[<any>order]) return 1;
-            return 0;
-        });
+            sortedArray.sort((leftSide, rightSide): number => {
+                if (leftSide[<any>order] < rightSide[<any>order]) return -1;
+                if (leftSide[<any>order] > rightSide[<any>order]) return 1;
+                return 0;
+            });
         return sortedArray;
     }
 
@@ -966,6 +966,7 @@ export default class InsightFacade implements IInsightFacade {
             if (OrderKeys.length == 2) {
                 if (OrderKeys[0] == "dir") {
                     var order = ORDER[<any>"dir"];
+                    ORDER = ORDER[<any>"keys"];
                     var OrderThings = ORDER[<any>OrderKeys[1]];
 
                 }

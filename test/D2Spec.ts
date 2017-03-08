@@ -121,7 +121,7 @@ describe("D2Spec", function () {
 
     it("Test rooms_lat", function () {
         return myIR.performQuery(query4).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            Log.test('The Response is: ' + JSON.stringify(response.body));
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseLat);
         }).catch(function (err) {
@@ -132,7 +132,7 @@ describe("D2Spec", function () {
 
     it("Test rooms_lon", function () {
         return myIR.performQuery(query5).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            Log.test('The Response is: ' + JSON.stringify(response.body));
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseLon);
         }).catch(function (err) {
