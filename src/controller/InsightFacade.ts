@@ -740,12 +740,23 @@ export default class InsightFacade implements IInsightFacade {
         }
     }
 
-    sorter(beforeArray: String[], order: any): String[] {
+    sorterDown(beforeArray: String[], order: any): String[] {
         var sortedArray: String[] = [];
         sortedArray = beforeArray.slice(0);
         sortedArray.sort((leftSide, rightSide): number => {
             if (leftSide[<any>order] < rightSide[<any>order]) return -1;
             if (leftSide[<any>order] > rightSide[<any>order]) return 1;
+            return 0;
+        });
+        return sortedArray;
+    }
+
+    sorterUp(beforeArray: String[], order: any): String[] {
+        var sortedArray: String[] = [];
+        sortedArray = beforeArray.slice(0);
+        sortedArray.sort((leftSide, rightSide): number => {
+            if (leftSide[<any>order] < rightSide[<any>order]) return 1;
+            if (leftSide[<any>order] > rightSide[<any>order]) return -1;
             return 0;
         });
         return sortedArray;
@@ -859,10 +870,22 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            var con = 1;
+            var OrderKeys = Object.keys(ORDER);
+
+            if (OrderKeys.length == 2) {
+                if (OrderKeys[0] == "dir") {
+                    var order = ORDER[<any>"dir"];
+                    var OrderThings = ORDER[<any>OrderKeys[1]];
+
+                }
+            }
+            else {
+                var con = 1;
                 for (var colu of COLUMNS) {
                     if (ORDER == colu) {
+                        var orderr:string = "DOWN";
                         con = 0;
+                    }
                 }
             }
             if (con == 1) {
@@ -889,7 +912,14 @@ export default class InsightFacade implements IInsightFacade {
                 }
                 passedArray.push(eachPassedArray);
             }
-            var sortedArray: String[] = InsightFacade.prototype.sorter(passedArray, ORDER);
+
+            if (order == "DOWN" || orderr == "DOWN") {
+                var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, ORDER);
+            }
+            else if (order == "UP") {
+                var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, ORDER);
+            }
+
 
             let body:any = {render: FORM, result: sortedArray};
             let myIR:any = {code: 200, body: body};
