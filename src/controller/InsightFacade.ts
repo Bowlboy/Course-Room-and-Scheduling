@@ -160,6 +160,128 @@ export default class InsightFacade implements IInsightFacade {
                                             //console.log(isi);
                                             lobo.push(isi);
                                         }
+                                        Promise.all(someProm)
+                                            .then(function (val: any) {
+                                                let dataroom: any[] = [];
+                                                var i = 0; // use lolsn[i] to get the shortname
+
+                                                for (let entry of val) { // each entry is content of each file
+                                                    let doc = p5.parse(entry);
+
+                                                    var addrnode = InsightFacade.prototype.roomhelper(doc, 'field-content');
+                                                    var addr = addrnode.childNodes[0].value; // rooms_address
+
+                                                    //var modad = addr.split(" ").join('%20');
+
+                                                    var latitude = 0;
+                                                    var longitude = 0;
+
+                                                    var fnamenode = InsightFacade.prototype.roomhelper(doc, 'building-info');
+                                                    var fname = fnamenode.childNodes[1].childNodes[0].childNodes[0].value; // rooms_fullname
+                                                    //console.log(fname);
+
+                                                    var sname = losn[i]; // rooms_shortname
+                                                    //console.log(sname);
+
+                                                    var tor = InsightFacade.prototype.roomhelper(doc, 'views-table cols-5 table');
+                                                    //console.log(tor);
+                                                    //console.log(lobo);
+                                                    if (typeof tor !== "undefined") {
+                                                        var loc = tor.childNodes[3].childNodes; // tbody
+                                                        //console.log(loc);
+                                                        // lat ; lon
+                                                        for (let anak of loc) {
+                                                            //console.log('masuk');
+                                                            if (anak.nodeName == "tr") {
+                                                                let dpr: any = {}; // each row is a new room object
+                                                                //console.log('new obj');
+                                                                dpr["rooms_address"] = addr;
+                                                                dpr["rooms_fullname"] = fname;
+                                                                dpr["rooms_shortname"] = sname;
+                                                                var numroom = anak.childNodes[1].childNodes[1].childNodes[0].value; // rooms_number
+                                                                dpr["rooms_number"] = numroom;
+                                                                var nameroom = sname.concat("_", numroom); // rooms_name
+                                                                dpr["rooms_name"] = nameroom;
+                                                                var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
+                                                                var seatroom = Number(str.replace(/\s+/g, ''));
+                                                                dpr["rooms_seats"] = seatroom;
+                                                                var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
+                                                                var furroom = str1.trim();//str1.replace(/\s+/g, '');
+                                                                dpr["rooms_furniture"] = furroom;
+                                                                var str2 = anak.childNodes[7].childNodes[0].value; // rooms_type /n rem
+                                                                var tyroom = str2.trim();//str2.replace(/\s+/g, '');
+                                                                dpr["rooms_type"] = tyroom;
+                                                                var ref = anak.childNodes[9].childNodes[1].attrs;
+                                                                var refroom;
+                                                                if (ref) {
+                                                                    for (let val of ref) {
+                                                                        refroom = val.value; // rooms_href
+                                                                    }
+                                                                }
+                                                                dpr["rooms_href"] = refroom;
+                                                                //lolsn = [];
+                                                                if (lolsn.indexOf(sname) > -1){
+                                                                    //console.log(lobo);
+                                                                    for (let bo of lobo) {
+                                                                        if (bo["shortname"] == sname) {
+                                                                            dpr["rooms_lat"] = bo["lati"];
+                                                                            dpr["rooms_lon"] = bo["long"];
+                                                                        }
+                                                                    }
+                                                                    //console.log(dpr);
+                                                                    dataroom.push(dpr);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    i++;
+                                                }
+                                                //console.log(dataroom.length);
+                                                //fulfill(0);
+                                                if (dataroom.length === 0) { //handle Bender
+                                                    //console.log('no data');
+                                                    //console.log(lobo);
+                                                    let ans: InsightResponse = {
+                                                        code: 400,
+                                                        //body : "error : no real data"};
+                                                        body: JSON.parse('{"error" : "no real data"}')
+                                                    };
+                                                    reject(ans) // errorat prom all
+                                                }
+                                                else if (fs.existsSync(id.concat(".txt"))) {
+                                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // overwrite file to disk
+                                                    roomsresult = dataroom;
+                                                    //console.log(roomsresult.length);
+                                                    //console.log(lobo);
+                                                    let ans: InsightResponse = {
+                                                        code: 201,
+                                                        //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                                        body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
+                                                    };
+                                                    fulfill(ans);
+                                                }
+                                                else {
+                                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // write file to disk
+                                                    roomsresult = dataroom;
+                                                    //console.log(roomsresult.length);
+                                                    //console.log(lobo);
+                                                    let ans: InsightResponse = {
+                                                        code: 204,
+                                                        //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                                        body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
+                                                    };
+                                                    fulfill(ans);
+                                                }
+                                            })
+                                            .catch(function (err: any) {
+                                                //console.log('masuk error prom all');
+                                                let ans: InsightResponse = {
+                                                    code: 400,
+                                                    //body : "error : no such id at zip file"};
+                                                    body: JSON.parse('{"error" : "no such id at zip file "}')
+                                                };
+                                                reject(ans) // errorat prom all
+                                            })
                                     })
                                     .catch(function (err: any) {
                                         //console.log('masuk error prom all');
@@ -170,127 +292,6 @@ export default class InsightFacade implements IInsightFacade {
                                                 body: JSON.parse('{"error" : "no such id at zip file "}')
                                             };
                                             reject(ans) // errorat prom all
-                                    })
-                                Promise.all(someProm)
-                                    .then(function (val: any) {
-                                        let dataroom: any[] = [];
-                                        var i = 0; // use lolsn[i] to get the shortname
-
-                                        for (let entry of val) { // each entry is content of each file
-                                            let doc = p5.parse(entry);
-
-                                            var addrnode = InsightFacade.prototype.roomhelper(doc, 'field-content');
-                                            var addr = addrnode.childNodes[0].value; // rooms_address
-
-                                            //var modad = addr.split(" ").join('%20');
-
-                                            var latitude = 0;
-                                            var longitude = 0;
-
-                                            var fnamenode = InsightFacade.prototype.roomhelper(doc, 'building-info');
-                                            var fname = fnamenode.childNodes[1].childNodes[0].childNodes[0].value; // rooms_fullname
-                                            //console.log(fname);
-
-                                            var sname = losn[i]; // rooms_shortname
-                                            //console.log(sname);
-
-                                            var tor = InsightFacade.prototype.roomhelper(doc, 'views-table cols-5 table');
-                                            //console.log(tor);
-                                            //console.log(lobo);
-                                            if (typeof tor !== "undefined") {
-                                                var loc = tor.childNodes[3].childNodes; // tbody
-                                                //console.log(loc);
-                                                // lat ; lon
-                                                for (let anak of loc) {
-                                                    //console.log('masuk');
-                                                    if (anak.nodeName == "tr") {
-                                                        let dpr: any = {}; // each row is a new room object
-                                                        //console.log('new obj');
-                                                        dpr["rooms_address"] = addr;
-                                                        dpr["rooms_fullname"] = fname;
-                                                        dpr["rooms_shortname"] = sname;
-                                                        var numroom = anak.childNodes[1].childNodes[1].childNodes[0].value; // rooms_number
-                                                        dpr["rooms_number"] = numroom;
-                                                        var nameroom = sname.concat("_", numroom); // rooms_name
-                                                        dpr["rooms_name"] = nameroom;
-                                                        var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
-                                                        var seatroom = Number(str.replace(/\s+/g, ''));
-                                                        dpr["rooms_seats"] = seatroom;
-                                                        var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
-                                                        var furroom = str1.trim();//str1.replace(/\s+/g, '');
-                                                        dpr["rooms_furniture"] = furroom;
-                                                        var str2 = anak.childNodes[7].childNodes[0].value; // rooms_type /n rem
-                                                        var tyroom = str2.trim();//str2.replace(/\s+/g, '');
-                                                        dpr["rooms_type"] = tyroom;
-                                                        var ref = anak.childNodes[9].childNodes[1].attrs;
-                                                        var refroom;
-                                                        if (ref) {
-                                                            for (let val of ref) {
-                                                                refroom = val.value; // rooms_href
-                                                            }
-                                                        }
-                                                        dpr["rooms_href"] = refroom;
-                                                        //lolsn = [];
-                                                        if (lolsn.indexOf(sname) > -1){
-                                                            //console.log(lobo);
-                                                            for (let bo of lobo) {
-                                                                if (bo["shortname"] == sname) {
-                                                                    dpr["rooms_lat"] = bo["lati"];
-                                                                    dpr["rooms_lon"] = bo["long"];
-                                                                }
-                                                            }
-                                                            dataroom.push(dpr);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            i++;
-                                        }
-                                        //console.log(dataroom.length);
-                                        //fulfill(0);
-                                        if (dataroom.length === 0) { //handle Bender
-                                            //console.log('no data');
-                                            //console.log(lobo);
-                                            let ans: InsightResponse = {
-                                                code: 400,
-                                                //body : "error : no real data"};
-                                                body: JSON.parse('{"error" : "no real data"}')
-                                            };
-                                            reject(ans) // errorat prom all
-                                        }
-                                        else if (fs.existsSync(id.concat(".txt"))) {
-                                            fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // overwrite file to disk
-                                            roomsresult = dataroom;
-                                            //console.log(roomsresult.length);
-                                            //console.log(lobo);
-                                            let ans: InsightResponse = {
-                                                code: 201,
-                                                //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
-                                                body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
-                                            };
-                                            fulfill(ans);
-                                        }
-                                        else {
-                                            fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // write file to disk
-                                            roomsresult = dataroom;
-                                            //console.log(roomsresult.length);
-                                            //console.log(lobo);
-                                            let ans: InsightResponse = {
-                                                code: 204,
-                                                //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
-                                                body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
-                                            };
-                                            fulfill(ans);
-                                        }
-                                    })
-                                    .catch(function (err: any) {
-                                        //console.log('masuk error prom all');
-                                        let ans: InsightResponse = {
-                                            code: 400,
-                                            //body : "error : no such id at zip file"};
-                                            body: JSON.parse('{"error" : "no such id at zip file "}')
-                                        };
-                                        reject(ans) // errorat prom all
                                     })
                             }, function error(e : any) {
                             // handle the error
