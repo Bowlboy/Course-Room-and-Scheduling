@@ -18,6 +18,63 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace('InsightFacadeImpl::init()');
     }
 
+    latlonhelper (adr: any, bsn:any) : Promise<any> { // do the data adding here then use prom.all with answers inside then? adress+shortname
+        return new Promise(function (fulfill, reject) {
+            var modad = adr.split(" ").join('%20');
+            // return below if lat lon fail, else return with modified lat lon
+            let ans1: Object = {
+                address: adr,
+                shortname: bsn,
+                lati :0,
+                long :0
+            };
+            http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res: any) => {
+                const statusCode = res.statusCode;
+                const contentType = res.headers['content-type'];
+
+                let error;
+                if (statusCode !== 200) {
+                    error = new Error(`Request Failed.\n` +
+                        `Status Code: ${statusCode}`);
+                } else if (!/^application\/json/.test(contentType)) {
+                    error = new Error(`Invalid content-type.\n` +
+                        `Expected application/json but received ${contentType}`);
+                }
+                if (error) {
+                    //console.log(error.message);
+                    // consume response data to free up memory
+                    res.resume();
+                    fulfill(ans1);
+                }
+
+                res.setEncoding('utf8');
+                let rawData = '';
+                res.on('data', (chunk: any) => rawData += chunk);
+                res.on('end', () => {
+                    try {
+                        let parsedData = JSON.parse(rawData);
+                        let ans2: Object = {
+                            address: adr,
+                            shortname: bsn,
+                            lati :parsedData.lat,
+                            long :parsedData.lon,
+                        };
+                        //console.log(ans2);
+                        fulfill(ans2);
+                        //console.log(parsedData);
+                        //console.log(latitude);
+                        //console.log(longitude);
+                    } catch (e) {
+                        //console.log(e.message);
+                        fulfill(ans1);
+                    }
+                });
+            }).on('error', (e: any) => {
+                fulfill(ans1);//console.log(`Got error: ${e.message}`);
+            });
+        })
+    }
+
     roomhelper (node: any, name: any) : any {
         var lor = node.childNodes;
         if (lor) {
@@ -47,176 +104,203 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
+        let that = this;
         return new Promise(function (fulfill, reject) { // create a new insight response nad do fulfill or reject that thing
             if (id === "rooms") {
                 //console.log("masuk rooms");
                 let someProm: Promise<any>[] = [];
+                let addprom: Promise<any>[] = [];
                 js.loadAsync(content, {"base64": true}) // 'utf8' or 'base64' // should handle non zip file???
                     .then(function (zip: any) {
                         //console.log('masuk load');
                         //console.log(zip);
                         //console.log('success loadAsyc');
-                        var losn: any[] = []; // list of short name
-                        var lof = Object.keys(zip.files);
-                        //console.log(lof);
-                        for (let entry of lof) {
-                            if (entry !== "campus/" && entry !== "index.htm" &&
-                                entry !== "campus/.DS_Store" && entry !== "campus/discover/" &&
-                                entry !== "campus/discover/.DS_Store" && entry !== "campus/discover/buildings-and-classrooms/" &&
-                                entry !== "campus/discover/buildings-and-classrooms/.DS_Store") {
-                                //console.log(entry);
-                                losn.push(entry.split('/')[3]);
-                                someProm.push(zip.file(entry).async("text"));
-                            }
-                        }
-                        Promise.all(someProm)
-                            .then(function (val: any) {
-                                let dataroom: any[] = [];
-                                var i = 0; // use losn[i] to get the shortname
-
-                                for (let entry of val) { // each entry is content of each file
-                                    let doc = p5.parse(entry);
-
-                                    var addrnode = InsightFacade.prototype.roomhelper (doc, 'field-content');
-                                    var addr = addrnode.childNodes[0].value; // rooms_address
-
-                                    var modad = addr.split(" ").join('%20');
-                                    //console.log(modad);
-                                    /*http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res : any) => {
-                                     console.log(res);
-                                     }).on('error', (e : any) => {
-                                     console.log(e);
-                                     });*/
-                                    var latitude = 0;
-                                    var longitude = 0;
-                                    /*http.get('http://skaha.cs.ubc.ca:11316/api/v1/team65/'.concat(modad), (res :any) => {
-                                        const statusCode = res.statusCode;
-                                        const contentType = res.headers['content-type'];
-
-                                        let error;
-                                        if (statusCode !== 200) {
-                                            error = new Error(`Request Failed.\n` +
-                                                `Status Code: ${statusCode}`);
-                                        } else if (!/^application\/json/.test(contentType)) {
-                                            error = new Error(`Invalid content-type.\n` +
-                                                `Expected application/json but received ${contentType}`);
-                                        }
-                                        if (error) {
-                                            //console.log(error.message);
-                                            // consume response data to free up memory
-                                            res.resume();
-                                            return;
-                                        }
-
-                                        res.setEncoding('utf8');
-                                        let rawData = '';
-                                        res.on('data', (chunk : any) => rawData += chunk);
-                                        res.on('end', () => {
-                                            try {
-                                                let parsedData = JSON.parse(rawData);
-                                                latitude = parsedData.lat;
-                                                longitude = parsedData.lon;
-                                                //console.log(parsedData);
-                                                //console.log(latitude);
-                                                //console.log(longitude);
-                                            } catch (e) {
-                                                console.log(e.message);
-                                            }
-                                        });
-                                    }).on('error', (e :any) => {
-                                        //console.log(`Got error: ${e.message}`);
-                                    });*/
-
-
-                                    var fnamenode = InsightFacade.prototype.roomhelper (doc, 'building-info');
-                                    var fname = fnamenode.childNodes[1].childNodes[0].childNodes[0].value; // rooms_fullname
-
-                                    var sname = losn[i]; // rooms_shortname
-
-                                    var tor = InsightFacade.prototype.roomhelper (doc, 'views-table cols-5 table');
-                                    //console.log(tor);
-                                    if (typeof tor !=="undefined") {
-                                        var loc = tor.childNodes[3].childNodes; // tbody
-                                        //console.log(loc);
-                                        // lat ; lon
-                                        for (let anak of loc) {
-                                            //console.log('masuk');
-                                            if (anak.nodeName == "tr") {
-                                                let dpr: any = {}; // each row is a new room object
-                                                //console.log('new obj');
-                                                dpr["rooms_address"] = addr;
-                                                dpr["rooms_fullname"] = fname;
-                                                dpr["rooms_shortname"] = sname;
-                                                var numroom = anak.childNodes[1].childNodes[1].childNodes[0].value; // rooms_number
-                                                dpr["rooms_number"] = numroom;
-                                                var nameroom = sname.concat("_", numroom); // rooms_name
-                                                dpr["rooms_name"] = nameroom;
-                                                var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
-                                                var seatroom = Number(str.replace(/\s+/g, ''));
-                                                dpr["rooms_seats"] = seatroom;
-                                                var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
-                                                var furroom = str1.trim();//str1.replace(/\s+/g, '');
-                                                dpr["rooms_furniture"] = furroom;
-                                                var str2 = anak.childNodes[7].childNodes[0].value; // rooms_type /n rem
-                                                var tyroom = str2.trim();//str2.replace(/\s+/g, '');
-                                                dpr["rooms_type"] = tyroom;
-                                                var ref = anak.childNodes[9].childNodes[1].attrs;
-                                                var refroom;
-                                                if (ref) {
-                                                    for (let val of ref) {
-                                                        refroom = val.value; // rooms_href
-                                                    }
-                                                }
-                                                dpr["rooms_href"] = refroom;
-                                                dpr["rooms_lat"] = latitude;
-                                                dpr["rooms_lot"] = longitude;
-                                                dataroom.push(dpr);
-                                            }
+                        var lolsn: any[] = [] // list of legit short name
+                        var lola:any[] = [] // list of legit address
+                        var lobo:any[] = [] // list of result from latlon helper
+                        zip.file("index.htm").async("text")
+                            .then(function success(content : any) {
+                                var doc1 = p5.parse(content);
+                                var tor1 = InsightFacade.prototype.roomhelper (doc1, 'views-table cols-5 table');
+                                //console.log(tor);
+                                if (typeof tor1 !=="undefined") {
+                                    var loc1 = tor1.childNodes[3].childNodes; // tbody
+                                    //console.log(loc);
+                                    // lat ; lon
+                                    for (let a of loc1) {
+                                        //console.log('masuk');
+                                        if (a.nodeName == "tr") {
+                                            //console.log (a.childNodes[3].childNodes[0].value); // list of legit sname
+                                            lolsn.push(a.childNodes[3].childNodes[0].value.trim()); // push to list
+                                            //console.log (a.childNodes[7].childNodes[0].value);// list of legit address
+                                            lola.push(a.childNodes[7].childNodes[0].value.trim());
+                                            addprom.push(that.latlonhelper(a.childNodes[7].childNodes[0].value.trim(),a.childNodes[3].childNodes[0].value.trim())) ; //promise for latlon
                                         }
                                     }
-                                    i++;
+                                    //console.log(lolsn);
                                 }
-                                //console.log(dataroom);
-                                //fulfill(0);
-                                if (dataroom.length === 0) { //handle Bender
-                                    let ans: InsightResponse = {
-                                        code: 400,
-                                        //body : "error : no real data"};
-                                        body: JSON.parse('{"error" : "no real data"}')
-                                    };
-                                    reject(ans) // errorat prom all
+                                var losn: any[] = []; // list of short name
+                                var lof = Object.keys(zip.files);
+                                //console.log(lof);
+                                for (let entry of lof) {
+                                    if (entry !== "campus/" && entry !== "index.htm" &&
+                                        entry !== "campus/.DS_Store" && entry !== "campus/discover/" &&
+                                        entry !== "campus/discover/.DS_Store" && entry !== "campus/discover/buildings-and-classrooms/" &&
+                                        entry !== "campus/discover/buildings-and-classrooms/.DS_Store") {
+                                        //console.log(entry);
+                                        losn.push(entry.split('/')[3]);
+                                    //if (lolsn.indexOf(entry.split('/')[3])) {
+                                        someProm.push(zip.file(entry).async("text"));
+                                    }
                                 }
-                                else if (fs.existsSync(id.concat(".txt"))) {
-                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // overwrite file to disk
-                                    roomsresult = dataroom;
-                                    let ans: InsightResponse = {
-                                        code: 201,
-                                        //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
-                                        body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
-                                    };
-                                    fulfill(ans);
-                                }
-                                else {
-                                    fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // write file to disk
-                                    roomsresult = dataroom;
-                                    let ans: InsightResponse = {
-                                        code: 204,
-                                        //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
-                                        body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
-                                    };
-                                    fulfill(ans);
-                                }
-                            })
-                            .catch(function (err: any) {
-                                //console.log('masuk error prom all');
+                                Promise.all(addprom)
+                                    .then(function (val1: any) {
+                                        //console.log(val1);
+                                        for (let isi of val1) {
+                                            //console.log(isi);
+                                            lobo.push(isi);
+                                        }
+                                    })
+                                    .catch(function (err: any) {
+                                        //console.log('masuk error prom all');
+                                        // should not be possible to go here
+                                            let ans: InsightResponse = {
+                                                code: 400,
+                                                //body : "error : no such id at zip file"};
+                                                body: JSON.parse('{"error" : "no such id at zip file "}')
+                                            };
+                                            reject(ans) // errorat prom all
+                                    })
+                                Promise.all(someProm)
+                                    .then(function (val: any) {
+                                        let dataroom: any[] = [];
+                                        var i = 0; // use lolsn[i] to get the shortname
+
+                                        for (let entry of val) { // each entry is content of each file
+                                            let doc = p5.parse(entry);
+
+                                            var addrnode = InsightFacade.prototype.roomhelper(doc, 'field-content');
+                                            var addr = addrnode.childNodes[0].value; // rooms_address
+
+                                            //var modad = addr.split(" ").join('%20');
+
+                                            var latitude = 0;
+                                            var longitude = 0;
+
+                                            var fnamenode = InsightFacade.prototype.roomhelper(doc, 'building-info');
+                                            var fname = fnamenode.childNodes[1].childNodes[0].childNodes[0].value; // rooms_fullname
+                                            //console.log(fname);
+
+                                            var sname = losn[i]; // rooms_shortname
+                                            //console.log(sname);
+
+                                            var tor = InsightFacade.prototype.roomhelper(doc, 'views-table cols-5 table');
+                                            //console.log(tor);
+                                            //console.log(lobo);
+                                            if (typeof tor !== "undefined") {
+                                                var loc = tor.childNodes[3].childNodes; // tbody
+                                                //console.log(loc);
+                                                // lat ; lon
+                                                for (let anak of loc) {
+                                                    //console.log('masuk');
+                                                    if (anak.nodeName == "tr") {
+                                                        let dpr: any = {}; // each row is a new room object
+                                                        //console.log('new obj');
+                                                        dpr["rooms_address"] = addr;
+                                                        dpr["rooms_fullname"] = fname;
+                                                        dpr["rooms_shortname"] = sname;
+                                                        var numroom = anak.childNodes[1].childNodes[1].childNodes[0].value; // rooms_number
+                                                        dpr["rooms_number"] = numroom;
+                                                        var nameroom = sname.concat("_", numroom); // rooms_name
+                                                        dpr["rooms_name"] = nameroom;
+                                                        var str = anak.childNodes[3].childNodes[0].value; // rooms_seat /n rem
+                                                        var seatroom = Number(str.replace(/\s+/g, ''));
+                                                        dpr["rooms_seats"] = seatroom;
+                                                        var str1 = anak.childNodes[5].childNodes[0].value;// rooms_furniture /n rem
+                                                        var furroom = str1.trim();//str1.replace(/\s+/g, '');
+                                                        dpr["rooms_furniture"] = furroom;
+                                                        var str2 = anak.childNodes[7].childNodes[0].value; // rooms_type /n rem
+                                                        var tyroom = str2.trim();//str2.replace(/\s+/g, '');
+                                                        dpr["rooms_type"] = tyroom;
+                                                        var ref = anak.childNodes[9].childNodes[1].attrs;
+                                                        var refroom;
+                                                        if (ref) {
+                                                            for (let val of ref) {
+                                                                refroom = val.value; // rooms_href
+                                                            }
+                                                        }
+                                                        dpr["rooms_href"] = refroom;
+                                                        //lolsn = [];
+                                                        if (lolsn.indexOf(sname) > -1){
+                                                            //console.log(lobo);
+                                                            for (let bo of lobo) {
+                                                                if (bo["shortname"] == sname) {
+                                                                    dpr["rooms_lat"] = bo["lati"];
+                                                                    dpr["rooms_lon"] = bo["long"];
+                                                                }
+                                                            }
+                                                            dataroom.push(dpr);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            i++;
+                                        }
+                                        //console.log(dataroom.length);
+                                        //fulfill(0);
+                                        if (dataroom.length === 0) { //handle Bender
+                                            //console.log('no data');
+                                            //console.log(lobo);
+                                            let ans: InsightResponse = {
+                                                code: 400,
+                                                //body : "error : no real data"};
+                                                body: JSON.parse('{"error" : "no real data"}')
+                                            };
+                                            reject(ans) // errorat prom all
+                                        }
+                                        else if (fs.existsSync(id.concat(".txt"))) {
+                                            fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // overwrite file to disk
+                                            roomsresult = dataroom;
+                                            //console.log(roomsresult.length);
+                                            //console.log(lobo);
+                                            let ans: InsightResponse = {
+                                                code: 201,
+                                                //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
+                                                body: JSON.parse('{"success" : "the operation was successful and the id already existed (was added in this session or was previously cached)."}')
+                                            };
+                                            fulfill(ans);
+                                        }
+                                        else {
+                                            fs.writeFileSync(id.concat(".txt"), JSON.stringify(dataroom)); // write file to disk
+                                            roomsresult = dataroom;
+                                            //console.log(roomsresult.length);
+                                            //console.log(lobo);
+                                            let ans: InsightResponse = {
+                                                code: 204,
+                                                //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
+                                                body: JSON.parse('{"success" : "the operation was successful and the id was new (not added in this session or was previously cached)"}')
+                                            };
+                                            fulfill(ans);
+                                        }
+                                    })
+                                    .catch(function (err: any) {
+                                        //console.log('masuk error prom all');
+                                        let ans: InsightResponse = {
+                                            code: 400,
+                                            //body : "error : no such id at zip file"};
+                                            body: JSON.parse('{"error" : "no such id at zip file "}')
+                                        };
+                                        reject(ans) // errorat prom all
+                                    })
+                            }, function error(e : any) {
+                            // handle the error
                                 let ans: InsightResponse = {
                                     code: 400,
-                                    //body : "error : no such id at zip file"};
-                                    body: JSON.parse('{"error" : "no such id at zip file "}')
+                                    //body : "error : invalid zip file"};
+                                    body: JSON.parse('{"error" : "no index.thm"}')
                                 };
-                                reject(ans) // errorat prom all
-                            })
-
+                                reject(ans) // error at loadasynch
+                        })
                     })
                     .catch(function (err: any) {
                         //console.log('masuk error zip');
@@ -328,6 +412,7 @@ export default class InsightFacade implements IInsightFacade {
                                     }
                                     //console.log( "final array" + data);
                                     //console.log( "final array" + JSON.stringify(datafile));
+                                    //console.log(datafile.length);
                                 }
                                 if (datafile.length === 0) { //handle Bender
                                     let ans: InsightResponse = {
@@ -340,6 +425,7 @@ export default class InsightFacade implements IInsightFacade {
                                 else if (fs.existsSync(id.concat(".txt"))) {
                                     fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // overwrite file to disk
                                     coursesresult = datafile;
+                                    //console.log(coursesresult.length);
                                     let ans: InsightResponse = {
                                         code: 201,
                                         //body : "the operation was successful and the id already existed (was added in this session or was previously cached)."};
@@ -350,6 +436,7 @@ export default class InsightFacade implements IInsightFacade {
                                 else {
                                     fs.writeFileSync(id.concat(".txt"), JSON.stringify(datafile)); // write file to disk
                                     coursesresult = datafile;
+                                    //console.log(coursesresult.length);
                                     let ans: InsightResponse = {
                                         code: 204,
                                         //body: "the operation was successful and the id was new (not added in this session or was previously cached)"
@@ -407,6 +494,8 @@ export default class InsightFacade implements IInsightFacade {
                     //body: "the operation was successful."
                     body: JSON.parse('{"success" : "the operation was successful."}')
                 };
+                //console.log("courses" + coursesresult.length);
+                //console.log("rooms" + roomsresult.length);
                 fulfill(ans);
             }
             else {
@@ -415,6 +504,8 @@ export default class InsightFacade implements IInsightFacade {
                     //body: "the operation was unsuccessful because the delete was for a resource that was not previously added."
                     body: JSON.parse('{"error" : "the operation was unsuccessful because the delete was for a resource that was not previously added."}')
                 };
+                //console.log("courses" + coursesresult.length);
+                //console.log("rooms" + roomsresult.length);
                 reject(ans);
             }
         })
