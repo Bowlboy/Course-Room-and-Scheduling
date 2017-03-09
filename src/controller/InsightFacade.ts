@@ -660,7 +660,7 @@ export default class InsightFacade implements IInsightFacade {
 
                             if (datasetChosen == "courses") {
                                 if (strings.indexOf(splits[1]) < 0) {
-                                    throw new Error("errGT");
+                                    throw new TypeError("errGT");
                                 }
                             }
                             else if (datasetChosen == "rooms") {
@@ -783,12 +783,18 @@ export default class InsightFacade implements IInsightFacade {
                                     var firstChar: string = tgt.substring(0, 1);
                                     var lastChar: string = tgt.substring(tgt.length - 1, tgt.length);
                                     if (firstChar == "*" && lastChar == "*") {
+                                        if (tgt.length < 3) {
+                                            throw new TypeError("errIS");
+                                        }
                                         tgt = tgt.substring(1, tgt.length - 1);
                                         if (ke.includes(tgt)) {
                                             return true;
                                         }
                                     }
                                     else if (firstChar == "*" && lastChar != "*") {
+                                        if (tgt.length < 2) {
+                                            throw new TypeError("errIS");
+                                        }
                                         tgt = tgt.substring(1, tgt.length);
                                         if (tgt.length <= ke.length) {
                                             if (ke.substring((ke.length - tgt.length), ke.length) == tgt) {
@@ -797,6 +803,9 @@ export default class InsightFacade implements IInsightFacade {
                                         }
                                     }
                                     else if (firstChar != "*" && lastChar == "*") {
+                                        if (tgt.length < 2) {
+                                            throw new TypeError("errIS");
+                                        }
                                         tgt = tgt.substring(0, tgt.length - 1);
                                         if (tgt.length <= ke.length) {
                                             if (ke.substring(0, tgt.length) == tgt) {
@@ -822,6 +831,9 @@ export default class InsightFacade implements IInsightFacade {
                 case'NOT': {
                     var NOT = WHERE[<any>"NOT"];
                     var notkey = Object.keys(NOT);
+                    if (notkey.length != 1) {
+                        throw new TypeError("errNOT");
+                    }
                     if (notkey[<any>0] == "NOT") {
                         var notnot = NOT[<any>"NOT"];
                         return InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>notnot);
@@ -919,7 +931,7 @@ export default class InsightFacade implements IInsightFacade {
                         reject(rejectIR);
                     }
                     else if ((<Error>e).message == 'errDataset') {
-                        let rejectIR = {code: 424, body: {missing: "More than one dataset is used"}};
+                        let rejectIR = {code: 400, body: {error: "More than one dataset is used"}};
                         reject(rejectIR);
                     }
                     else if ((<Error>e).message == 'errLT') {
@@ -944,6 +956,10 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     else if ((<Error>e).message == 'errOR') {
                         let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
+                        reject(rejectIR);
+                    }
+                    else if ((<Error>e).message == 'errNOT') {
+                        let rejectIR = {code: 400, body: {error: "Something is wrong in NOT"}};
                         reject(rejectIR);
                     }
 

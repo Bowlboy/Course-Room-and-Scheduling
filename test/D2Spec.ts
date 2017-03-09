@@ -57,6 +57,9 @@ describe("D2Spec", function () {
     query12 = {"WHERE":{"GT":{"courses_year":2015}},"OPTIONS":{"COLUMNS":["courses_dept", "courses_year"], "ORDER":"courses_year", "FORM":"TABLE"}};
     let query13: QueryRequest;
     query13 = {"WHERE": {"AND": [{"IS": {"rooms_type": "*Group*"}}, {"NOT": {"IS": {"rooms_type": "*studio*"}}}]}, "OPTIONS": {"COLUMNS": ["rooms_seats", "rooms_type", "rooms_address"], "ORDER": "rooms_seats", "FORM": "TABLE"}};
+    let query14: QueryRequest;
+    query14 = {"WHERE":{"AND":[{"GT":{"courses_year":2015}},{"IS":{"rooms_type":"adhe"}}]},"OPTIONS":{"COLUMNS":["rooms_type", "courses_year"], "ORDER":"courses_year", "FORM":"TABLE"}};
+
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');

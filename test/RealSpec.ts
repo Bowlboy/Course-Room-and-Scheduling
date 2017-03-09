@@ -231,8 +231,8 @@ describe("RealSpec", function () {
             expect.fail();
         }).catch(function (err: InsightResponse) {
             Log.test('Error: ' + err.body);
-            expect(err.code).to.equal(424);
-            expect(JSON.stringify(err.body)).to.equal('{"missing":"More than one dataset is used"}');
+            expect(err.code).to.equal(400);
+            expect(JSON.stringify(err.body)).to.equal('{"error":"More than one dataset is used"}');
         })
     });
 
