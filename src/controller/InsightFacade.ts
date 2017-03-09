@@ -883,7 +883,7 @@ export default class InsightFacade implements IInsightFacade {
 
             if (split [0] == "courses") {
                 if (coursesresult.length == 0) {
-                    let rejectIR = {code: 424, body: {error: ["Missing Dataset"]}};
+                    let rejectIR = {code: 400, body: {error: ["Missing Dataset"]}};
                     reject(rejectIR);
                 }
                 var files = coursesresult;
@@ -891,14 +891,14 @@ export default class InsightFacade implements IInsightFacade {
             }
             else if (split[0] == "rooms") {
                 if (roomsresult.length == 0) {
-                    let rejectIR = {code: 424, body: {error: ["Missing Dataset"]}};
+                    let rejectIR = {code: 400, body: {error: ["Missing Dataset"]}};
                     reject(rejectIR);
                 }
                 var files = roomsresult;
                 datasetChosen = "rooms";
             }
             else {
-                let rejectIR = {code: 424, body: {missing: "Wrong dataset introduced"}};
+                let rejectIR = {code: 400, body: {missing: "Wrong dataset introduced"}};
                 reject(rejectIR);
             }
 
