@@ -581,7 +581,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
                     ;
-                case'LT': gi{
+                case'LT': {
                     var thingsGreaterThan = WHERE[<any>"LT"];
 
                     var fileKey = Object.keys(file);
@@ -982,6 +982,8 @@ export default class InsightFacade implements IInsightFacade {
 
                 }
             }
+
+            // var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
 
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
