@@ -983,8 +983,6 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
 
-            // var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
-
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
             var FORM = OPTIONS[<any>"FORM"];
