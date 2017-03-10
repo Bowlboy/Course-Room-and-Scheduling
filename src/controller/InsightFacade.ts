@@ -140,6 +140,7 @@ export default class InsightFacade implements IInsightFacade {
                                     //console.log(lolsn);
                                 }
                                 var losn: any[] = []; // list of short name
+
                                 var lof = Object.keys(zip.files);
                                 //console.log(lof);
                                 for (let entry of lof) {
@@ -580,7 +581,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
                     ;
-                case'LT': {
+                case'LT': gi{
                     var thingsGreaterThan = WHERE[<any>"LT"];
 
                     var fileKey = Object.keys(file);
@@ -595,6 +596,9 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errLT");
                             }
                             var split = thingsGreaterThanKey[<any>l];
+                            if (split === undefined) {
+                                throw new TypeError("errLT");
+                            }
                             var splits = split.split("_");
                             if (splits.length != 2) {
                                 throw new TypeError("errLT");
@@ -648,6 +652,9 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errGT");
                             }
                             var split = thingsGreaterThanKey[<any>l];
+                            if (split === undefined) {
+                                throw new TypeError("errGT");
+                            }
                             var splits = split.split("_");
                             if (splits.length != 2) {
                                 throw new TypeError("errGT");
@@ -702,6 +709,9 @@ export default class InsightFacade implements IInsightFacade {
                             }
 
                             var split = thingsGreaterThanKey[<any>l];
+                            if (split === undefined) {
+                                throw new TypeError("errEQ");
+                            }
                             var splits = split.split("_");
                             if (splits.length != 2) {
                                 throw new TypeError("errEQ");
@@ -754,6 +764,9 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errIS");
                             }
                             var split = thingsGreaterThanKey[<any>l];
+                            if (split === undefined) {
+                                throw new TypeError("errIS");
+                            }
                             var splits = split.split("_");
                             if (splits.length != 2) {
                                 throw new TypeError("errIS");
@@ -889,6 +902,10 @@ export default class InsightFacade implements IInsightFacade {
 
             var order = OPTIONS[<any>"ORDER"];
             var split = order.split("_");
+            if (split === undefined) {
+                let rejectIR = {code: 400, body: {error: ["missing something"]}};
+                reject(rejectIR);
+            }
             var datasetChosen = "none";
 
             if (coursesresult.length == 0 && roomsresult.length == 0) {
