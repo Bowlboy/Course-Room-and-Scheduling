@@ -952,50 +952,57 @@ export default class InsightFacade implements IInsightFacade {
 
             var newArr: String[] = [];
 
-            for (var file of files) {
-                try {
-                    if (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>WHERE)) {
-                        newArr.push(file);
-                    }
+            if (WHERE == "") {
+                for (var fil of files) {
+                    newArr.push(fil);
                 }
-                catch (e) {
-                    if ((<Error>e).message == 'errDefault') {
-                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
-                        reject(rejectIR);
+            }
+            else {
+                for (var file of files) {
+                    try {
+                        if (InsightFacade.prototype.queryHelper(<any>file, <any>datasetChosen, <any>WHERE)) {
+                            newArr.push(file);
+                        }
                     }
-                    else if ((<Error>e).message == 'errDataset') {
-                        let rejectIR = {code: 400, body: {error: "More than one dataset is used"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errLT') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in LT"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errGT') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in GT"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errEQ') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in EQ"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errIS') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errAND') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errOR') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
-                        reject(rejectIR);
-                    }
-                    else if ((<Error>e).message == 'errNOT') {
-                        let rejectIR = {code: 400, body: {error: "Something is wrong in NOT"}};
-                        reject(rejectIR);
-                    }
+                    catch (e) {
+                        if ((<Error>e).message == 'errDefault') {
+                            let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errDataset') {
+                            let rejectIR = {code: 400, body: {error: "More than one dataset is used"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errLT') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in LT"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errGT') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in GT"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errEQ') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in EQ"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errIS') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in IS"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errAND') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in AND"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errOR') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in OR"}};
+                            reject(rejectIR);
+                        }
+                        else if ((<Error>e).message == 'errNOT') {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in NOT"}};
+                            reject(rejectIR);
+                        }
 
+                    }
                 }
             }
 
