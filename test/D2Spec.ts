@@ -12,8 +12,8 @@ import Log from "../src/Util";
 import {InsightResponse, QueryRequest} from "../src/controller/IInsightFacade";
 import InsightFacade from "../src/controller/InsightFacade";
 var fs = require("fs");
-var zip3 = fs.readFileSync("rooms.zip", "base64");
 var zip: any = fs.readFileSync("courses.zip", "base64");
+var zip3 = fs.readFileSync("rooms.zip", "base64");
 
 let responseFullname:string = '{"render":"TABLE","result":[{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_101"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_110"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_201"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_301"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_310"}]}';
 let responseName:string = '{"render":"TABLE","result":[{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_101"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_110"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_201"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_301"},{"rooms_fullname":"Hugh Dempster Pavilion","rooms_name":"DMP_310"}]}';
@@ -98,7 +98,7 @@ describe("D2Spec", function () {
                 // expect.fail();
             });
     });
-    it("Add rooms firs time", function () {
+    it("Add courses firs time", function () {
         return myIR.addDataset("courses", zip)
             .then(function (value) {
                 Log.test('Code: ' + value.code);

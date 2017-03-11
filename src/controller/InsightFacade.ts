@@ -864,8 +864,10 @@ export default class InsightFacade implements IInsightFacade {
         var sortedArray: String[] = [];
         sortedArray = beforeArray.slice(0);
             sortedArray.sort((leftSide, rightSide): number => {
-                if (leftSide[<any>order] < rightSide[<any>order]) return -1;
-                if (leftSide[<any>order] > rightSide[<any>order]) return 1;
+                for (var oo of order) {
+                    if (leftSide[<any>oo] < rightSide[<any>oo]) return 1;
+                    if (leftSide[<any>oo] > rightSide[<any>oo]) return -1;
+                }
                 return 0;
             });
         return sortedArray;
@@ -875,8 +877,10 @@ export default class InsightFacade implements IInsightFacade {
         var sortedArray: String[] = [];
         sortedArray = beforeArray.slice(0);
         sortedArray.sort((leftSide, rightSide): number => {
-            if (leftSide[<any>order] < rightSide[<any>order]) return 1;
-            if (leftSide[<any>order] > rightSide[<any>order]) return -1;
+            for (var oo of order) {
+                if (leftSide[<any>oo] < rightSide[<any>oo]) return -1;
+                if (leftSide[<any>oo] > rightSide[<any>oo]) return 1;
+            }
             return 0;
         });
         return sortedArray;
@@ -900,8 +904,20 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
+
             var order = OPTIONS[<any>"ORDER"];
-            var split = order.split("_");
+            if (Object.keys(order).length == 2) {
+                if (Object.keys(order)[0] == "dir" && Object.keys(order)[1] == "keys") {
+                    var split = order[<any>"keys"][0].split("_");
+                }
+                else {
+                    let rejectIR = {code: 400, body: {error: ["missing something"]}};
+                    reject(rejectIR);
+                }
+            }
+            else {
+                var split = order.split("_");
+            }
             if (split === undefined) {
                 let rejectIR = {code: 400, body: {error: ["missing something"]}};
                 reject(rejectIR);
@@ -1000,19 +1016,28 @@ export default class InsightFacade implements IInsightFacade {
 
             var OrderKeys = Object.keys(ORDER);
 
+            var con = 1;
+            var order;
+            order = "UP";
+            let OORD:String[] = [];
             if (OrderKeys.length == 2) {
                 if (OrderKeys[0] == "dir") {
-                    var order = ORDER[<any>"dir"];
-                    ORDER = ORDER[<any>"keys"];
-                    var OrderThings = ORDER[<any>OrderKeys[1]];
-
+                    order = ORDER[<any>OrderKeys[0]];
+                    Log.test("or" + order);
+                    OORD = ORDER[<any>OrderKeys[1]];
+                    for (var or of OORD) {
+                        for (var colu of COLUMNS) {
+                            if (or == colu) {
+                                con = 0;
+                            }
+                        }
+                    }
                 }
             }
             else {
-                var con = 1;
                 for (var colu of COLUMNS) {
                     if (ORDER == colu) {
-                        var orderr:string = "DOWN";
+                        OORD.push(ORDER);
                         con = 0;
                     }
                 }
@@ -1042,11 +1067,11 @@ export default class InsightFacade implements IInsightFacade {
                 passedArray.push(eachPassedArray);
             }
 
-            if (order == "DOWN" || orderr == "DOWN") {
-                var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, ORDER);
+            if (order == "DOWN") {
+                var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
             }
             else if (order == "UP") {
-                var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, ORDER);
+                var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
             }
 
 
