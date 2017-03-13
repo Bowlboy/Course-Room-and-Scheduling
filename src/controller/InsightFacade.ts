@@ -865,23 +865,96 @@ export default class InsightFacade implements IInsightFacade {
         var key = apply[<any>content];
         switch(content) {
             case 'MAX': {
-                return 0;
+                var tempMax = 0;
+                for (var arr of array) {
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == key) {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                if (tempData > tempMax) {
+                                    tempMax = tempData;
+                                }
+                            }
+                        }
+                    }
+                }
+                return tempMax;
             }
                 ;
             case 'MIN': {
-                return 0;
+                var tempMin = 999999999;
+                for (var arr of array) {
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == key) {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                if (tempData < tempMin) {
+                                    tempMin = tempData;
+                                }
+                            }
+                        }
+                    }
+                }
+                return tempMin;
             }
                 ;
             case 'AVG': {
-                return 0;
+                let averaged: number[] = [];
+                for (var arr of array) {
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == key) {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                var tempData1 = parseInt(tempData);
+                                tempData1 = tempData1*10;
+                                tempData1 = Number(tempData1.toFixed(0))
+                                averaged.push(tempData1);
+                            }
+                        }
+                    }
+                }
+                var sum = averaged.reduce(function(pv, cv) { return pv + cv; }, 0);
+                sum = sum/averaged.length;
+                sum = sum/10;
+                var avg = Number(sum.toFixed(2));
+                return avg;
             }
                 ;
             case 'COUNT': {
-                return 0;
+                let tempCount: (String|number)[] = [];
+                for (var arr of array) {
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == key) {
+                            var temp = arr[<any>keyy[<any>i]];
+                            if (tempCount.indexOf(temp) < 0) {
+                                tempCount.push(temp);
+                            }
+                        }
+                    }
+                }
+                return tempCount.length;
             }
                 ;
             case 'SUM': {
-                return 0;
+                var tempSum = 0;
+                for (var arr of array) {
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == key) {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                var tempData1 = parseInt(tempData);
+                                // Log.test("tempData" + tempData1);
+                                tempSum += tempData1;
+                            }
+                        }
+                    }
+                }
+                return tempSum;
             }
                 ;
             default: {
@@ -1089,7 +1162,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            for (var col in COLUMNS){
+            for (var col of COLUMNS){
                 if (!col.includes("_")){
                     applyKeys.push(col);
                 }
@@ -1162,7 +1235,9 @@ export default class InsightFacade implements IInsightFacade {
                         var tempArray: String[] = [smth];
                         combin[<any>temp] = tempArray;
                     }
-                    combin[<any>temp].push(smth);
+                    else {
+                        combin[<any>temp].push(smth);
+                    }
                 }
 
                 for (var i = 0; i < Object.keys(combin).length; i++) {
@@ -1171,19 +1246,18 @@ export default class InsightFacade implements IInsightFacade {
                 var passedArray: String[] = [];
                 var count = 0;
                 for (var smth of newArr1) {
-                    count++;
                     let eachPassedArray: any = {};
                     for (var column of COLUMNS) {
                         eachPassedArray[column] = "";
                     }
-                    // Log.test("ApplyKey" + applyKeys);
 
                     var smthKey = Object.keys(smth);
                     for (var n = 0; n < smthKey.length; n++) {
                         var eachPassedArrayKey = Object.keys(eachPassedArray);
                         for (var o = 0; o < eachPassedArrayKey.length; o++) {
-                            if (applyKeys.indexOf(eachPassedArrayKey[<any>o]) >= 0) {
-                                var tempApply = APPLY[<any>eachPassedArrayKey[<any>o]];
+                            var xx = applyKeys.indexOf(eachPassedArrayKey[<any>o]);
+                            if (xx >= 0) {
+                                var tempApply = APPLY[xx][<any>eachPassedArrayKey[<any>o]];
                                 eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
                                 }
                             if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
@@ -1192,6 +1266,7 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                     passedArray.push(eachPassedArray);
+                    count++;
                 }
 
                 if (order == "DOWN") {
