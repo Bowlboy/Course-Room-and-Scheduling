@@ -7,10 +7,14 @@ import restify = require('restify');
 
 import Log from "../Util";
 import {InsightResponse} from "../controller/IInsightFacade";
+import InsightFacade from "../controller/InsightFacade";
 
 /**
  * This configures the REST endpoints for the server.
  */
+
+var IF : InsightFacade;
+
 export default class Server {
 
     private port: number;
@@ -54,6 +58,10 @@ export default class Server {
                     name: 'insightUBC'
                 });
 
+                IF = new InsightFacade();
+
+                that.rest.use(restify.bodyParser({mapParams: true, mapFiles: true}));
+
                 that.rest.get('/', function (req: restify.Request, res: restify.Response, next: restify.Next) {
                     res.send(200);
                     return next();
@@ -64,6 +72,10 @@ export default class Server {
                 that.rest.get('/echo/:msg', Server.echo);
 
                 // Other endpoints will go here
+
+                that.rest.put('/dataset/:id', Server.add);
+                that.rest.del('/dataset/:id', Server.remove);
+                that.rest.post('/query', Server.perform);
 
                 that.rest.listen(that.port, function () {
                     Log.info('Server::start() - restify listening: ' + that.rest.url);
@@ -97,6 +109,70 @@ export default class Server {
             res.json(400, {error: err.message});
         }
         return next();
+    }
+
+    public static add(req: restify.Request, res: restify.Response, next: restify.Next) {
+        //console.log("masuk buffer");
+        let dataStr = new Buffer(req.params.body).toString('base64');
+        //console.log(dataStr);
+        //console.log("masuk add");
+        IF.addDataset(req.params.id, dataStr)
+            .then(function success(content: any) {
+                //console.log('IF success');
+                //console.log(content);
+                //console.log(content.code);
+                //console.log(content.body);
+                res.json(content.code,content.body);
+                //console.log("then");
+                return next();
+            })
+            .catch(function (err: any) {
+                //console.log('IF reject');
+                //console.log(err);
+                //console.log(err.code);
+                //console.log(err.body);
+                res.json(err.code,err.body);
+                //console.log("catch");
+                return next();
+            })
+    }
+
+    public static remove(req: restify.Request, res: restify.Response, next: restify.Next) {
+        //let nama = req.params.id;
+        //console.log("masuk rem");
+        IF.removeDataset(req.params.id)
+            .then(function success(content: any) {
+                //console.log("masuk rem then");
+                res.json(content.code,content.body);
+                return next();
+            })
+            .catch(function (err: any) {
+                //console.log("masuk rem err");
+                //console.log(err);
+                //console.log(err.code);
+                //console.log(err.body);
+                res.json(err.code,err.body);
+                return next();
+            })
+    }
+
+    public static perform(req: restify.Request, res: restify.Response, next: restify.Next) {
+        //console.log("masuk perform");
+        IF.performQuery(req.body)
+            .then(function success(content: any) {
+                //console.log(content);
+                //console.log(content.code);
+                //console.log(content.body);
+                res.json(content.code,content.body);
+                return next();
+            })
+            .catch(function (err: any) {
+                //console.log(err);
+                //console.log(err.code);
+                //console.log(err.body);
+                res.json(err.code,err.body);
+                return next();
+            })
     }
 
     public static performEcho(msg: string): InsightResponse {
