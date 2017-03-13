@@ -859,6 +859,19 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
     }
+    
+    applyHelper(apply: any, array: String[]): var {
+        var content = Object.keys(apply)[0];
+        var key = apply[<any>content];
+        switch(content) {
+        case 'MAX': {return 0;};
+        case 'MIN': {return 0;};
+        case 'AVG': {return 0;};
+        case 'COUNT': {return 0;};
+        case 'SUM': {return 0;};
+        default: {return 0;};
+                 }
+    }
 
     sorterDown(beforeArray: String[], order: any): String[] {
         var sortedArray: String[] = [];
@@ -1058,10 +1071,9 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            let applys:String[] = [];
             for (var col in COLUMNS){
                 if (!col.includes("_")){
-                    applys.push(col);
+                    applyKeys.push(col);
                 }
             }
 
@@ -1139,8 +1151,9 @@ export default class InsightFacade implements IInsightFacade {
                     newArr1.push(combin[<any>Object.keys(combin)[i]][0])
                 }
                 var passedArray: String[] = [];
-
+                var count = 0;
                 for (var smth of newArr1) {
+                    count++;
                     let eachPassedArray: any = {};
                     for (var column of COLUMNS) {
                         eachPassedArray[column] = "";
@@ -1150,6 +1163,10 @@ export default class InsightFacade implements IInsightFacade {
                     for (var n = 0; n < smthKey.length; n++) {
                         var eachPassedArrayKey = Object.keys(eachPassedArray);
                         for (var o = 0; o < eachPassedArrayKey.length; o++) {
+                            if (applyKeys.indexOf(eachPassedArrayKey[<any>o] > 0) {
+                                var tempApply = APPLY[<any>eachPassedArrayKey[<any>o]];
+                                eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
+                                }
                             if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
                                 eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
                             }
