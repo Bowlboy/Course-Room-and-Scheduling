@@ -86,6 +86,8 @@ describe("D3Spec", function () {
     query12 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": []}};
     let query13: QueryRequest;
     query13 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
+    let query14: QueryRequest;
+    query14 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type","anjing"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
 
 
     function sanityCheck(response: InsightResponse) {
@@ -270,6 +272,17 @@ describe("D3Spec", function () {
                 expect.fail();
             })
         });
+
+    it("Test Gagal", function () {
+        return myIR.performQuery(query14).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });
+
 });
 /**
  * Created by nicoa on 2017-01-31.

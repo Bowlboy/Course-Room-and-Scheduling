@@ -513,6 +513,38 @@ export default class InsightFacade implements IInsightFacade {
         })
     }
 
+    keyChecker(datasetChosen:any, split: any): number {
+        var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid", "year"];
+        var roomString: String[] = ["fullname", "shortname", "number", "name", "address", "lat", "lon", "seats", "type", "furniture", "href"];
+        if (split === undefined) {
+            return 0;
+        }
+        if (typeof split !== "string") {
+            return 0;
+        }
+        if (!split.includes("_")) {return 0;}
+        var splits = split.split("_");
+        if (splits.length != 2) {
+            return 0;
+        }
+
+        if (splits[0] != datasetChosen) {
+            return 2
+        }
+
+        if (datasetChosen == "courses") {
+            if (strings.indexOf(splits[1]) < 0) {
+                return 0;
+            }
+        }
+        else if (datasetChosen == "rooms") {
+            if (roomString.indexOf(splits[1]) < 0) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
     queryHelper(file: any, datasetChosen: any, WHERE: any): boolean {
         var strings: String[] = ["dept", "id", "avg", "instructor", "title", "pass", "fail", "audit", "uuid", "year"];
         var roomString: String[] = ["fullname", "shortname", "number", "name", "address", "lat", "lon", "seats", "type", "furniture", "href"];
@@ -596,28 +628,15 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errLT");
                             }
                             var split = thingsGreaterThanKey[<any>l];
-                            if (split === undefined) {
-                                throw new TypeError("errLT");
-                            }
-                            var splits = split.split("_");
-                            if (splits.length != 2) {
-                                throw new TypeError("errLT");
-                                // return false;
-                            }
-
-                            if (splits[0] != datasetChosen) {
-                                throw new TypeError("errDataset");
-                                // return false;
-                            }
-
-                            if (datasetChosen == "courses") {
-                                if (strings.indexOf(splits[1]) < 0) {
+                            switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
+                                case(0): {
                                     throw new TypeError("errLT");
                                 }
-                            }
-                            else if (datasetChosen == "rooms") {
-                                if (roomString.indexOf(splits[1]) < 0) {
-                                    throw new TypeError("errLT");
+                                case(2): {
+                                    throw new TypeError("errDataset");
+                                }
+                                default: {
+                                    break;
                                 }
                             }
 
@@ -652,27 +671,15 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errGT");
                             }
                             var split = thingsGreaterThanKey[<any>l];
-                            if (split === undefined) {
-                                throw new TypeError("errGT");
-                            }
-                            var splits = split.split("_");
-                            if (splits.length != 2) {
-                                throw new TypeError("errGT");
-                                // return false;
-                            }
-
-                            if (splits[0] != datasetChosen) {
-                                throw new TypeError("errDataset");
-                            }
-
-                            if (datasetChosen == "courses") {
-                                if (strings.indexOf(splits[1]) < 0) {
+                            switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
+                                case(0): {
                                     throw new TypeError("errGT");
                                 }
-                            }
-                            else if (datasetChosen == "rooms") {
-                                if (roomString.indexOf(splits[1]) < 0) {
-                                    throw new TypeError("errGT");
+                                case(2): {
+                                    throw new TypeError("errDataset");
+                                }
+                                default: {
+                                    break;
                                 }
                             }
 
@@ -709,28 +716,15 @@ export default class InsightFacade implements IInsightFacade {
                             }
 
                             var split = thingsGreaterThanKey[<any>l];
-                            if (split === undefined) {
-                                throw new TypeError("errEQ");
-                            }
-                            var splits = split.split("_");
-                            if (splits.length != 2) {
-                                throw new TypeError("errEQ");
-                                // return false;
-                            }
-
-                            if (splits[0] != datasetChosen) {
-                                throw new TypeError("errDataset");
-                                // return false;
-                            }
-
-                            if (datasetChosen == "courses") {
-                                if (strings.indexOf(splits[1]) < 0) {
+                            switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
+                                case(0): {
                                     throw new TypeError("errEQ");
                                 }
-                            }
-                            else if (datasetChosen == "rooms") {
-                                if (roomString.indexOf(splits[1]) < 0) {
-                                    throw new TypeError("errEQ");
+                                case(2): {
+                                    throw new TypeError("errDataset");
+                                }
+                                default: {
+                                    break;
                                 }
                             }
 
@@ -764,28 +758,15 @@ export default class InsightFacade implements IInsightFacade {
                                 throw new TypeError("errIS");
                             }
                             var split = thingsGreaterThanKey[<any>l];
-                            if (split === undefined) {
-                                throw new TypeError("errIS");
-                            }
-                            var splits = split.split("_");
-                            if (splits.length != 2) {
-                                throw new TypeError("errIS");
-                                // return false;
-                            }
-
-                            if (splits[0] != datasetChosen) {
-                                throw new TypeError("errDataset");
-                                // return false;
-                            }
-
-                            if (datasetChosen == "courses") {
-                                if (strings.indexOf(splits[1]) < 0) {
-                                    throw new TypeError("errIS");
+                            switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
+                                case(0): {
+                                    throw new TypeError("errEQ");
                                 }
-                            }
-                            else if (datasetChosen == "rooms") {
-                                if (roomString.indexOf(splits[1]) < 0) {
-                                    throw new TypeError("errIS");
+                                case(2): {
+                                    throw new TypeError("errDataset");
+                                }
+                                default: {
+                                    break;
                                 }
                             }
 
@@ -860,9 +841,27 @@ export default class InsightFacade implements IInsightFacade {
             }
     }
     
-    applyHelper(apply: any, array: String[]): String | number {
+    applyHelper(apply: any, datasetChosen: any, array: String[]): String | number {
+        if (Object.keys(apply).length == 0) {
+            throw new TypeError("errDefault");
+        }
         var content = Object.keys(apply)[0];
         var key = apply[<any>content];
+
+        var split = key;
+
+        switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
+            case(0): {
+                throw new TypeError("errDefault");
+            }
+            case(2): {
+                throw new TypeError("errDefault");
+            }
+            default: {
+                break;
+            }
+        }
+
         switch(content) {
             case 'MAX': {
                 var tempMax = 0;
@@ -875,6 +874,9 @@ export default class InsightFacade implements IInsightFacade {
                                 if (tempData > tempMax) {
                                     tempMax = tempData;
                                 }
+                            }
+                            else {
+                                throw new TypeError("errMAX");
                             }
                         }
                     }
@@ -894,6 +896,8 @@ export default class InsightFacade implements IInsightFacade {
                                     tempMin = tempData;
                                 }
                             }
+                            else {
+                                throw new TypeError("errMIN");}
                         }
                     }
                 }
@@ -913,6 +917,8 @@ export default class InsightFacade implements IInsightFacade {
                                 tempData1 = Number(tempData1.toFixed(0))
                                 averaged.push(tempData1);
                             }
+                            else {
+                                throw new TypeError("errAVG");}
                         }
                     }
                 }
@@ -951,6 +957,8 @@ export default class InsightFacade implements IInsightFacade {
                                 // Log.test("tempData" + tempData1);
                                 tempSum += tempData1;
                             }
+                            else {
+                                throw new TypeError("errSUM");}
                         }
                     }
                 }
@@ -958,7 +966,7 @@ export default class InsightFacade implements IInsightFacade {
             }
                 ;
             default: {
-                return 0;
+                throw new TypeError("errDefault");
             }
                 ;
         }
@@ -1241,6 +1249,19 @@ export default class InsightFacade implements IInsightFacade {
 
                 var gc = 0;
                 for (var group of GROUP) {
+                    switch(InsightFacade.prototype.keyChecker(datasetChosen, group)) {
+                        case(0): {
+                            let rejectIR = {code: 400, body: {error: "[Wrong group Code]"}};
+                            reject(rejectIR);
+                        }
+                        case(2): {
+                            let rejectIR = {code: 400, body: {error: "[Wrong group Code]"}};
+                            reject(rejectIR);
+                        }
+                        default: {
+                            break;
+                        }
+                    }
                     if (COLUMNS.indexOf(group) >= 0) {
                         gc++;
                     }
@@ -1283,10 +1304,14 @@ export default class InsightFacade implements IInsightFacade {
                             if (xx >= 0) {
                                 var tempApply = APPLY[xx][<any>eachPassedArrayKey[<any>o]];
                                 try {
-                                    eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
+                                    eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, datasetChosen, combin[<any>Object.keys(combin)[count]]);
                                 }
                                 catch (e) {
                                     if ((<Error>e).message == 'errDefault') {
+                                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errDataset') {
                                         let rejectIR = {code: 400, body: {error: "Wrong Key"}};
                                         reject(rejectIR);
                                     }
