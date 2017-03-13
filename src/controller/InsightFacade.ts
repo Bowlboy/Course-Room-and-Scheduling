@@ -860,17 +860,35 @@ export default class InsightFacade implements IInsightFacade {
             }
     }
     
-    applyHelper(apply: any, array: String[]): var {
+    applyHelper(apply: any, array: String[]): String | number {
         var content = Object.keys(apply)[0];
         var key = apply[<any>content];
         switch(content) {
-        case 'MAX': {return 0;};
-        case 'MIN': {return 0;};
-        case 'AVG': {return 0;};
-        case 'COUNT': {return 0;};
-        case 'SUM': {return 0;};
-        default: {return 0;};
-                 }
+            case 'MAX': {
+                return 0;
+            }
+                ;
+            case 'MIN': {
+                return 0;
+            }
+                ;
+            case 'AVG': {
+                return 0;
+            }
+                ;
+            case 'COUNT': {
+                return 0;
+            }
+                ;
+            case 'SUM': {
+                return 0;
+            }
+                ;
+            default: {
+                return 0;
+            }
+                ;
+        }
     }
 
     sorterDown(beforeArray: String[], order: any): String[] {
@@ -1158,12 +1176,13 @@ export default class InsightFacade implements IInsightFacade {
                     for (var column of COLUMNS) {
                         eachPassedArray[column] = "";
                     }
+                    // Log.test("ApplyKey" + applyKeys);
 
                     var smthKey = Object.keys(smth);
                     for (var n = 0; n < smthKey.length; n++) {
                         var eachPassedArrayKey = Object.keys(eachPassedArray);
                         for (var o = 0; o < eachPassedArrayKey.length; o++) {
-                            if (applyKeys.indexOf(eachPassedArrayKey[<any>o] > 0) {
+                            if (applyKeys.indexOf(eachPassedArrayKey[<any>o]) >= 0) {
                                 var tempApply = APPLY[<any>eachPassedArrayKey[<any>o]];
                                 eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
                                 }
