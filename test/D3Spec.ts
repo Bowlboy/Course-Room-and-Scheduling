@@ -232,6 +232,7 @@ describe("D3Spec", function () {
             expect.fail();
         })
     });
+
     it("Test Banyak", function () {
         return myIR.performQuery(query10).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
@@ -242,6 +243,7 @@ describe("D3Spec", function () {
             expect.fail();
         })
     });
+
     it("Test Double Apply", function () {
         return myIR.performQuery(query11).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
@@ -252,6 +254,7 @@ describe("D3Spec", function () {
             expect.fail();
         })
     });
+
     it("Test Empty Apply", function () {
         return myIR.performQuery(query12).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
@@ -262,6 +265,7 @@ describe("D3Spec", function () {
             expect.fail();
         })
     });
+
     it("Test 4 Apply", function () {
             return myIR.performQuery(query13).then(function (response: InsightResponse) {
                 // Log.test('The Response is: ' + JSON.stringify(response.body));

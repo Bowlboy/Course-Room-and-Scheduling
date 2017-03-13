@@ -1000,8 +1000,6 @@ export default class InsightFacade implements IInsightFacade {
 
     performQuery(query: QueryRequest): Promise <InsightResponse> {
 
-        // var returnedArray: String[] = [];
-
         return new Promise(function(fulfill, reject) {
 
             var WHERE = query.WHERE;
