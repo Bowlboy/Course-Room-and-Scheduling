@@ -247,17 +247,6 @@ describe("RealSpec", function () {
         })
     });
 
-    it("Test No Where", function () {
-        return myIR.performQuery(query12).then(function (response: InsightResponse) {
-            // Log.test('The Response is: ' + response.body);
-            expect.fail();
-        }).catch(function (err: InsightResponse) {
-            // Log.test('Error: ' + err.body);
-            expect(err.code).to.equal(400);
-            expect(JSON.stringify(err.body)).to.equal('{"error":["WHERE"]}');
-        })
-    });
-
     it("Test No Options", function () {
         return myIR.performQuery(query13).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + response.body);

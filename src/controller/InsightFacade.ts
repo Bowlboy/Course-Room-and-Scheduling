@@ -1137,16 +1137,31 @@ export default class InsightFacade implements IInsightFacade {
             let OORD:String[] = [];
             if (OrderKeys.length == 2) {
                 if (OrderKeys[0] == "dir") {
-                    order = ORDER[<any>OrderKeys[0]];
-                    OORD = ORDER[<any>OrderKeys[1]];
-                    for (var or of OORD) {
-                        for (var colu of COLUMNS) {
-                            if (or == colu) {
-                                con = 0;
-                                //Check for every ORDER in COLUMN
+                    if (OrderKeys[1] == "keys") {
+                        order = ORDER[<any>OrderKeys[0]];
+                        OORD = ORDER[<any>OrderKeys[1]];
+                        var checker = 0;
+                        for (var or of OORD) {
+                            for (var colu of COLUMNS) {
+                                if (or == colu) {
+                                    checker++;
+                                }
                             }
                         }
+                        if (checker != OORD.length) {
+                            let rejectIR = {code: 400, body: {error: "ORDER not complete"}};
+                            reject(rejectIR);
+                        }
+                        else {con = 0};
                     }
+                    else {
+                        let rejectIR = {code: 400, body: {error: "Wrong Order Key[1]"}};
+                        reject(rejectIR);
+                    }
+                }
+                else {
+                    let rejectIR = {code: 400, body: {error: "Wrong Order Key[0]"}};
+                    reject(rejectIR);
                 }
             }
             else {
@@ -1223,6 +1238,14 @@ export default class InsightFacade implements IInsightFacade {
                     let rejectIR = {code: 400, body: {error: "[Wrong Transformation Code]"}};
                     reject(rejectIR);
                 }
+
+                var gc = 0;
+                for (var group of GROUP) {
+                    if (COLUMNS.indexOf(group) >= 0) {
+                        gc++;
+                    }
+                }
+
                 let newArr1: String[] = [];
                 var combin: String[][] = [];
                 for (var smth of newArr) {
@@ -1244,6 +1267,7 @@ export default class InsightFacade implements IInsightFacade {
                     newArr1.push(combin[<any>Object.keys(combin)[i]][0])
                 }
                 var passedArray: String[] = [];
+                var realApplyArray: String[] = [];
                 var count = 0;
                 for (var smth of newArr1) {
                     let eachPassedArray: any = {};
@@ -1258,8 +1282,36 @@ export default class InsightFacade implements IInsightFacade {
                             var xx = applyKeys.indexOf(eachPassedArrayKey[<any>o]);
                             if (xx >= 0) {
                                 var tempApply = APPLY[xx][<any>eachPassedArrayKey[<any>o]];
-                                eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
+                                try {
+                                    eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, combin[<any>Object.keys(combin)[count]]);
                                 }
+                                catch (e) {
+                                    if ((<Error>e).message == 'errDefault') {
+                                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errMAX') {
+                                        let rejectIR = {code: 400, body: {error: "Something is wrong in MAX"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errMIN') {
+                                        let rejectIR = {code: 400, body: {error: "Something is wrong in MIN"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errSUM') {
+                                        let rejectIR = {code: 400, body: {error: "Something is wrong in SUM"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errCOUNT') {
+                                        let rejectIR = {code: 400, body: {error: "Something is wrong in COUNT"}};
+                                        reject(rejectIR);
+                                    }
+                                    if ((<Error>e).message == 'errAVG') {
+                                        let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
+                                        reject(rejectIR);
+                                    }
+                                }
+                            }
                             if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
                                 eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
                             }
@@ -1267,6 +1319,16 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     passedArray.push(eachPassedArray);
                     count++;
+                }
+
+                for (var app of APPLY) {
+                    if (COLUMNS.indexOf(Object.keys(app)[0]) >= 0) {
+                        gc++;
+                    }
+                }
+                if (gc != (GROUP.length + Object.keys(APPLY).length)) {
+                    let rejectIR = {code:400, body: {error: "Missing a GROUP aspect"}};
+                    reject(rejectIR);
                 }
 
                 if (order == "DOWN") {
