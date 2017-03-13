@@ -894,21 +894,25 @@ export default class InsightFacade implements IInsightFacade {
 
             var WHERE = query.WHERE;
             var wherekey = Object.keys(WHERE);
-            if (wherekey.length == 0) {
-                let rejectIR = {code: 400, body: {error: ["WHERE"]}};
-                reject(rejectIR);
-            }
             var OPTIONS = query.OPTIONS;
             if (Object.keys(OPTIONS).length == 0) {
                 let rejectIR = {code: 400, body: {error: ["OPTIONS"]}};
                 reject(rejectIR);
             }
-
+            var TRANSFORMATIONS = query.TRANSFORMATIONS;
 
             var order = OPTIONS[<any>"ORDER"];
+            let applyKeys:String[] = [];
+
             if (Object.keys(order).length == 2) {
                 if (Object.keys(order)[0] == "dir" && Object.keys(order)[1] == "keys") {
-                    var split = order[<any>"keys"][0].split("_");
+                    if ((order[<any>"keys"][0]).includes("_")) {
+                        var split = order[<any>"keys"][0].split("_");
+                    }
+                    else {
+                        let rejectIR = {code: 400, body: {error: ["missing something"]}};
+                        reject(rejectIR);
+                    }
                 }
                 else {
                     let rejectIR = {code: 400, body: {error: ["missing something"]}};
@@ -922,6 +926,7 @@ export default class InsightFacade implements IInsightFacade {
                 let rejectIR = {code: 400, body: {error: ["missing something"]}};
                 reject(rejectIR);
             }
+
             var datasetChosen = "none";
 
             if (coursesresult.length == 0 && roomsresult.length == 0) {
@@ -952,7 +957,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var newArr: String[] = [];
 
-            if (WHERE == "") {
+            if (JSON.stringify(WHERE) == "{}") {
                 for (var fil of files) {
                     newArr.push(fil);
                 }
@@ -1006,8 +1011,6 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
 
-            // var newArr: String[] = InsightFacade.prototype.queryHelper(<any>files, <any>wherekey, <any>WHERE);
-
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var ORDER = OPTIONS[<any>"ORDER"];
             var FORM = OPTIONS[<any>"FORM"];
@@ -1026,16 +1029,17 @@ export default class InsightFacade implements IInsightFacade {
             var con = 1;
             var order;
             order = "UP";
+
             let OORD:String[] = [];
             if (OrderKeys.length == 2) {
                 if (OrderKeys[0] == "dir") {
                     order = ORDER[<any>OrderKeys[0]];
-                    Log.test("or" + order);
                     OORD = ORDER[<any>OrderKeys[1]];
                     for (var or of OORD) {
                         for (var colu of COLUMNS) {
                             if (or == colu) {
                                 con = 0;
+                                //Check for every ORDER in COLUMN
                             }
                         }
                     }
@@ -1054,37 +1058,118 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            var passedArray: String[] = [];
-
-            for (var smth of newArr) {
-                let eachPassedArray: any = {};
-                for (var column of COLUMNS) {
-                    eachPassedArray[column] = "";
+            let applys:String[] = [];
+            for (var col in COLUMNS){
+                if (!col.includes("_")){
+                    applys.push(col);
                 }
+            }
 
-                var smthKey = Object.keys(smth);
-                for (var n = 0; n < smthKey.length; n++) {
-                    var eachPassedArrayKey = Object.keys(eachPassedArray);
-                    for (var o = 0; o < eachPassedArrayKey.length; o++) {
-                        if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
-                            eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
+            if (TRANSFORMATIONS == null) {
+                var passedArray: String[] = [];
+
+                for (var smth of newArr) {
+                    let eachPassedArray: any = {};
+                    for (var column of COLUMNS) {
+                        eachPassedArray[column] = "";
+                    }
+
+                    var smthKey = Object.keys(smth);
+                    for (var n = 0; n < smthKey.length; n++) {
+                        var eachPassedArrayKey = Object.keys(eachPassedArray);
+                        for (var o = 0; o < eachPassedArrayKey.length; o++) {
+                            if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
+                                eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
+                            }
                         }
                     }
+                    passedArray.push(eachPassedArray);
                 }
-                passedArray.push(eachPassedArray);
-            }
 
-            if (order == "DOWN") {
-                var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
-            }
-            else if (order == "UP") {
-                var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
-            }
+                if (order == "DOWN") {
+                    var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                }
+                else if (order == "UP") {
+                    var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
+                }
 
 
-            let body:any = {render: FORM, result: sortedArray};
-            let myIR:any = {code: 200, body: body};
-            fulfill(myIR);
+                let body: any = {render: FORM, result: sortedArray};
+                let myIR: any = {code: 200, body: body};
+                fulfill(myIR);
+            }
+            else {
+                var TRANSKEY = Object.keys(TRANSFORMATIONS);
+                if (TRANSKEY.length == 2) {
+                    if (TRANSKEY[0] == "GROUP") {
+                        if (TRANSKEY[1] == "APPLY") {
+                            var GROUP = TRANSFORMATIONS[<any>"GROUP"];
+                            var APPLY = TRANSFORMATIONS[<any>"APPLY"];
+                        }
+                        else {
+                            let rejectIR = {code: 400, body: {error: "[Wrong Apply Code]"}};
+                            reject(rejectIR);
+                        }
+                    }
+                    else {
+                        let rejectIR = {code: 400, body: {error: "[Wrong Group Code]"}};
+                        reject(rejectIR);
+                    }
+                }
+                else {
+                    let rejectIR = {code: 400, body: {error: "[Wrong Transformation Code]"}};
+                    reject(rejectIR);
+                }
+                let newArr1: String[] = [];
+                var combin: String[][] = [];
+                for (var smth of newArr) {
+                    var temp: string = "";
+                    for (var gro of GROUP) {
+                        var groo: string = smth[<any>gro];
+                        temp += groo;
+                    }
+                    if (combin[<any>temp] === undefined) {
+                        var tempArray: String[] = [smth];
+                        combin[<any>temp] = tempArray;
+                    }
+                    combin[<any>temp].push(smth);
+                }
+
+                for (var i = 0; i < Object.keys(combin).length; i++) {
+                    newArr1.push(combin[<any>Object.keys(combin)[i]][0])
+                }
+                var passedArray: String[] = [];
+
+                for (var smth of newArr1) {
+                    let eachPassedArray: any = {};
+                    for (var column of COLUMNS) {
+                        eachPassedArray[column] = "";
+                    }
+
+                    var smthKey = Object.keys(smth);
+                    for (var n = 0; n < smthKey.length; n++) {
+                        var eachPassedArrayKey = Object.keys(eachPassedArray);
+                        for (var o = 0; o < eachPassedArrayKey.length; o++) {
+                            if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
+                                eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
+                            }
+                        }
+                    }
+                    passedArray.push(eachPassedArray);
+                }
+
+                if (order == "DOWN") {
+                    var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                }
+                else if (order == "UP") {
+                    var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
+                }
+
+
+                let body: any = {render: FORM, result: sortedArray};
+                let myIR: any = {code: 200, body: body};
+                fulfill(myIR);
+            }
         })
     }
 }

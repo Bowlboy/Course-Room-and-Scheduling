@@ -136,7 +136,7 @@ describe("D3Spec", function () {
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responseAddress);
         }).catch(function (err) {
-            // Log.test('Error: ' + JSON.stringify(err));
+            Log.test('Error: ' + JSON.stringify(err));
             expect.fail();
         })
     });
@@ -147,7 +147,7 @@ describe("D3Spec", function () {
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(responsetriple);
         }).catch(function (err) {
-            // Log.test('Error: ' + JSON.stringify(err));
+            Log.test('Error: ' + JSON.stringify(err));
             expect.fail();
         })
     });
@@ -174,7 +174,7 @@ describe("D3Spec", function () {
         })
     });
 
-    it("Test Min ", function () {
+    it("Test Min", function () {
         return myIR.performQuery(query5).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
             expect(response.code).to.equal(200);
