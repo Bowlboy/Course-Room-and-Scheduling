@@ -1003,7 +1003,6 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise(function(fulfill, reject) {
 
             var WHERE = query.WHERE;
-            var wherekey = Object.keys(WHERE);
             var OPTIONS = query.OPTIONS;
             if (Object.keys(OPTIONS).length == 0) {
                 let rejectIR = {code: 400, body: {error: ["OPTIONS"]}};
@@ -1016,9 +1015,20 @@ export default class InsightFacade implements IInsightFacade {
             if (optionKeys.indexOf("ORDER") >= 0) {
                 orderToggle = 1;
             }
-            let applyKeys:String[] = [];
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
+            if (COLUMNS.length == 0) {
+                let rejectIR = {code: 400, body: {error: "OPTIONS/ORDER/FORM option not complete"}};
+                reject(rejectIR);
+            }
+            var FORM = OPTIONS[<any>"FORM"];
+            if (FORM != "TABLE") {
+                let rejectIR = {code:400, body: {error: "Something is wrong in FORM"}};
+                reject(rejectIR);
+            }
+            let applyKeys:String[] = [];
             var splt;
+            var datasetChosen = "none";
+            var newArr: String[] = [];
 
 
             for (colu of COLUMNS) {
@@ -1026,11 +1036,10 @@ export default class InsightFacade implements IInsightFacade {
                     var tempsplt = colu.split("_");
                     if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
                         splt = tempsplt;
+                        break;
                     }
                 }
             }
-
-            var datasetChosen = "none";
 
             if (coursesresult.length == 0 && roomsresult.length == 0) {
                 let rejectIR = {code: 424, body: {missing: ["courses", "rooms"]}};
@@ -1057,8 +1066,6 @@ export default class InsightFacade implements IInsightFacade {
                 let rejectIR = {code: 424, body: {missing: ["courses", "rooms"]}};
                 reject(rejectIR);
             }
-
-            var newArr: String[] = [];
 
             if (JSON.stringify(WHERE) == "{}") {
                 for (var fil of files) {
@@ -1114,23 +1121,9 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
 
-            if (orderToggle == 1) {
-                var ORDER = OPTIONS[<any>"ORDER"];
-            }
-
-            var FORM = OPTIONS[<any>"FORM"];
-            if (FORM != "TABLE") {
-                let rejectIR = {code:400, body: {error: "Something is wrong in FORM"}};
-                reject(rejectIR);
-            }
-
-            if (COLUMNS.length == 0 || FORM.length == 0) {
-                let rejectIR = {code: 400, body: {error: "OPTIONS/ORDER/FORM option not complete"}};
-                reject(rejectIR);
-            }
-
             let OORD: String[] = [];
             if (orderToggle == 1) {
+                var ORDER = OPTIONS[<any>"ORDER"];
                 var OrderKeys = Object.keys(ORDER);
 
                 var con = 1;
@@ -1157,7 +1150,6 @@ export default class InsightFacade implements IInsightFacade {
                             else {
                                 con = 0
                             }
-                            ;
                         }
                         else {
                             let rejectIR = {code: 400, body: {error: "Wrong Order Key[1]"}};
@@ -1268,14 +1260,26 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
 
+                for (var app of APPLY) {
+                    if (COLUMNS.indexOf(Object.keys(app)[0]) >= 0) {
+                        gc++;
+                    }
+                }
+                if (gc != (GROUP.length + Object.keys(APPLY).length)) {
+                    let rejectIR = {code:400, body: {error: "Missing a GROUP aspect"}};
+                    reject(rejectIR);
+                }
+
                 let newArr1: String[] = [];
                 var combin: String[][] = [];
+                // Make an array of arrays (Groupings on each array)
                 for (var smth of newArr) {
                     var temp: string = "";
                     for (var gro of GROUP) {
                         var groo: string = smth[<any>gro];
                         temp += groo;
                     }
+                    // If an array of the key is not defined, set that as the array.
                     if (combin[<any>temp] === undefined) {
                         var tempArray: String[] = [smth];
                         combin[<any>temp] = tempArray;
@@ -1285,14 +1289,16 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
 
+                // NewArr1 now contains a reprsentative of each group.
                 for (var i = 0; i < Object.keys(combin).length; i++) {
                     newArr1.push(combin[<any>Object.keys(combin)[i]][0])
                 }
+
                 var passedArray: String[] = [];
-                var realApplyArray: String[] = [];
                 var count = 0;
                 for (var smth of newArr1) {
                     let eachPassedArray: any = {};
+                    // Create an empty object containing the keys exactly like of that in COLUMNS.
                     for (var column of COLUMNS) {
                         eachPassedArray[column] = "";
                     }
@@ -1345,16 +1351,6 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     passedArray.push(eachPassedArray);
                     count++;
-                }
-
-                for (var app of APPLY) {
-                    if (COLUMNS.indexOf(Object.keys(app)[0]) >= 0) {
-                        gc++;
-                    }
-                }
-                if (gc != (GROUP.length + Object.keys(APPLY).length)) {
-                    let rejectIR = {code:400, body: {error: "Missing a GROUP aspect"}};
-                    reject(rejectIR);
                 }
 
                 if (orderToggle == 1) {
