@@ -1013,7 +1013,7 @@ export default class InsightFacade implements IInsightFacade {
 
             var orderKeys = Object.keys(OPTIONS);
             var orderToggle = 0;
-            if (orderKeys.includes("ORDER")) {
+            if (orderKeys.indexOf("ORDER") >= 0) {
                 orderToggle = 1;
             }
             if (orderToggle == 1) {
@@ -1048,7 +1048,7 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
             else {
-                for (colu in COLUMNS) {
+                for (colu of COLUMNS) {
                     if (colu.includes("_")) {
                         var tempsplt = colu.split("_");
                         if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
@@ -1152,7 +1152,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            if (COLUMNS.length == 0 || ORDER.length == 0 || FORM.length == 0) {
+            if (COLUMNS.length == 0 || FORM.length == 0) {
                 let rejectIR = {code: 400, body: {error: "OPTIONS/ORDER/FORM option not complete"}};
                 reject(rejectIR);
             }
