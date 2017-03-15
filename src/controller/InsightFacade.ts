@@ -1011,49 +1011,21 @@ export default class InsightFacade implements IInsightFacade {
             }
             var TRANSFORMATIONS = query.TRANSFORMATIONS;
 
-            var orderKeys = Object.keys(OPTIONS);
+            var optionKeys = Object.keys(OPTIONS);
             var orderToggle = 0;
-            if (orderKeys.indexOf("ORDER") >= 0) {
+            if (optionKeys.indexOf("ORDER") >= 0) {
                 orderToggle = 1;
-            }
-            if (orderToggle == 1) {
-                var order = OPTIONS[<any>"ORDER"];
             }
             let applyKeys:String[] = [];
             var COLUMNS = OPTIONS[<any>"COLUMNS"];
             var splt;
 
-            if (orderToggle == 1) {
-                if (Object.keys(order).length == 2) {
-                    if (Object.keys(order)[0] == "dir" && Object.keys(order)[1] == "keys") {
-                        if ((order[<any>"keys"][0]).includes("_")) {
-                            splt = order[<any>"keys"][0].split("_");
-                        }
-                        else {
-                            let rejectIR = {code: 400, body: {error: ["missing something"]}};
-                            reject(rejectIR);
-                        }
-                    }
-                    else {
-                        let rejectIR = {code: 400, body: {error: ["missing something"]}};
-                        reject(rejectIR);
-                    }
-                }
-                else {
-                    splt = order.split("_");
-                }
-                if (splt === undefined) {
-                    let rejectIR = {code: 400, body: {error: ["missing something"]}};
-                    reject(rejectIR);
-                }
-            }
-            else {
-                for (colu of COLUMNS) {
-                    if (colu.includes("_")) {
-                        var tempsplt = colu.split("_");
-                        if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
-                            splt = tempsplt;
-                        }
+
+            for (colu of COLUMNS) {
+                if (colu.includes("_")) {
+                    var tempsplt = colu.split("_");
+                    if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
+                        splt = tempsplt;
                     }
                 }
             }

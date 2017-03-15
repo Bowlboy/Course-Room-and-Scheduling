@@ -30,6 +30,8 @@ let responseBanyak = '{"render":"TABLE","result":[{"rooms_shortname":"WOOD","roo
 let responseDouble = '{"render":"TABLE","result":[{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose","transs":442,"wuanjirrrr":442},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group","transs":700,"wuanjirrrr":350},{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group","transs":375,"wuanjirrrr":375}]}';
 let responseEmptyApply = '{"render":"TABLE","result":[{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose"},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group"},{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group"}]}';
 let response4Apply = '{"render":"TABLE","result":[{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose","transs":442,"wuanjirrrr":442,"ngentot":1,"anjing":442},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group","transs":700,"wuanjirrrr":350,"ngentot":1,"anjing":350},{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group","transs":375,"wuanjirrrr":375,"ngentot":1,"anjing":375}]}';
+let response4ApplyNoOrder = '{"render":"TABLE","result":[{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group","transs":375,"wuanjirrrr":375,"ngentot":1,"anjing":375},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group","transs":700,"wuanjirrrr":350,"ngentot":1,"anjing":350},{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose","transs":442,"wuanjirrrr":442,"ngentot":1,"anjing":442}]}';
+
 
 describe("D3Spec", function () {
 
@@ -88,7 +90,8 @@ describe("D3Spec", function () {
     query13 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
     let query14: QueryRequest;
     query14 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type","anjing"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
-
+    let query15: QueryRequest;
+    query15 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -284,6 +287,17 @@ describe("D3Spec", function () {
         }).catch(function (err: InsightResponse) {
             // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
+        })
+    });
+
+    it("Test 4 Apply No Order", function () {
+        return myIR.performQuery(query15).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            expect(JSON.stringify(response.body)).to.equal(response4ApplyNoOrder);
+        }).catch(function (err) {
+            // Log.test('Error: ' + JSON.stringify(err));
+            expect.fail();
         })
     });
 
