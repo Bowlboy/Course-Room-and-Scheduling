@@ -118,7 +118,7 @@ describe("RealSpec", function () {
         Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
-    it("Add rooms firs time", function () {
+    it("Add courses firs time", function () {
         return myIR.addDataset("courses", zip)
             .then(function (value) {
                 Log.test('Code: ' + value.code);

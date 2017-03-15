@@ -1011,13 +1011,28 @@ export default class InsightFacade implements IInsightFacade {
             }
             var TRANSFORMATIONS = query.TRANSFORMATIONS;
 
-            var order = OPTIONS[<any>"ORDER"];
+            var orderKeys = Object.keys(OPTIONS);
+            var orderToggle = 0;
+            if (orderKeys.includes("ORDER")) {
+                orderToggle = 1;
+            }
+            if (orderToggle == 1) {
+                var order = OPTIONS[<any>"ORDER"];
+            }
             let applyKeys:String[] = [];
+            var COLUMNS = OPTIONS[<any>"COLUMNS"];
+            var splt;
 
-            if (Object.keys(order).length == 2) {
-                if (Object.keys(order)[0] == "dir" && Object.keys(order)[1] == "keys") {
-                    if ((order[<any>"keys"][0]).includes("_")) {
-                        var split = order[<any>"keys"][0].split("_");
+            if (orderToggle == 1) {
+                if (Object.keys(order).length == 2) {
+                    if (Object.keys(order)[0] == "dir" && Object.keys(order)[1] == "keys") {
+                        if ((order[<any>"keys"][0]).includes("_")) {
+                            splt = order[<any>"keys"][0].split("_");
+                        }
+                        else {
+                            let rejectIR = {code: 400, body: {error: ["missing something"]}};
+                            reject(rejectIR);
+                        }
                     }
                     else {
                         let rejectIR = {code: 400, body: {error: ["missing something"]}};
@@ -1025,16 +1040,22 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
                 else {
+                    splt = order.split("_");
+                }
+                if (splt === undefined) {
                     let rejectIR = {code: 400, body: {error: ["missing something"]}};
                     reject(rejectIR);
                 }
             }
             else {
-                var split = order.split("_");
-            }
-            if (split === undefined) {
-                let rejectIR = {code: 400, body: {error: ["missing something"]}};
-                reject(rejectIR);
+                for (colu in COLUMNS) {
+                    if (colu.includes("_")) {
+                        var tempsplt = colu.split("_");
+                        if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
+                            splt = tempsplt;
+                        }
+                    }
+                }
             }
 
             var datasetChosen = "none";
@@ -1044,7 +1065,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            if (split [0] == "courses") {
+            if (splt [0] == "courses") {
                 if (coursesresult.length == 0) {
                     let rejectIR = {code: 424, body: {missing: ["courses"]}};
                     reject(rejectIR);
@@ -1052,7 +1073,7 @@ export default class InsightFacade implements IInsightFacade {
                 var files = coursesresult;
                 datasetChosen = "courses";
             }
-            else if (split[0] == "rooms") {
+            else if (splt[0] == "rooms") {
                 if (roomsresult.length == 0) {
                     let rejectIR = {code: 424, body: {missing: ["rooms"]}};
                     reject(rejectIR);
@@ -1121,8 +1142,10 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
 
-            var COLUMNS = OPTIONS[<any>"COLUMNS"];
-            var ORDER = OPTIONS[<any>"ORDER"];
+            if (orderToggle == 1) {
+                var ORDER = OPTIONS[<any>"ORDER"];
+            }
+
             var FORM = OPTIONS[<any>"FORM"];
             if (FORM != "TABLE") {
                 let rejectIR = {code:400, body: {error: "Something is wrong in FORM"}};
@@ -1134,47 +1157,52 @@ export default class InsightFacade implements IInsightFacade {
                 reject(rejectIR);
             }
 
-            var OrderKeys = Object.keys(ORDER);
+            let OORD: String[] = [];
+            if (orderToggle == 1) {
+                var OrderKeys = Object.keys(ORDER);
 
-            var con = 1;
-            var order;
-            order = "UP";
+                var con = 1;
+                var order;
+                order = "UP";
 
-            let OORD:String[] = [];
-            if (OrderKeys.length == 2) {
-                if (OrderKeys[0] == "dir") {
-                    if (OrderKeys[1] == "keys") {
-                        order = ORDER[<any>OrderKeys[0]];
-                        OORD = ORDER[<any>OrderKeys[1]];
-                        var checker = 0;
-                        for (var or of OORD) {
-                            for (var colu of COLUMNS) {
-                                if (or == colu) {
-                                    checker++;
+                if (OrderKeys.length == 2) {
+                    if (OrderKeys[0] == "dir") {
+                        if (OrderKeys[1] == "keys") {
+                            order = ORDER[<any>OrderKeys[0]];
+                            OORD = ORDER[<any>OrderKeys[1]];
+                            var checker = 0;
+                            for (var or of OORD) {
+                                for (var colu of COLUMNS) {
+                                    if (or == colu) {
+                                        checker++;
+                                    }
                                 }
                             }
+                            if (checker != OORD.length) {
+                                let rejectIR = {code: 400, body: {error: "ORDER not complete"}};
+                                reject(rejectIR);
+                            }
+                            else {
+                                con = 0
+                            }
+                            ;
                         }
-                        if (checker != OORD.length) {
-                            let rejectIR = {code: 400, body: {error: "ORDER not complete"}};
+                        else {
+                            let rejectIR = {code: 400, body: {error: "Wrong Order Key[1]"}};
                             reject(rejectIR);
                         }
-                        else {con = 0};
                     }
                     else {
-                        let rejectIR = {code: 400, body: {error: "Wrong Order Key[1]"}};
+                        let rejectIR = {code: 400, body: {error: "Wrong Order Key[0]"}};
                         reject(rejectIR);
                     }
                 }
                 else {
-                    let rejectIR = {code: 400, body: {error: "Wrong Order Key[0]"}};
-                    reject(rejectIR);
-                }
-            }
-            else {
-                for (var colu of COLUMNS) {
-                    if (ORDER == colu) {
-                        OORD.push(ORDER);
-                        con = 0;
+                    for (var colu of COLUMNS) {
+                        if (ORDER == colu) {
+                            OORD.push(ORDER);
+                            con = 0;
+                        }
                     }
                 }
             }
@@ -1210,12 +1238,15 @@ export default class InsightFacade implements IInsightFacade {
                     passedArray.push(eachPassedArray);
                 }
 
-                if (order == "DOWN") {
-                    var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                if (orderToggle == 1) {
+                    if (order == "DOWN") {
+                        var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                    }
+                    else if (order == "UP") {
+                        var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
+                    }
                 }
-                else if (order == "UP") {
-                    var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
-                }
+                else {var sortedArray = passedArray;}
 
 
                 let body: any = {render: FORM, result: sortedArray};
@@ -1354,12 +1385,15 @@ export default class InsightFacade implements IInsightFacade {
                     reject(rejectIR);
                 }
 
-                if (order == "DOWN") {
-                    var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                if (orderToggle == 1) {
+                    if (order == "DOWN") {
+                        var sortedArray: String[] = InsightFacade.prototype.sorterDown(passedArray, OORD);
+                    }
+                    else if (order == "UP") {
+                        var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
+                    }
                 }
-                else if (order == "UP") {
-                    var sortedArray: String[] = InsightFacade.prototype.sorterUp(passedArray, OORD);
-                }
+                else {sortedArray = passedArray;}
 
 
                 let body: any = {render: FORM, result: sortedArray};
