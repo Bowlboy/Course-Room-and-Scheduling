@@ -343,7 +343,7 @@ describe("D3Spec", function () {
         })
     });
 
-    it.skip("Test Sacrilegous", function () {
+    it("Test Sacrilegous", function () {
         return myIR.performQuery(query16).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
             expect(response.code).to.equal(200);

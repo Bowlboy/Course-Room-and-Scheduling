@@ -1268,10 +1268,10 @@ export default class InsightFacade implements IInsightFacade {
                     let rejectIR = {code:400, body: {error: "Missing a GROUP aspect"}};
                     reject(rejectIR);
                 }
-                Log.test("Before grouping");
 
                 let newArr1: String[] = [];
-                var combin: String[][] = [];
+                var GROUPS: String[][] = [];
+                var GroupNames: String[] = [];
                 // Make an array of arrays (Groupings on each array)
                 for (var smth of newArr) {
                     var temp: string = "";
@@ -1280,34 +1280,26 @@ export default class InsightFacade implements IInsightFacade {
                         temp += groo;
                     }
                     // If an array of the key is not defined, set that as the array.
-                    if (combin[<any>temp] === undefined) {
+                    if (GROUPS[<any>temp] === undefined) {
                         var tempArray: String[] = [smth];
-                        combin[<any>temp] = tempArray;
-                        // newArr1.push(smth);
+                        GroupNames.push(temp);
+                        GROUPS[<any>temp] = tempArray;
                     }
                     else {
-                        combin[<any>temp].push(smth);
+                        GROUPS[<any>temp].push(smth);
                     }
                 }
 
-                Log.test("how long does it take?");
 
                 // NewArr1 now contains a reprsentative of each group.
-                for (var i = 0; i < Object.keys(combin).length; i++) {
-                    let tempObject: any = {};
-                    var tempObject1 = combin[<any>Object.keys(combin)[i]][0];
-                    for (var key of Object.keys(tempObject1)) {
-                        tempObject[key] = tempObject1[<any>key];
-                    }
-                    for (var ap of applyKeys) {
-                        var apindex = 0;
-                        for (var appl of APPLY) {
-                            if (Object.keys(appl)[0] == ap) {
-                                apindex = APPLY.indexOf(appl);
-                            }
-                        }
+                for (var name of GroupNames) {
+                    let tempObject: any = GROUPS[<any>name][0];
+                    var GroupMembers = GROUPS[<any>name];
+                    for (var ap of APPLY) {
+                        var apkey = Object.keys(ap)[0];
+                        var content = ap[<any>apkey];
                         try {
-                            tempObject[ap.toString()] = InsightFacade.prototype.applyHelper(APPLY[<any>apindex][<any>ap], datasetChosen, combin[<any>Object.keys(combin)[i]]);
+                            tempObject[apkey] = InsightFacade.prototype.applyHelper(content, datasetChosen, GroupMembers);
                         }
                         catch (e) {
                             if ((<Error>e).message == 'errDefault') {
@@ -1344,10 +1336,7 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                     newArr1.push(tempObject);
-                    Log.test("azzzz" + (Object.keys(combin).length - i));
                 }
-
-                Log.test("how long does it take2?");
 
                 var passedArray: String[] = [];
                 // var count = 0;
@@ -1359,8 +1348,6 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     passedArray.push(eachPassedArray);
                 }
-
-                Log.test("how long does it take3?");
 
                 if (orderToggle == 1) {
                     if (order == "DOWN") {
