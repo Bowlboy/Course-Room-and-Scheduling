@@ -1272,7 +1272,7 @@ export default class InsightFacade implements IInsightFacade {
                 let newArr1: String[] = [];
                 var GROUPS: String[][] = [];
                 var GroupNames: String[] = [];
-                // Make an array of arrays (Groupings on each array)
+                // Make an array of arrays (Groupings on each array) muahahaha
                 for (var smth of newArr) {
                     var temp: string = "";
                     for (var gro of GROUP) {
