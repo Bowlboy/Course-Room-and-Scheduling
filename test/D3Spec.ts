@@ -123,6 +123,101 @@ describe("D3Spec", function () {
             "FORM": "TABLE"
         }
     };
+    let query18: QueryRequest;
+    query18 = {"WHERE": {}, "OPTIONS": {"COLUMNS": ["courses_dept", "ave"], "ORDER": {"dir": "UP","keys":["courses_dept"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP":["courses_dept"], "APPLY": [{"ave":{"AVG":"courses_avg"}}]}};
+
+    let query19: QueryRequest;
+    query19 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instuctor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"numberofcourses":{"COUNT":"courses_uuid"}}]
+        }
+    };
+    let query20: QueryRequest;
+    query20 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","numberofcourses"],
+            "APPLY": [{"numberofcourses":{"COUNT":"courses_uuid"}}]
+        }
+    };
+    let query21: QueryRequest;
+    query21 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "Middle",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"numberofcourses":{"COUNT":"courses_uuid"}}]
+        }
+    };
+
+    let query22:QueryRequest;
+    query22 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"courses_instructor":{"COUNT":"courses_uuid"}}]
+        }
+    };
+
+    let query23: QueryRequest;
+    query23 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"apalu":{"COUNT":"courses_uuid"}}]
+        }
+    };
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -351,6 +446,57 @@ describe("D3Spec", function () {
         }).catch(function (err) {
             // Log.test('Error: ' + JSON.stringify(err));
             expect.fail();
+        })
+    });
+    it("Test Taurus", function () {
+        return myIR.performQuery(query18).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            // expect(JSON.stringify(response.body)).to.equal(response4ApplyNoOrder);
+        }).catch(function (err) {
+            // Log.test('Error: ' + JSON.stringify(err));
+            expect.fail();
+        })
+    });
+    it("Test Gagal1", function () {
+        return myIR.performQuery(query19).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });it("Test Gagal2", function () {
+        return myIR.performQuery(query20).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });it("Test Gagal3", function () {
+        return myIR.performQuery(query21).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });it("Test Gagal4", function () {
+        return myIR.performQuery(query22).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });it("Test Gagal5", function () {
+        return myIR.performQuery(query23).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
         })
     });
 

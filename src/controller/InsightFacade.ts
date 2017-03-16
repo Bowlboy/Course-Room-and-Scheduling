@@ -1031,12 +1031,17 @@ export default class InsightFacade implements IInsightFacade {
 
 
             for (colu of COLUMNS) {
+                splt = null;
                 if (colu.includes("_")) {
                     var tempsplt = colu.split("_");
                     if (tempsplt[0] == "courses" || tempsplt[0] == "rooms") {
                         splt = tempsplt;
                         break;
                     }
+                }
+                if (splt == null) {
+                    let rejectIR = {code:400, body: {error: "Could not chose dataset"}};
+                    reject(rejectIR);
                 }
             }
 
@@ -1161,6 +1166,19 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
                 else {
+                    switch(InsightFacade.prototype.keyChecker(datasetChosen, ORDER)) {
+                        case(0): {
+                            let rejectIR = {code: 400, body: {error: "[Wrong group Code]"}};
+                            reject(rejectIR);
+                        }
+                        case(2): {
+                            let rejectIR = {code: 400, body: {error: "[Wrong group Code]"}};
+                            reject(rejectIR);
+                        }
+                        default: {
+                            break;
+                        }
+                    }
                     for (var colu of COLUMNS) {
                         if (ORDER == colu) {
                             OORD.push(ORDER);
@@ -1168,10 +1186,15 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                 }
-            }
-            if (con == 1) {
-                let rejectIR = {code: 400, body: {error: "[Sort column in COLUMNS]"}};
-                reject(rejectIR);
+                if (order == "UP" || order == "DOWN") {}
+                else {
+                    let rejectIR = {code:400, body: {error: "Order not up or down"}};
+                    reject(rejectIR);
+                }
+                if (con == 1) {
+                    let rejectIR = {code: 400, body: {error: "[Sort column in COLUMNS]"}};
+                    reject(rejectIR);
+                }
             }
 
             for (var col of COLUMNS){
@@ -1297,6 +1320,10 @@ export default class InsightFacade implements IInsightFacade {
                     var GroupMembers = GROUPS[<any>name];
                     for (var ap of APPLY) {
                         var apkey = Object.keys(ap)[0];
+                        if ((COLUMNS.indexOf(apkey) < 0) ||  apkey.includes("_")) {
+                            let rejectIR = {code:400, body: {error: "apkey Wrong"}};
+                            reject(rejectIR);
+                        }
                         var content = ap[<any>apkey];
                         try {
                             tempObject[apkey] = InsightFacade.prototype.applyHelper(content, datasetChosen, GroupMembers);
