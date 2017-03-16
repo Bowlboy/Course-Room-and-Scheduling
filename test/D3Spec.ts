@@ -32,7 +32,6 @@ let responseEmptyApply = '{"render":"TABLE","result":[{"rooms_shortname":"OSBO",
 let response4Apply = '{"render":"TABLE","result":[{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose","transs":442,"wuanjirrrr":442,"ngentot":1,"anjing":442},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group","transs":700,"wuanjirrrr":350,"ngentot":1,"anjing":350},{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group","transs":375,"wuanjirrrr":375,"ngentot":1,"anjing":375}]}';
 let response4ApplyNoOrder = '{"render":"TABLE","result":[{"rooms_shortname":"HEBB","rooms_type":"Tiered Large Group","transs":375,"wuanjirrrr":375,"ngentot":1,"anjing":375},{"rooms_shortname":"LSC","rooms_type":"Tiered Large Group","transs":700,"wuanjirrrr":350,"ngentot":1,"anjing":350},{"rooms_shortname":"OSBO","rooms_type":"Open Design General Purpose","transs":442,"wuanjirrrr":442,"ngentot":1,"anjing":442}]}';
 
-
 describe("D3Spec", function () {
 
     let query1: QueryRequest;
@@ -92,6 +91,38 @@ describe("D3Spec", function () {
     query14 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type","anjing"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
     let query15: QueryRequest;
     query15 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
+    let query16: QueryRequest;
+    query16 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"numberofcourses":{"COUNT":"courses_uuid"}}]
+        }
+    };
+    let query17: QueryRequest;
+    query17 = {
+        "WHERE": {"IS":{"courses_instructor": "* *"}},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        }
+    };
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -295,6 +326,28 @@ describe("D3Spec", function () {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
             expect(response.code).to.equal(200);
             expect(JSON.stringify(response.body)).to.equal(response4ApplyNoOrder);
+        }).catch(function (err) {
+            // Log.test('Error: ' + JSON.stringify(err));
+            expect.fail();
+        })
+    });
+
+    it("Test Sacrilegous Half", function () {
+        return myIR.performQuery(query17).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            // expect(JSON.stringify(response.body)).to.equal(response4ApplyNoOrder);
+        }).catch(function (err) {
+            // Log.test('Error: ' + JSON.stringify(err));
+            expect.fail();
+        })
+    });
+
+    it.skip("Test Sacrilegous", function () {
+        return myIR.performQuery(query16).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            // expect(JSON.stringify(response.body)).to.equal(response4ApplyNoOrder);
         }).catch(function (err) {
             // Log.test('Error: ' + JSON.stringify(err));
             expect.fail();

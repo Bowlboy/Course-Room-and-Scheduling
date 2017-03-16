@@ -849,7 +849,6 @@ export default class InsightFacade implements IInsightFacade {
         var key = apply[<any>content];
 
         var split = key;
-
         switch(InsightFacade.prototype.keyChecker(datasetChosen, split)) {
             case(0): {
                 throw new TypeError("errDefault");
@@ -1269,6 +1268,7 @@ export default class InsightFacade implements IInsightFacade {
                     let rejectIR = {code:400, body: {error: "Missing a GROUP aspect"}};
                     reject(rejectIR);
                 }
+                Log.test("Before grouping");
 
                 let newArr1: String[] = [];
                 var combin: String[][] = [];
@@ -1283,75 +1283,84 @@ export default class InsightFacade implements IInsightFacade {
                     if (combin[<any>temp] === undefined) {
                         var tempArray: String[] = [smth];
                         combin[<any>temp] = tempArray;
+                        // newArr1.push(smth);
                     }
                     else {
                         combin[<any>temp].push(smth);
                     }
                 }
 
+                Log.test("how long does it take?");
+
                 // NewArr1 now contains a reprsentative of each group.
                 for (var i = 0; i < Object.keys(combin).length; i++) {
-                    newArr1.push(combin[<any>Object.keys(combin)[i]][0])
+                    let tempObject: any = {};
+                    var tempObject1 = combin[<any>Object.keys(combin)[i]][0];
+                    for (var key of Object.keys(tempObject1)) {
+                        tempObject[key] = tempObject1[<any>key];
+                    }
+                    for (var ap of applyKeys) {
+                        var apindex = 0;
+                        for (var appl of APPLY) {
+                            if (Object.keys(appl)[0] == ap) {
+                                apindex = APPLY.indexOf(appl);
+                            }
+                        }
+                        try {
+                            tempObject[ap.toString()] = InsightFacade.prototype.applyHelper(APPLY[<any>apindex][<any>ap], datasetChosen, combin[<any>Object.keys(combin)[i]]);
+                        }
+                        catch (e) {
+                            if ((<Error>e).message == 'errDefault') {
+                                let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errDataset') {
+                                let rejectIR = {code: 400, body: {error: "Wrong Key"}};
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errMAX') {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong in MAX"}};
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errMIN') {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong in MIN"}};
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errSUM') {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong in SUM"}};
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errCOUNT') {
+                                let rejectIR = {
+                                    code: 400,
+                                    body: {error: "Something is wrong in COUNT"}
+                                };
+                                reject(rejectIR);
+                            }
+                            if ((<Error>e).message == 'errAVG') {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
+                                reject(rejectIR);
+                            }
+                        }
+                    }
+                    newArr1.push(tempObject);
+                    Log.test("azzzz" + (Object.keys(combin).length - i));
                 }
 
+                Log.test("how long does it take2?");
+
                 var passedArray: String[] = [];
-                var count = 0;
+                // var count = 0;
                 for (var smth of newArr1) {
                     let eachPassedArray: any = {};
                     // Create an empty object containing the keys exactly like of that in COLUMNS.
                     for (var column of COLUMNS) {
-                        eachPassedArray[column] = "";
-                    }
-
-                    var smthKey = Object.keys(smth);
-                    for (var n = 0; n < smthKey.length; n++) {
-                        var eachPassedArrayKey = Object.keys(eachPassedArray);
-                        for (var o = 0; o < eachPassedArrayKey.length; o++) {
-                            var xx = applyKeys.indexOf(eachPassedArrayKey[<any>o]);
-                            if (xx >= 0) {
-                                var tempApply = APPLY[xx][<any>eachPassedArrayKey[<any>o]];
-                                try {
-                                    eachPassedArray[<any>eachPassedArrayKey[<any>o]] = InsightFacade.prototype.applyHelper(tempApply, datasetChosen, combin[<any>Object.keys(combin)[count]]);
-                                }
-                                catch (e) {
-                                    if ((<Error>e).message == 'errDefault') {
-                                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errDataset') {
-                                        let rejectIR = {code: 400, body: {error: "Wrong Key"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errMAX') {
-                                        let rejectIR = {code: 400, body: {error: "Something is wrong in MAX"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errMIN') {
-                                        let rejectIR = {code: 400, body: {error: "Something is wrong in MIN"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errSUM') {
-                                        let rejectIR = {code: 400, body: {error: "Something is wrong in SUM"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errCOUNT') {
-                                        let rejectIR = {code: 400, body: {error: "Something is wrong in COUNT"}};
-                                        reject(rejectIR);
-                                    }
-                                    if ((<Error>e).message == 'errAVG') {
-                                        let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
-                                        reject(rejectIR);
-                                    }
-                                }
-                            }
-                            if (smthKey[<any>n] == eachPassedArrayKey[<any>o]) {
-                                eachPassedArray[<any>smthKey[<any>n]] = smth[<any>smthKey[<any>n]];
-                            }
-                        }
+                        eachPassedArray[column] = smth[column];
                     }
                     passedArray.push(eachPassedArray);
-                    count++;
                 }
+
+                Log.test("how long does it take3?");
 
                 if (orderToggle == 1) {
                     if (order == "DOWN") {
