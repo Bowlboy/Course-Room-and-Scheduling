@@ -964,6 +964,28 @@ export default class InsightFacade implements IInsightFacade {
                 return tempSum;
             }
                 ;
+            case 'BIGGEST': {
+                var tempBiggest = 0;
+                for (var arr of array) {
+                    var buffer = 0;
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == "courses_pass" || keyy[i] == "courses_fail") {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                buffer += parseInt(tempData);
+                                if (tempBiggest < buffer) {
+                                    tempBiggest = buffer;
+                                }
+                            }
+                            else {
+                                throw new TypeError("errMAX");
+                            }
+                        }
+                    }
+                }
+                return tempBiggest;
+            };
             default: {
                 throw new TypeError("errDefault");
             }
@@ -1120,7 +1142,10 @@ export default class InsightFacade implements IInsightFacade {
                             let rejectIR = {code: 400, body: {error: "Something is wrong in NOT"}};
                             reject(rejectIR);
                         }
-
+                        else {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
+                            reject(rejectIR);
+                        }
                     }
                 }
             }
@@ -1316,6 +1341,7 @@ export default class InsightFacade implements IInsightFacade {
 
                 // NewArr1 now contains a reprsentative of each group.
                 for (var name of GroupNames) {
+                    var biggestSize = 0;
                     let tempObject: any = GROUPS[<any>name][0];
                     var GroupMembers = GROUPS[<any>name];
                     for (var ap of APPLY) {
@@ -1358,6 +1384,10 @@ export default class InsightFacade implements IInsightFacade {
                             }
                             if ((<Error>e).message == 'errAVG') {
                                 let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
+                                reject(rejectIR);
+                            }
+                            else {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong Apply"}};
                                 reject(rejectIR);
                             }
                         }

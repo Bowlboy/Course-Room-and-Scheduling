@@ -218,6 +218,42 @@ describe("D3Spec", function () {
             "APPLY": [{"apalu":{"COUNT":"courses_uuid"}}]
         }
     };
+    let query24: QueryRequest;
+    query24 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor","courses_uuid","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": ["courses_instructor"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_instructor","courses_uuid"],
+            "APPLY": [{"numberofcourses":{"CUNT":"courses_uuid"}}]
+        }
+    };
+    let query25: QueryRequest;
+    query25 = {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept","numberofcourses"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": ["courses_dept"]
+            },
+            "FORM": "TABLE"
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_dept"],
+            "APPLY": [{"numberofcourses":{"MAX":"coursesaudit"}}]
+        }
+    };
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -466,7 +502,8 @@ describe("D3Spec", function () {
             // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
         })
-    });it("Test Gagal2", function () {
+    });
+    it("Test Gagal2", function () {
         return myIR.performQuery(query20).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + response.body);
             expect.fail();
@@ -474,7 +511,8 @@ describe("D3Spec", function () {
             // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
         })
-    });it("Test Gagal3", function () {
+    });
+    it("Test Gagal3", function () {
         return myIR.performQuery(query21).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + response.body);
             expect.fail();
@@ -482,7 +520,8 @@ describe("D3Spec", function () {
             // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
         })
-    });it("Test Gagal4", function () {
+    });
+    it("Test Gagal4", function () {
         return myIR.performQuery(query22).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + response.body);
             expect.fail();
@@ -490,8 +529,27 @@ describe("D3Spec", function () {
             // Log.test('Error: ' + err.body);
             expect(err.code).to.equal(400);
         })
-    });it("Test Gagal5", function () {
+    });
+    it("Test Gagal5", function () {
         return myIR.performQuery(query23).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });
+    it("Test Gagal6", function () {
+        return myIR.performQuery(query24).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + response.body);
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            // Log.test('Error: ' + err.body);
+            expect(err.code).to.equal(400);
+        })
+    });
+    it("Test Gagal7777", function () {
+        return myIR.performQuery(query25).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + response.body);
             expect.fail();
         }).catch(function (err: InsightResponse) {
