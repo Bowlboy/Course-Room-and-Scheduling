@@ -1,16 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>TRY</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h1>D4 Team 65</h1>
+    <head>
+        <title>Team 65 Demo</title>
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>D4 Team 65</h1>
+        <h2>Input Zip File</h2>
+        <input type="file" name="fileUpload" id="fileUpload" />
+        <button id="btnUpload">Upload</button>
 
-    <input type="file" name="fileUpload" id="fileUpload" />
-    <button id="btnUpload">Upload</button>
+        <div>
+           <h2>Courses</h2>
+                Section Size: <input type="number" name="secsize" id="secsize">
+                Department: <input type="text" name="dept" id="dept">
+                Tittle: <input type="text" name="tittle" id="tittle">
+            <br>
+                Course Number: <input type="number" name="cornum" id="cornum">
+                Instructor: <input type="text" name="inst" id="inst">
+            <br>
+                <button id="btncourses">Filter Courses</button>
+                <table id="coursestblResults"></table>
+        </div>
 
-</body>
+        <div>
+            <h2>Rooms</h2>
+            Building Name: <input type="text" name="bname" id="bname">
+            Room Number: <input type="number" name="rnum" id="rnum">
+            Room Size: <input type="number" name="rsize" id="rsize">
+            <br>
+            Room Type: <input type="text" name="rtype" id="rtype">
+            Furniture Type: <input type="text" name="ftype" id="ftype">
+            <br>
+            Location: <input type="number" name="rad" id="rad">m from building <input type="text" name="brname" id="brname">
+            <br>
+            <button id="btnrooms">Filter Rooms</button>
+            <table id="roomstblResults"></table>
+        </div>
+
+        <div>
+            <h2>Scheduling</h2>
+            <h3>Courses</h3>
+
+            <h3>Rooms</h3>
+            Building Name: <input type="text" name="schbname" id="schbname">
+            Location: <input type="number" name="schrad" id="schrad">m from building <input type="text" name="schbrname" id="schbrname">
+            <br>
+            Room Name <input type="text" name="schrname" id="schrname">
+            <br>
+            <button id="btnsch">Schedule</button>
+            <table id="schtblResults"></table>
+        </div>
+
+        <!-- <div>
+            <textarea id="txtQuery"></textarea><br />
+            <button id="btnSubmit">Submit</button>
+            <table id="tblResults"></table>
+        </div>-->
+
+
+        <script src="js/jquery-3.2.0.js"></script>
+        <script src="js/main.js"></script>
+    </body>
 </html>
 
