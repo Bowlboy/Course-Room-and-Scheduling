@@ -90,11 +90,10 @@ $("#btncourses").click(function () {
 
     var query =
         {"WHERE":
-            {"AND": [{"GT": {"rooms_seats": 300}},
-                {"NOT": {"IS": {"rooms_type": "*studio*"}}},
-                {"NOT": {"IS": {"rooms_address": "6245 Agronomy Road V6T 1Z4"}}}]},
-            "OPTIONS": {"COLUMNS": ["rooms_seats", "rooms_type", "rooms_address"],
-                "ORDER": "rooms_seats", "FORM": "TABLE"}};
+            {"AND": [arryofkeys]},
+            "OPTIONS": {"COLUMNS": ["courses_dept","courses_id","courses_avg", "courses_instructor",
+                "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid"],
+                "ORDER": "rooms_dept", "FORM": "TABLE"}};
 
     $.ajax({
         url: 'http://localhost:4321/query',
