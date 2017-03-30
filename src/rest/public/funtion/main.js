@@ -54,9 +54,15 @@ $("#btncourses").click(function () {
     var Orad = $('input[name=orad]:checked').val(); // just add it as you make ORDER
 
     var arryofkeys = []; // array of filled filters
+
     // if NOT have to add IS -> for non numbers
-    var SCQ = {}; //number
-    // comapre to both # fail or #pass
+    // comapre to both # fail or #pass -> handle Section Size
+    if (Secsize.toString().length > 0) {
+        var SCQ1 = {SCrad: {"courses_pass": Secsize}}; //number
+        var SCQ2 = {SCrad: {"courses_fail": Secsize}}; //number
+        arryofkeys.push(SCQ1);
+        arryofkeys.push(SCQ2);
+    }
     // handle dept
     if (Dept.length > 0 && Drad == "IS") {
         var DQ = {Drad: {"courses_dept": Dept}};
@@ -81,13 +87,21 @@ $("#btncourses").click(function () {
         arryofkeys.push(CNQ);
     }
     else if (Cnum.length >0 && CNrad == "NOT") {
-        var CNQ = {CNad: {"IS":{"courses_id": Cnum}}};
+        var CNQ = {CNrad: {"IS":{"courses_id": Cnum}}};
         arryofkeys.push(CNQ);
     }
+    // handle Instructor
+    if (Cnum.length > 0 && Irad == "IS" ) {
+        var IQ = {Irad: {"courses_instructor": Inst}};
+        arryofkeys.push(IQ);
+    }
+    else if (Cnum.length >0 && Irad == "NOT") {
+        var IQ = {Irad: {"IS":{"courses_instructor": Inst}}};
+        arryofkeys.push(IQ);
+    }
 
-
-    var IQ = {Irad: {"courses_instructor": Inst}};
-
+    // array is now filled and time to make the query dont forget to use
+    // Orad for the ORDER
     var query =
         {"WHERE":
             {"AND": [arryofkeys]},
@@ -135,14 +149,142 @@ $("#btnrooms").click(function () {
     var Dist = $("#rad").val();
     var DBname = $("#brname").val();
 
-    // if NOT have to add IS -> for non number
-    var BNQ = {BNrad: {"rooms_shortname": Bname}};
-    var RNQ = {RNrad: {"rooms_number": Rnum}};
-    var RSQ = {RSrad: {"rooms_seats": Rsize}}; // number
-    var RTQ = {RTrad: {"rooms_type": Rtype}};
-    var FTQ = {FTrad: {"rooms_furniture": FTrad}};
+    var arryofkeys = []; // array of filled filters
 
+    // if NOT have to add IS -> for non number
+    // handle building short name
+    if (Bname.length > 0 && BNrad == "IS" ) {
+        var BNQ = {BNrad: {"rooms_shortname": Bname}};
+        arryofkeys.push(BNQ);
+    }
+    else if (Bname.length >0 && BNrad == "NOT") {
+        var BNQ = {BNrad: {"IS":{"rooms_shortname": Bname}}};
+        arryofkeys.push(BNQ);
+    }
+    //handle room number
+    if (Rnum.length > 0 && RNrad == "IS" ) {
+        var RNQ = {RNrad: {"rooms_number": Rnum}};
+        arryofkeys.push(RNQ);
+    }
+    else if (Rnum.length >0 && RNrad == "NOT") {
+        var RNQ = {RNrad: {"IS":{"rooms_number": Rnum}}};
+        arryofkeys.push(RNQ);
+    }
+    // handle room size
+    if (Rsize.toString().length > 0) {
+        var RSQ = {RSrad: {"rooms_seats": Rsize}}; // number
+        arryofkeys.push(RSQ);
+    }
+    // handle room type
+    if (Rtype.length > 0 && RTrad == "IS" ) {
+        var RTQ = {RTrad: {"rooms_type": Rtype}};
+        arryofkeys.push(RTQ);
+    }
+    else if (Rtype.length >0 && RTrad == "NOT") {
+        var RTQ = {RTrad: {"IS":{"rooms_type": Rtype}}};
+        arryofkeys.push(RTQ);
+    }
+    // handle room funriture
+    if (Ftype.length > 0 && FTrad == "IS" ) {
+        var FTQ = {FTrad: {"rooms_furniture": Ftype}};
+        arryofkeys.push(FTQ);
+    }
+    else if (Ftype.length >0 && FTrad == "NOT") {
+        var FTQ = {FTrad: {"IS":{"rooms_furniture": Ftype}}};
+        arryofkeys.push(FTQ);
+    }
+    // handle location -> HOW TO IMPLEMENT???
     var LDQ = {};
+
+    // array is now filled and time to make the query
+    var query =
+        {"WHERE":
+            {"AND": [{"GT": {"rooms_seats": 300}},
+                {"NOT": {"IS": {"rooms_type": "*studio*"}}},
+                {"NOT": {"IS": {"rooms_address": "6245 Agronomy Road V6T 1Z4"}}}]},
+            "OPTIONS": {"COLUMNS": ["rooms_seats", "rooms_type", "rooms_address"],
+                "ORDER": "rooms_seats", "FORM": "TABLE"}};
+    $.ajax({
+        url: 'http://localhost:4321/query',
+        type: 'post',
+        data: query,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done(function (data) {
+        console.log("Response", data);
+        generateTable(data.result);
+    }).fail(function () {
+        console.error("ERROR - Failed to submit query");
+    });
+});
+
+$("#btnSch").click(function () {
+    //courses
+    var Sdept = $("#schdept").val();
+    var SCnum =  $("#schcornum").val();
+    var SCname = $("#schcname").val();
+
+    var course = [];
+    // handle department
+    if (Sdept.length > 0) {
+        var SDQ = {"IS": {"courses_dept": Sdept}};
+        course.push(SDQ);
+    }
+    // handle course number
+    if (SCnum.length > 0) {
+        var SCNQ = {"IS": {"courses_id": SCnum}};
+        course.push(SCNQ);
+    }
+    // handle courses name
+    if (SCname.length > 0) {
+        if (SCname.length == 1) {
+            SCnamed = SCname.split("_");
+            var SCNAQ1 = {"IS": {"courses_dept": SCnamed[0]}};
+            var SCNAQ2 = {"IS": {"courses_id": SCnamed[1]}};
+            course.push(SCNAQ1);
+            course.push(SCNAQ2);
+        }
+        else {
+            SCnames = SCname.split(",");
+            for (i = 0; i< SCnames.length;i++) {
+                SCnamed2 = SCnames[i].split("_");
+                var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
+                var SCNAQ2B = {"IS": {"courses_id": SCnamed2[1]}};
+                course.push(SCNAQ1B);
+                course.push(SCNAQ2B);
+            }
+        }
+    }
+    // add year requirement
+    var YQ = {"IS": {"courses_year": 2014}};
+    course.push(YQ);
+
+    // NOW course ARE FILLLED WITH REQUIRED KEYS
+
+    //rooms
+    var SBname = $("#schbname").val();
+    var SDist = $("#schrad").val(); // number
+    var SDBname = $("#schbrname").val();
+    var SRname = $("#schrname").val();
+
+    var rooms = [];
+    // handle S short bulding name
+    if (SBname.length > 0) {
+        var SBNQ = {"IS": {"rooms_shortname": Bname}};
+        rooms.push(SBNQ);
+    }
+    // handle S room name
+    if (SRname.length > 0) {
+        var SRNQ = {"IS": {"rooms_name": SRname}};
+        rooms.push(SRNQ);
+    }
+    // handle location -> HOW TO IMPLEMENT???
+    var SLDQ = {};
+
+    // NOW rooms ARE FILLED WITH REQUIRED KEYS
+
+
+
     var query =
         {"WHERE":
             {"AND": [{"GT": {"rooms_seats": 300}},
