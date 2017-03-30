@@ -90,4 +90,6 @@ export interface IInsightFacade {
      *
      */
     performQuery(query: QueryRequest): Promise<InsightResponse>;
+
+    schedule(courses: any[], rooms: any[]): String[][];
 }

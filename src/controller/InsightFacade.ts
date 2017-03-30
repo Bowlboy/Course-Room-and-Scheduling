@@ -1423,5 +1423,84 @@ export default class InsightFacade implements IInsightFacade {
             }
         })
     }
+
+    schedule(courses: any[], rooms: any[]): String[][] {
+        let finalSchedule: String[][] = [];
+        let overflow: String[] = [];
+        let firstArray: String[] = [,"MWF 8-9","MWF 9-10","MWF 10-11","MWF 11-12","MWF 12-13","MWF 13-14","MWF 14-15","MWF 15-16","MWF 16-17","TT 8-9.30","TT 9.30-11","TT 11-12.30","TT 12.30-2","TT 2-3.30","TT 3.30-5"];
+
+        function compare(a: any,b: any) {
+            if (a.rooms_seats < b.rooms_seats)
+                return -1;
+            if (a.rooms_seats > b.rooms_seats)
+                return 1;
+            return 0;
+        }
+
+        rooms.sort(compare);
+
+        // Log.test(JSON.stringify(rooms));
+
+        let room_names: String[] = [];
+        let room_capacity: number[] = [];
+        let room_full: boolean[] = [];
+
+        finalSchedule.push(firstArray);
+        for (var room of rooms) {
+            // KEY[0] = NAME, KEY[1] = MAX_SEATS
+            var roomKeys = Object.keys(room);
+            room_names.push(room[<any>roomKeys[0]]);
+            room_capacity.push(room[<any>roomKeys[1]]);
+            room_full.push(false);
+            let tempArray: String[] = [room[<any>roomKeys[0]]];
+            finalSchedule.push(tempArray);
+        }
+
+        // Log.test("room_names" + room_names);
+        // Log.test("room_capacity" + room_capacity);
+
+        let finalCourses: any[] = [];
+
+        for (var course of courses) {
+            // KEY[0] = COURSE_DEPT, KEY[1] = COURSE_ID, KEY[2] = #SECTIONS, KEY[3] = #STUDENTS
+            var courseKey = Object.keys(course);
+            var course_dept = course[<any>courseKey[0]];
+            var course_id = course[<any>courseKey[1]];
+            var num_sections = course[<any>courseKey[2]];
+            var num_students = course[<any>courseKey[3]];
+            num_sections = Math.ceil(num_sections/3);
+
+            for (var i = 0; i < num_sections; i++) {
+                var tempName = course_dept + " " + course_id + " 10" + i;
+                let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
+                finalCourses.push(tempObject);
+                Log.test("teemp" + JSON.stringify(tempObject));
+            }
+        }
+
+        // Log.test("final courses" + JSON.stringify(finalCourses));
+
+        for (var course of finalCourses) {
+            var name = course[<any>Object.keys(course)[0]];
+            var students = course[<any>Object.keys(course)[1]];
+            for (var i = 0; i <= room_capacity.length; i++) {
+                if (room_capacity[i] > students && !room_full[i]) {
+                    finalSchedule[i+1].push(name);
+                    if (finalSchedule[i+1].length >= 15) {
+                        room_full[i] = true;
+                    }
+                    break;
+                }
+                if (i == room_capacity.length) {
+                    overflow.push(name);
+                    break;
+                }
+            }
+        }
+        var quality = 1 - (overflow.length)/courses.length;
+        Log.test("Quality" + quality);
+
+        return finalSchedule
+    }
 }
 
