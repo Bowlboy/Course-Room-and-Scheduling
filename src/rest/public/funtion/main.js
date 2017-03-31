@@ -64,10 +64,10 @@ $("#btncourses").click(function () {
         arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "GT") {
-        var SCQ1 = {"GT": {"courses_pass": Number(Secsize)}}; //number
-        var SCQ2 = {"GT": {"courses_fail": Number(Secsize)}}; //number
-        //arryofkeys.push(SCQ1);
-        //arryofkeys.push(SCQ2);
+        var SCQ1 = {"LT": {"courses_pass": 0}}; //number
+        var SCQ2 = {"LT": {"courses_fail": 0}}; //number
+        arryofkeys.push(SCQ1);
+        arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "LT") {
         var SCQ1 = {"LT": {"courses_pass": Number(Secsize)}}; //number
@@ -139,7 +139,7 @@ $("#btncourses").click(function () {
         var results = data.result;
         var realData = [];
         for (var i = 0; i < results.length; i++) {
-            switch (SCRad) {
+            switch (SCrad) {
                 case ("GT"): {
                     if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) >= Number(Secsize)) {
                         realData.push(results[i]);
