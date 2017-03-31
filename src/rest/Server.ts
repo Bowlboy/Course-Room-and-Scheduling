@@ -179,8 +179,8 @@ export default class Server {
     }
 
     public static schedule(req: restify.Request, res: restify.Response, next: restify.Next) {
-        //console.log("masuk perform");
-        //console.log(req.body);
+        console.log("masuk schedule");
+        console.log(req.body);
         IF.schedule(req.body)
             .then(function success(content: any) {
                 //console.log(content);

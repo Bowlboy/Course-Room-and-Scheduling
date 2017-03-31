@@ -1,7 +1,7 @@
 /**
  * This is the main programmatic entry point for the project.
  */
-import {IInsightFacade, InsightResponse, QueryRequest} from "./IInsightFacade";
+import {IInsightFacade, InsightResponse, QueryRequest, Schedule} from "./IInsightFacade";
 
 import Log from "../Util";
 
@@ -1424,15 +1424,25 @@ export default class InsightFacade implements IInsightFacade {
         })
     }
 
-    schedule(obj: any[]): Promise<InsightResponse> {
+    schedule(objj: Schedule): Promise<InsightResponse> {
         return new Promise(function(fulfill, reject) {
+            Log.test("sampe sini gaa");
 
-            let courses: any[] = obj[0].body.result;
-            let rooms: any[] = obj[1].body.result;
+            var obj = objj["ngentot"];
+
+            Log.test("objj" + JSON.stringify(obj));
+
+            let courses: any[] = obj[0];
+            let rooms: any[] = obj[1];
+
+            Log.test("rooms" + JSON.stringify(rooms));
 
             let finalSchedule: String[][] = [];
             let overflow: String[] = [];
             let firstArray: String[] = [, "MWF 8-9", "MWF 9-10", "MWF 10-11", "MWF 11-12", "MWF 12-13", "MWF 13-14", "MWF 14-15", "MWF 15-16", "MWF 16-17", "TT 8-9.30", "TT 9.30-11", "TT 11-12.30", "TT 12.30-2", "TT 2-3.30", "TT 3.30-5"];
+
+
+            Log.test("sampe sini gaa2");
 
             function compare(a: any, b: any) {
                 if (a.rooms_seats < b.rooms_seats)
@@ -1443,6 +1453,8 @@ export default class InsightFacade implements IInsightFacade {
             }
 
             rooms.sort(compare);
+
+            Log.test("sampe sini gaa3");
 
             // Log.test(JSON.stringify(rooms));
 
@@ -1463,6 +1475,9 @@ export default class InsightFacade implements IInsightFacade {
 
             // Log.test("room_names" + room_names);
             // Log.test("room_capacity" + room_capacity);
+
+
+            Log.test("sampe sini gaa4");
 
             let finalCourses: any[] = [];
 

@@ -36,7 +36,7 @@ describe.only("D4Spec", function () {
     let QueryDMP: QueryRequest;
     QueryDMP = {"WHERE": {
         "IS": {"rooms_name": "*PHRM*"}}, "OPTIONS": {
-            "COLUMNS": ["rooms_name","rooms_seats"], "ORDER": "rooms_name", "FORM": "TABLE"}};
+            "COLUMNS": ["rooms_name","rooms_seats","rooms_lat","rooms_lon"], "ORDER": "rooms_name", "FORM": "TABLE"}};
 
     let query1: QueryRequest;
     query1 = {"WHERE":{"AND":[{"IS":{"courses_dept":"cpsc"}}]},"OPTIONS":{"COLUMNS": ["courses_dept","courses_id","courses_avg","courses_instructor","courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],"ORDER":"courses_fail","FORM":"TABLE"}};
@@ -125,7 +125,8 @@ describe.only("D4Spec", function () {
 
     it("Test 1", function () {
         let tempObj: any[] = [tempCourses, tempRooms];
-        return myIR.schedule(tempObj).then(function (response: InsightResponse) {
+        let tempObjj: any = {ngentot: tempObj};
+        return myIR.schedule(tempObjj).then(function (response: InsightResponse) {
             expect(response.code).to.equal(200);
             Log.test('The Response is: ' + JSON.stringify(response.body));
         }).catch(function (err) {

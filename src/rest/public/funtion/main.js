@@ -335,27 +335,32 @@ $("#btnrooms").click(function () {
             var lat2 = result2[0]["rooms_lat"];
             var lon2 = result2[0]["rooms_lon"];
 
-            for (var i = 0; i < result1.length; i++) {
-                var lat1 = result1[i]["rooms_lat"];
-                var lon1 = result1[i]["rooms_lon"];
-
-                var R = 6371;
-                var x1 = lat2-lat1;
-                var dLat = x1.toRad();
-                var x2 = lon2-lon1;
-                var dLon = x2.toRad();
-                var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
-                    Math.sin(dLon/2) * Math.sin(dLon/2);
-                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                var d = (R * c) * 1000;
-
-                if (d < Dist) {
-                    puuuu.push(result1[i]);
-                    console.log("DISTAAAANCE " + d + " HOLY " + Dist);
-                }
+            if (DBname.length == 0) {
+                generateTable(result1);
             }
-            generateTable(puuuu);
+            else {
+                for (var i = 0; i < result1.length; i++) {
+                    var lat1 = result1[i]["rooms_lat"];
+                    var lon1 = result1[i]["rooms_lon"];
+
+                    var R = 6371;
+                    var x1 = lat2 - lat1;
+                    var dLat = x1.toRad();
+                    var x2 = lon2 - lon1;
+                    var dLon = x2.toRad();
+                    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    var d = (R * c) * 1000;
+
+                    if (d < Dist) {
+                        puuuu.push(result1[i]);
+                        console.log("DISTAAAANCE " + d + " HOLY " + Dist);
+                    }
+                }
+                generateTable(puuuu);
+            }
 
         }).fail(function () {
             console.error("ERROR - Failed to submit LD query");
@@ -365,7 +370,8 @@ $("#btnrooms").click(function () {
     });
 });
 
-$("#btnSch").click(function () {
+$("#btnsch").click(function () {
+    console.log("Checkpoint1");
     //courses
     var Sdept = $("#schdept").val();
     var SCnum =  $("#schcornum").val();
@@ -382,6 +388,8 @@ $("#btnSch").click(function () {
         var SCNQ = {"IS": {"courses_id": SCnum}};
         course.push(SCNQ);
     }
+
+    console.log("Checkpoint2");
     // handle courses name
     if (SCname.length > 0) {
         if (SCname.length == 1) {
@@ -403,11 +411,12 @@ $("#btnSch").click(function () {
         }
     }
     // add year requirement
-    var YQ = {"IS": {"courses_year": 2014}};
+    var YQ = {"EQ": {"courses_year": 2014}};
     course.push(YQ);
 
     // NOW course ARE FILLLED WITH REQUIRED KEYS
 
+    console.log("Checkpoint3");
     //rooms
     var SBname = $("#schbname").val();
     var SDist = $("#schrad").val(); // number
@@ -417,7 +426,7 @@ $("#btnSch").click(function () {
     var rooms = [];
     // handle S short bulding name
     if (SBname.length > 0) {
-        var SBNQ = {"IS": {"rooms_shortname": Bname}};
+        var SBNQ = {"IS": {"rooms_shortname": SBname}};
         rooms.push(SBNQ);
     }
     // handle S room name
@@ -434,9 +443,12 @@ $("#btnSch").click(function () {
             }
         }
     }
+
+    console.log("Checkpoint4");
     // handle location -> HOW TO IMPLEMENT???
     //SDist
     //SDBname
+    console.log("SDBname" + SDBname);
     if (SDBname.length > 0) {
         var SLDQ = {
             "WHERE": {"AND": [{"IS": {"rooms_shortname": SDBname}}]},
@@ -456,7 +468,6 @@ $("#btnSch").click(function () {
         };
     }
     // NOW rooms ARE FILLED WITH REQUIRED KEYS
-
 
 
     var queryCourse =
@@ -479,14 +490,22 @@ $("#btnSch").click(function () {
         };
 
     var queryRoom = {"WHERE": SBNQ, "OPTIONS": {
-        "COLUMNS": ["rooms_name","rooms_seats"], "ORDER": "rooms_name", "FORM": "TABLE"}};
+        "COLUMNS": ["rooms_name","rooms_seats","rooms_lat","rooms_lon"], "ORDER": "rooms_name", "FORM": "TABLE"}};
 
     var coursesResult;
     var roomsResult;
 
+
+    console.log("Checkpoint6");
     console.log(JSON.stringify(queryCourse));
     console.log(JSON.stringify(queryRoom));
     console.log(JSON.stringify(SLDQ));
+
+
+    Number.prototype.toRad = function() {
+        return this * Math.PI / 180;
+    };
+
 
     $.ajax({
         url: 'http://localhost:4321/query',
@@ -495,8 +514,8 @@ $("#btnSch").click(function () {
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
-        console.log("Response", data);
-        coursesResult = data;
+        console.log("Response", data.result);
+        coursesResult = data.result;
 
         $.ajax({
             url: 'http://localhost:4321/query',
@@ -505,19 +524,72 @@ $("#btnSch").click(function () {
             dataType: 'json',
             contentType: 'application/json'
         }).done(function (data) {
-            console.log("Response", data);
-            roomsResult = data;
-            var tempObj = [coursesResult, roomsResult];
+
+            console.log("Response", data.result);
+            roomsResult = data.result;
 
             $.ajax({
                 url: 'http://localhost:4321/query',
                 type: 'post',
-                data: tempObj,
+                data: JSON.stringify(SLDQ),
                 dataType: 'json',
                 contentType: 'application/json'
-            }).done(function (data) {
-                console.log("Response", data);
-                generateTable(data)
+            }).done(function (data3) {
+
+                var puuuuuuuuuuuu = [];
+
+                var result3 = data3.result;
+                var lat2 = result3[0]["rooms_lat"];
+                var lon2 = result3[0]["rooms_lon"];
+
+                console.log("roooms" + JSON.stringify(roomsResult));
+                console.log("data3" + JSON.stringify(data3));
+
+                if (SDBname == 0) {
+                    var tempObj = [coursesResult, roomsResult];
+                    var tempObjj = {ngentot: tempObj};
+                    console.log("teempobj" + JSON.stringify(tempObjj));
+                }
+                else {
+
+                    for (var i = 0; i < roomsResult.length; i++) {
+                        var lat1 = roomsResult[i]["rooms_lat"];
+                        var lon1 = roomsResult[i]["rooms_lon"];
+
+                        var R = 6371;
+                        var x1 = lat2 - lat1;
+                        var dLat = x1.toRad();
+                        var x2 = lon2 - lon1;
+                        var dLon = x2.toRad();
+                        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        var d = (R * c) * 1000;
+
+                        if (d < SDist) {
+                            puuuuuuuuuuuu.push(roomsResult[i]);
+                        }
+                    }
+                    // generateTable(coursesResult);
+                    // generateTable(puuuuuuuuuuuu);
+                    var tempObj = [coursesResult, puuuuuuuuuuuu];
+                    var tempObjj = {ngentot: tempObj};
+                    console.log("teempobj" + JSON.stringify(tempObjj));
+                }
+
+                $.ajax({
+                    url: 'http://localhost:4321/schedule',
+                    type: 'post',
+                    data: JSON.stringify(tempObjj),
+                    dataType: 'json',
+                    contentType: 'application/json'
+                }).done(function (data) {
+                    console.log("Response", JSON.stringify(data.result));
+                    generateTable(data.result)
+                }).fail(function () {
+                    console.error("ERROR - Failed to submit query");
+                });
             }).fail(function () {
                 console.error("ERROR - Failed to submit query");
             });

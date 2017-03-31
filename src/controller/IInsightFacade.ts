@@ -17,6 +17,10 @@ export interface QueryRequest {
 
 }
 
+export interface Schedule {
+    ngentot: any;
+}
+
 export interface IInsightFacade {
 
     /**
@@ -91,5 +95,5 @@ export interface IInsightFacade {
      */
     performQuery(query: QueryRequest): Promise<InsightResponse>;
 
-    schedule(obj: any[]): Promise<InsightResponse>;
+    schedule(obj: Schedule): Promise<InsightResponse>;
 }
