@@ -447,7 +447,7 @@ $("#btnsch").click(function () {
     // handle location -> HOW TO IMPLEMENT???
     //SDist
     //SDBname
-    console.log("SDBname" + SDBname);
+    //console.log("SDBname" + SDBname);
     if (SDBname.length > 0) {
         var SLDQ = {
             "WHERE": {"AND": [{"IS": {"rooms_shortname": SDBname}}]},
@@ -507,7 +507,7 @@ $("#btnsch").click(function () {
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
-        console.log("Response", data.result);
+        //console.log("Response", data.result);
         coursesResult = data.result;
 
         $.ajax({
@@ -518,7 +518,7 @@ $("#btnsch").click(function () {
             contentType: 'application/json'
         }).done(function (data) {
 
-            console.log("Response", data.result);
+            //console.log("Response", data.result);
             roomsResult = data.result;
 
             $.ajax({
@@ -535,13 +535,15 @@ $("#btnsch").click(function () {
                 var lat2 = result3[0]["rooms_lat"];
                 var lon2 = result3[0]["rooms_lon"];
 
-                console.log("roooms" + JSON.stringify(roomsResult));
-                console.log("data3" + JSON.stringify(data3));
+                //console.log("roooms" + JSON.stringify(roomsResult));
+                //console.log("data3" + JSON.stringify(data3));
 
                 if (SDBname == 0) {
                     var tempObj = [coursesResult, roomsResult];
                     var tempObjj = {ngentot: tempObj};
-                    console.log("teempobj" + JSON.stringify(tempObjj));
+                    //console.log("teempobj" + JSON.stringify(tempObjj));
+                    generateTable(coursesResult);
+                    generateTable2(roomsResult);
                 }
                 else {
 
@@ -564,11 +566,11 @@ $("#btnsch").click(function () {
                             puuuuuuuuuuuu.push(roomsResult[i]);
                         }
                     }
-                    // generateTable(coursesResult);
-                    // generateTable(puuuuuuuuuuuu);
+                     generateTable(coursesResult);
+                     generateTable2(puuuuuuuuuuuu);
                     var tempObj = [coursesResult, puuuuuuuuuuuu];
                     var tempObjj = {ngentot: tempObj};
-                    console.log("teempobj" + JSON.stringify(tempObjj));
+                    //console.log("teempobj" + JSON.stringify(tempObjj));
                 }
 
                 $.ajax({
@@ -578,8 +580,8 @@ $("#btnsch").click(function () {
                     dataType: 'json',
                     contentType: 'application/json'
                 }).done(function (data) {
-                    console.log("Response", JSON.stringify(data.result));
-                    generateTable(data.result)
+                    //console.log("Response", JSON.stringify(data.result));
+                    generateTable3(data.result);
                 }).fail(function () {
                     console.error("ERROR - Failed to submit query");
                 });
@@ -688,33 +690,23 @@ function generateTable3(data) {
     var tbl_body = document.createElement("tbody");
     var odd_even = false;
     //console.log("DATA", data);
-    $.each(data, function () {
-        var tbl_row = tbl_body.insertRow();
-        tbl_row.className = odd_even ? "odd" : "even";
-        $.each(this, function (k, v) {
-            var cell = tbl_row.insertCell();
-            cell.appendChild(document.createTextNode(v.toString()));
+    //$.each(data, function (n0, v0) {
+        $.each(data, function (n1, v1) {
+            console.log(v1);
+            var tbl_row = tbl_body.insertRow();
+            tbl_row.className = odd_even ? "odd" : "even";
+            $.each(this, function (k, v) {
+                var cell = tbl_row.insertCell();
+                cell.appendChild(document.createTextNode(v));
+            })
+            odd_even = !odd_even;
         })
-        odd_even = !odd_even;
-    })
+    //})
     var myNode = document.getElementById("tblResults3");
     while (myNode.firstChild) {
         myNode.removeChild(myNode.firstChild);
     }
-    var tbl_head = document.createElement("thead");
-    //console.log("here1");
-    var row = tbl_head.insertRow(0);
-    //console.log("here3");
-    //console.log(JSON.stringify(data));
-    var akey = Object.keys(data[0]);
-    //console.log("here4");
-    for (i=0; i<akey.length; i++) {
-        var cell1 = row.insertCell();
-        cell1.innerHTML = akey[i].toString();
-        //console.log(akey[i]);
-    }
     //console.log("here5");
-    document.getElementById("tblResults3").appendChild(tbl_head);
     document.getElementById("tblResults3").appendChild(tbl_body);
     //console.log("here6");
     // $("#tblResults").appendChild(tbl_body);
