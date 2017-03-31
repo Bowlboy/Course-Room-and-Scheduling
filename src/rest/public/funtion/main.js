@@ -116,17 +116,29 @@ $("#btncourses").click(function () {
     // array is now filled and time to make the query dont forget to use
     // Orad for the ORDER
     if (arryofkeys.length == 0) {
-        alert("FILL ONE OF THE FILTER BOX IN COURSES");
+        var query =
+            {
+                "WHERE": {},
+                "OPTIONS": {
+                    "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
+                        "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
+                    "ORDER": Orad, "FORM": "TABLE"
+                }
+            };
+    }
+    else {
+        var query =
+            {
+                "WHERE": {"AND": arryofkeys},
+                "OPTIONS": {
+                    "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
+                        "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
+                    "ORDER": Orad, "FORM": "TABLE"
+                }
+            };
     }
 
-    var query =
-        {"WHERE":
-            {"AND": arryofkeys},
-            "OPTIONS": {"COLUMNS": ["courses_dept","courses_id","courses_avg", "courses_instructor",
-                "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],
-                "ORDER": Orad, "FORM": "TABLE"}};
-
-    console.log(JSON.stringify(query));
+    //console.log(JSON.stringify(query));
 
     $.ajax({
         url: 'http://localhost:4321/query',
@@ -194,57 +206,99 @@ $("#btnrooms").click(function () {
     var arryofkeys1 = []; // array of filled filters
 
     // if NOT have to add IS -> for non number
-    // handle building short name
-    if (Bname.length > 0 && BNrad == "IS" ) {
-        var BNQ = {BNrad: {"rooms_shortname": Bname}};
-        arryofkeys1.push(BNQ);
-    }
-    else if (Bname.length >0 && BNrad == "NOT") {
-        var BNQ = {BNrad: {"IS":{"rooms_shortname": Bname}}};
-        arryofkeys1.push(BNQ);
-    }
     //handle room number
     if (Rnum.length > 0 && RNrad == "IS" ) {
-        var RNQ = {RNrad: {"rooms_number": Rnum}};
+        var RNQ = {"IS": {"rooms_number": Rnum}};
         arryofkeys1.push(RNQ);
     }
     else if (Rnum.length >0 && RNrad == "NOT") {
-        var RNQ = {RNrad: {"IS":{"rooms_number": Rnum}}};
+        var RNQ = {"NOT": {"IS":{"rooms_number": Rnum}}};
         arryofkeys1.push(RNQ);
     }
     // handle room size
-    if (Rsize.toString().length > 0) {
-        var RSQ = {RSrad: {"rooms_seats": Rsize}}; // number
+    if (Rsize.toString().length > 0 && RSrad == "EQ") {
+        var RSQ = {"EQ": {"rooms_seats": Number(Rsize)}}; // number
+        arryofkeys1.push(RSQ);
+    }
+    else if (Rsize.toString().length > 0 && RSrad == "GT") {
+        var RSQ = {"GT": {"rooms_seats": Number(Rsize)}}; // number
+        arryofkeys1.push(RSQ);
+    }
+    else if (Rsize.toString().length > 0 && RSrad == "LT") {
+        var RSQ = {"LT": {"rooms_seats": Number(Rsize)}}; // number
         arryofkeys1.push(RSQ);
     }
     // handle room type
     if (Rtype.length > 0 && RTrad == "IS" ) {
-        var RTQ = {RTrad: {"rooms_type": Rtype}};
+        var RTQ = {"IS": {"rooms_type": Rtype}};
         arryofkeys1.push(RTQ);
     }
     else if (Rtype.length >0 && RTrad == "NOT") {
-        var RTQ = {RTrad: {"IS":{"rooms_type": Rtype}}};
+        var RTQ = {"NOT": {"IS":{"rooms_type": Rtype}}};
         arryofkeys1.push(RTQ);
     }
     // handle room funriture
     if (Ftype.length > 0 && FTrad == "IS" ) {
-        var FTQ = {FTrad: {"rooms_furniture": Ftype}};
+        var FTQ = {"IS": {"rooms_furniture": Ftype}};
         arryofkeys1.push(FTQ);
     }
     else if (Ftype.length >0 && FTrad == "NOT") {
-        var FTQ = {FTrad: {"IS":{"rooms_furniture": Ftype}}};
+        var FTQ = {"NOT": {"IS":{"rooms_furniture": Ftype}}};
         arryofkeys1.push(FTQ);
     }
-    // handle location -> HOW TO IMPLEMENT???
-    var LDQ = {};
+    // handle building short name
+    if (Bname.length > 0 && BNrad == "IS" ) {
+        var BNQ = {"IS": {"rooms_shortname": Bname}};
+        arryofkeys1.push(BNQ);
+    }
+    else if (Bname.length >0 && BNrad == "NOT") {
+        var BNQ = {"NOT": {"IS":{"rooms_shortname": Bname}}};
+        arryofkeys1.push(BNQ);
+    }
 
-    // array is now filled and time to make the query
-    var query =
-        {"WHERE":
-            {"AND": [arryofkeys1]},
-            "OPTIONS": {"COLUMNS": ["rooms_fullname","rooms_shortname","rooms_name", "rooms_address",
-                "rooms_lat","rooms_lon","rooms_seats","rooms_type","rooms_furniture","rooms_href"],
-                "ORDER": "rooms_shortname", "FORM": "TABLE"}};
+    // handle location -> HOW TO IMPLEMENT???
+    //Dist
+    //DBname
+    if (DBname.length > 0) {
+        var LDQ = {
+            "WHERE": {"AND": [{"IS": {"rooms_shortname": DBname}}]},
+            "OPTIONS": {
+                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_shortname", "FORM": "TABLE"
+            }
+        };
+    }
+    else {
+        var LDQ = {
+            "WHERE": {},
+            "OPTIONS": {
+                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_shortname", "FORM": "TABLE"
+            }
+        };
+    }
+
+
+    if (arryofkeys1.length == 0) {
+        var query =
+            {"WHERE":
+                {},
+                "OPTIONS": {"COLUMNS": ["rooms_fullname","rooms_shortname","rooms_name", "rooms_address",
+                    "rooms_lat","rooms_lon","rooms_seats","rooms_type","rooms_furniture","rooms_href"],
+                    "ORDER": "rooms_shortname", "FORM": "TABLE"}};
+    }
+    else {
+        // array is now filled and time to make the query
+        var query =
+            {
+                "WHERE": {"AND": arryofkeys1},
+                "OPTIONS": {
+                    "COLUMNS": ["rooms_fullname", "rooms_shortname", "rooms_name", "rooms_address",
+                        "rooms_lat", "rooms_lon", "rooms_seats", "rooms_type", "rooms_furniture", "rooms_href"],
+                    "ORDER": "rooms_shortname", "FORM": "TABLE"
+                }
+            };
+    }
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
@@ -252,8 +306,23 @@ $("#btnrooms").click(function () {
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
-        console.log("Response", data);
-        generateTable(data.result);
+        console.log("Response1");
+        //generateTable(data.result);
+        var result1 = data;
+        $.ajax({
+            url: 'http://localhost:4321/query',
+            type: 'post',
+            data: JSON.stringify(LDQ),
+            dataType: 'json',
+            contentType: 'application/json'
+        }).done(function (data2) {
+            console.log("Response2");
+            //generateTable(data.result);
+            var result2 = data2;
+
+        }).fail(function () {
+            console.error("ERROR - Failed to submit LD query");
+        });
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
     });
