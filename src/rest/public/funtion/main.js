@@ -138,27 +138,33 @@ $("#btncourses").click(function () {
         console.log("Response");
         var results = data.result;
         var realData = [];
+        // console.log(JSON.stringify(results[0]) + JSON.stringify(results[0]["courses_fail"] + Secsize));
         for (var i = 0; i < results.length; i++) {
             switch (SCrad) {
                 case ("GT"): {
-                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) >= Number(Secsize)) {
+                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) >= Secsize) {
                         realData.push(results[i]);
                     }
-                }
+                };
+                break;
                 case ("EQ"): {
-                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) == Number(Secsize)) {
+                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) == Secsize) {
                         realData.push(results[i]);
+                        console.log("BL");
                     }
-                }
+                };
+                break;
                 case ("LT"): {
-                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) <= Secsize) {
+                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) <= Secsize) {
                         realData.push(results[i]);
                     }
-                }
+                };
+                break;
                 default:
                     break;
             }
         }
+        console.log(JSON.stringify(realData));
         generateTable(realData);
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
