@@ -421,20 +421,47 @@ $("#btnSch").click(function () {
         rooms.push(SBNQ);
     }
     // handle S room name
-    // if (SRname.length > 0) {
-    //     var SRNQ = {"IS": {"rooms_name": SRname}};
-    //     rooms.push(SRNQ);
-    // }
+    if (SRname.length > 0) {
+        if (SRname.length == 1) {
+            var SRNQ = {"IS": {"rooms_name": SRname}};
+             rooms.push(SRNQ);
+        }
+        else {
+            SRnames = SRname.split(",");
+            for (i = 0; i< SCnames.length;i++) {
+                var SRNQ2 = {"IS": {"rooms_name": SRnames[i]}};
+                rooms.push(SRNQ2);
+            }
+        }
+    }
     // handle location -> HOW TO IMPLEMENT???
-    var SLDQ = {};
-
+    //SDist
+    //SDBname
+    if (SDBname.length > 0) {
+        var SLDQ = {
+            "WHERE": {"AND": [{"IS": {"rooms_shortname": SDBname}}]},
+            "OPTIONS": {
+                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_shortname", "FORM": "TABLE"
+            }
+        };
+    }
+    else {
+        var SLDQ = {
+            "WHERE": {},
+            "OPTIONS": {
+                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_shortname", "FORM": "TABLE"
+            }
+        };
+    }
     // NOW rooms ARE FILLED WITH REQUIRED KEYS
 
 
 
-    var query =
+    var queryCourse =
         {"WHERE":
-            {"AND": [course]},
+            {"AND": course},
             "OPTIONS": {
                 "COLUMNS": [
                     "courses_dept","courses_id","numberofsections","capacity"
@@ -457,10 +484,14 @@ $("#btnSch").click(function () {
     var coursesResult;
     var roomsResult;
 
+    console.log(JSON.stringify(queryCourse));
+    console.log(JSON.stringify(queryRoom));
+    console.log(JSON.stringify(SLDQ));
+
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
-        data: JSON.stringify(query),
+        data: JSON.stringify(queryCourse),
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
