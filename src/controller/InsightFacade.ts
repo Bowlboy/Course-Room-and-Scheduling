@@ -1435,6 +1435,8 @@ export default class InsightFacade implements IInsightFacade {
             let courses: any[] = obj[0];
             let rooms: any[] = obj[1];
 
+            var totalSections = 0;
+
             Log.test("rooms" + JSON.stringify(rooms));
 
             let finalSchedule: String[][] = [];
@@ -1481,6 +1483,8 @@ export default class InsightFacade implements IInsightFacade {
 
             let finalCourses: any[] = [];
 
+            let checker: String[][] = [];
+
             for (var course of courses) {
                 // KEY[0] = COURSE_DEPT, KEY[1] = COURSE_ID, KEY[2] = #SECTIONS, KEY[3] = #STUDENTS
                 var courseKey = Object.keys(course);
@@ -1489,12 +1493,19 @@ export default class InsightFacade implements IInsightFacade {
                 var num_sections = course[<any>courseKey[2]];
                 var num_students = course[<any>courseKey[3]];
                 num_sections = Math.ceil(num_sections / 3);
+                totalSections += num_sections;
 
                 for (var i = 0; i < num_sections; i++) {
-                    var tempName = course_dept + " " + course_id + " 10" + i;
-                    let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
-                    finalCourses.push(tempObject);
-                    // Log.test("teemp" + JSON.stringify(tempObject));
+                    if (i < 15) {
+                        var tempName = course_dept + " " + course_id + " 10" + i;
+                        let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
+                        finalCourses.push(tempObject);
+                        // Log.test("teemp" + JSON.stringify(tempObject));
+                    }
+                    else {
+                        var tempName = course_dept + " " + course_id + " 10" + i;
+                        let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
+                        overflow.push(tempObject);}
                 }
             }
 
@@ -1517,7 +1528,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
             }
-            var quality = 1 - (overflow.length) / courses.length;
+            var quality = 1 - (overflow.length) / totalSections;
             var q = "Quality" + quality;
             finalSchedule.push([q]);
             Log.test("Quality" + quality);

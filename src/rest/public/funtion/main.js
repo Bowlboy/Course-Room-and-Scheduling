@@ -120,7 +120,21 @@ $("#btncourses").click(function () {
                 "OPTIONS": {
                     "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
                         "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
-                    "ORDER": Orad, "FORM": "TABLE"
+                    "ORDER": {"dir": "DOWN", "keys": [Orad]}, "FORM": "TABLE"
+                }
+            };
+    }
+    else if (arryofkeys.length == 1 && Dept.length > 0) {
+        var query =
+            {
+                "WHERE": {"IS": {"courses_dept": Dept}},
+                "OPTIONS": {
+                    "COLUMNS": ["courses_dept", "courses_id", "average"],
+                    "ORDER": {"dir": "UP", "keys": ["courses_dept", "courses_id"]}, "FORM": "TABLE"
+                },
+                "TRANSFORMATIONS": {
+                    "GROUP": ["courses_dept","courses_id"],
+                    "APPLY": [{"average":{"AVG": "courses_avg"}}]
                 }
             };
     }
@@ -131,13 +145,16 @@ $("#btncourses").click(function () {
                 "OPTIONS": {
                     "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
                         "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
-                    "ORDER": Orad, "FORM": "TABLE"
+                    "ORDER": {"dir": "DOWN", "keys": [Orad]}, "FORM": "TABLE"
                 }
             };
     }
 
     //console.log(JSON.stringify(query));
 
+    if (query == null) {
+        alert("Hey, put something in first!");
+    }
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
@@ -147,6 +164,9 @@ $("#btncourses").click(function () {
     }).done(function (data) {
         console.log("Response");
         var results = data.result;
+        if (results.length == 0 ){
+            alert("do not put super tight parameters!");
+        }
         var realData = [];
 
         if(Secsize > 0) {
@@ -322,6 +342,9 @@ $("#btnrooms").click(function () {
     }).done(function (data) {
         console.log("Response1");
         //generateTable(data.result);
+        if (data.result.length == 0) {
+            alert("Parameters too tight! Loosen it up a little");
+        }
         var result1 = data.result;
         $.ajax({
             url: 'http://localhost:4321/query',
