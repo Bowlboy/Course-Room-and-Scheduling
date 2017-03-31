@@ -136,7 +136,7 @@ $("#btncourses").click(function () {
             };
     }
 
-    console.log(JSON.stringify(query));
+    //console.log(JSON.stringify(query));
 
     $.ajax({
         url: 'http://localhost:4321/query',
@@ -174,7 +174,7 @@ $("#btncourses").click(function () {
                         break;
                 }
             }
-            console.log(JSON.stringify(realData));
+            //console.log(JSON.stringify(realData));
             generateTable(realData);
         }
         else {
@@ -371,7 +371,6 @@ $("#btnrooms").click(function () {
 });
 
 $("#btnsch").click(function () {
-    console.log("Checkpoint1");
     //courses
     var Sdept = $("#schdept").val();
     var SCnum =  $("#schcornum").val();
@@ -494,12 +493,6 @@ $("#btnsch").click(function () {
 
     var coursesResult;
     var roomsResult;
-
-
-    console.log("Checkpoint6");
-    console.log(JSON.stringify(queryCourse));
-    console.log(JSON.stringify(queryRoom));
-    console.log(JSON.stringify(SLDQ));
 
 
     Number.prototype.toRad = function() {
@@ -638,15 +631,91 @@ function generateTable(data) {
     while (myNode.firstChild) {
         myNode.removeChild(myNode.firstChild);
     }
-    document.getElementById("tblResults").appendChild(tbl_body);
- /*   var table = document.getElementById("tblResult");
-    var row = table.insertRow(0);
+    var tbl_head = document.createElement("thead");
+    //console.log("here1");
+    var row = tbl_head.insertRow(0);
+    //console.log("here3");
+    //console.log(JSON.stringify(data));
     var akey = Object.keys(data[0]);
+    //console.log("here4");
     for (i=0; i<akey.length; i++) {
-        var cell1 = row.insertCell(0);
+        var cell1 = row.insertCell();
         cell1.innerHTML = akey[i].toString();
-    }*/
-
-
+        //console.log(akey[i]);
+    }
+    //console.log("here5");
+    document.getElementById("tblResults").appendChild(tbl_head);
+    document.getElementById("tblResults").appendChild(tbl_body);
+    //console.log("here6");
+    // $("#tblResults").appendChild(tbl_body);
+}
+function generateTable2(data) {
+    var tbl_body = document.createElement("tbody");
+    var odd_even = false;
+    //console.log("DATA", data);
+    $.each(data, function () {
+        var tbl_row = tbl_body.insertRow();
+        tbl_row.className = odd_even ? "odd" : "even";
+        $.each(this, function (k, v) {
+            var cell = tbl_row.insertCell();
+            cell.appendChild(document.createTextNode(v.toString()));
+        })
+        odd_even = !odd_even;
+    })
+    var myNode = document.getElementById("tblResults2");
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+    var tbl_head = document.createElement("thead");
+    //console.log("here1");
+    var row = tbl_head.insertRow(0);
+    //console.log("here3");
+    //console.log(JSON.stringify(data));
+    var akey = Object.keys(data[0]);
+    //console.log("here4");
+    for (i=0; i<akey.length; i++) {
+        var cell1 = row.insertCell();
+        cell1.innerHTML = akey[i].toString();
+        //console.log(akey[i]);
+    }
+    //console.log("here5");
+    document.getElementById("tblResults2").appendChild(tbl_head);
+    document.getElementById("tblResults2").appendChild(tbl_body);
+    //console.log("here6");
+    // $("#tblResults").appendChild(tbl_body);
+}
+function generateTable3(data) {
+    var tbl_body = document.createElement("tbody");
+    var odd_even = false;
+    //console.log("DATA", data);
+    $.each(data, function () {
+        var tbl_row = tbl_body.insertRow();
+        tbl_row.className = odd_even ? "odd" : "even";
+        $.each(this, function (k, v) {
+            var cell = tbl_row.insertCell();
+            cell.appendChild(document.createTextNode(v.toString()));
+        })
+        odd_even = !odd_even;
+    })
+    var myNode = document.getElementById("tblResults3");
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+    var tbl_head = document.createElement("thead");
+    //console.log("here1");
+    var row = tbl_head.insertRow(0);
+    //console.log("here3");
+    //console.log(JSON.stringify(data));
+    var akey = Object.keys(data[0]);
+    //console.log("here4");
+    for (i=0; i<akey.length; i++) {
+        var cell1 = row.insertCell();
+        cell1.innerHTML = akey[i].toString();
+        //console.log(akey[i]);
+    }
+    //console.log("here5");
+    document.getElementById("tblResults3").appendChild(tbl_head);
+    document.getElementById("tblResults3").appendChild(tbl_body);
+    //console.log("here6");
     // $("#tblResults").appendChild(tbl_body);
 }
