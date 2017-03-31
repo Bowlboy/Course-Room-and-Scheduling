@@ -64,10 +64,8 @@ $("#btncourses").click(function () {
         arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "GT") {
-        var SCQ1 = {"LT": {"courses_pass": 0}}; //number
-        var SCQ2 = {"LT": {"courses_fail": 0}}; //number
+        var SCQ1 = {"IS": {"courses_instructor": "* *"}}; //number
         arryofkeys.push(SCQ1);
-        arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "LT") {
         var SCQ1 = {"LT": {"courses_pass": Number(Secsize)}}; //number
@@ -138,7 +136,7 @@ $("#btncourses").click(function () {
             };
     }
 
-    //console.log(JSON.stringify(query));
+    console.log(JSON.stringify(query));
 
     $.ajax({
         url: 'http://localhost:4321/query',
@@ -151,24 +149,27 @@ $("#btncourses").click(function () {
         var results = data.result;
         var realData = [];
 
-        if(Number(Secsize) > 0) {
+        if(Secsize > 0) {
             for (var i = 0; i < results.length; i++) {
                 switch (SCrad) {
                     case ("GT"): {
-                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) >= Number(Secsize)) {
+                        if ((results[i]["courses_fail"] + results[i]["courses_pass"]) >= Secsize) {
                             realData.push(results[i]);
                         }
                     }
+                    break;
                     case ("EQ"): {
-                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) == Number(Secsize)) {
+                        if ((results[i]["courses_fail"] + results[i]["courses_pass"]) == Secsize) {
                             realData.push(results[i]);
                         }
                     }
+                    break;
                     case ("LT"): {
-                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) <= Secsize) {
+                        if ((results[i]["courses_fail"] + results[i]["courses_pass"]) <= Secsize) {
                             realData.push(results[i]);
                         }
                     }
+                    break;
                     default:
                         break;
                 }
