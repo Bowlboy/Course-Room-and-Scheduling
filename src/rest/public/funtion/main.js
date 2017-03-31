@@ -711,7 +711,15 @@ $("#btnrnd").click(function () {
         if (CRname.length == 1) {
             SCnamed = CRname.split("_");
             var SCNAQ1 = {"IS": {"courses_dept": SCnamed[0]}};
-            var SCNAQ2 = {"NOT":{"IS": {"courses_id": SCnamed[1]}}};
+            if (Number(SCnamed[1]) < 200) {
+                var SCNAQ2 = {"IS": {"courses_id": "2*"}};
+            }
+            else if (Number(SCnamed[1]) < 300) {
+                var SCNAQ2 = {"IS": {"courses_id": "3*"}};
+            }
+            else if (Number(SCnamed[1]) < 400) {
+                var SCNAQ2 = {"IS": {"courses_id": "4*"}};;
+            }
             CRkeys.push(SCNAQ1);
             CRkeys.push(SCNAQ2);
         }
@@ -722,7 +730,15 @@ $("#btnrnd").click(function () {
                 SCnamed2 = SCnames[i].split("_");
                 var temp =[];
                 var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
-                var SCNAQ2B = {"NOT":{"IS": {"courses_id": SCnamed2[1]}}};
+                if (Number(SCnamed2[1]) < 200) {
+                    var SCNAQ2B = {"IS": {"courses_id": "2*"}};
+                }
+                else if (Number(SCnamed2[1]) < 300) {
+                    var SCNAQ2B = {"IS": {"courses_id": "3*"}};
+                }
+                else if (Number(SCnamed2[1]) < 400) {
+                    var SCNAQ2B = {"IS": {"courses_id": "4*"}};
+                }
                 temp.push(SCNAQ1B);
                 temp.push(SCNAQ2B);
                 var RQ = {"AND":temp};
@@ -745,7 +761,7 @@ $("#btnrnd").click(function () {
             "OPTIONS": {
                 "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
                     "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
-                "ORDER": "courses_avg", "FORM": "TABLE"
+                "ORDER": {"dir": "DOWN", "keys": ["courses_avg","courses_dept","courses_id"]}, "FORM": "TABLE"
             }
         };
 
@@ -760,7 +776,15 @@ $("#btnrnd").click(function () {
     }).done(function (data) {
         console.log("Response");
         var results = data.result;
-            generateTable(results);
+        var real = [];
+
+        for (j=0; j<results.length;j++) {
+            var temp = results[j]["courses_dept"] + "_" + results[j]["courses_id"];
+            if (SCnames.indexOf(temp) < 0) {
+                real.push(results[j]);
+            }
+        }
+        generateTable(real);
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
     });
