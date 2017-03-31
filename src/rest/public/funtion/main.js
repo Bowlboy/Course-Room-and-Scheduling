@@ -305,6 +305,12 @@ $("#btnrooms").click(function () {
                 }
             };
     }
+
+    var puuuu = [];
+    Number.prototype.toRad = function() {
+        return this * Math.PI / 180;
+    };
+
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
@@ -314,7 +320,7 @@ $("#btnrooms").click(function () {
     }).done(function (data) {
         console.log("Response1");
         //generateTable(data.result);
-        var result1 = data;
+        var result1 = data.result;
         $.ajax({
             url: 'http://localhost:4321/query',
             type: 'post',
@@ -323,8 +329,31 @@ $("#btnrooms").click(function () {
             contentType: 'application/json'
         }).done(function (data2) {
             console.log("Response2");
-            //generateTable(data.result);
-            var result2 = data2;
+            var result2 = data2.result;
+            var lat2 = result2[0]["rooms_lat"];
+            var lon2 = result2[0]["rooms_lon"];
+
+            for (var i = 0; i < result1.length; i++) {
+                var lat1 = result1[i]["rooms_lat"];
+                var lon1 = result1[i]["rooms_lon"];
+
+                var R = 6371;
+                var x1 = lat2-lat1;
+                var dLat = x1.toRad();
+                var x2 = lon2-lon1;
+                var dLon = x2.toRad();
+                var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                var d = (R * c) * 1000;
+
+                if (d < Dist) {
+                    puuuu.push(result1[i]);
+                    console.log("DISTAAAANCE " + d + " HOLY " + Dist);
+                }
+            }
+            generateTable(puuuu);
 
         }).fail(function () {
             console.error("ERROR - Failed to submit LD query");
