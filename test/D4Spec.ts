@@ -97,7 +97,7 @@ describe.only("D4Spec", function () {
     it("Test Courses", function () {
         return myIR.performQuery(QueryAllCPSCCourses).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
-            tempCourses = response.body;
+            tempCourses = response;
             expect(response.code).to.equal(200);
             // expect(JSON.stringify(response.body)).to.equal(responseBanyak);
         }).catch(function (err) {
@@ -109,7 +109,7 @@ describe.only("D4Spec", function () {
     it("Test Rooms", function () {
         return myIR.performQuery(QueryDMP).then(function (response: InsightResponse) {
             // Log.test('The Response is: ' + JSON.stringify(response.body));
-            tempRooms = response.body;
+            tempRooms = response;
             expect(response.code).to.equal(200);
             // expect(JSON.stringify(response.body)).to.equal(responseBanyak);
         }).catch(function (err) {
@@ -119,10 +119,13 @@ describe.only("D4Spec", function () {
     });
 
     it("Test 1", function () {
-        let tempCourses1: String[] = tempCourses.result;
-        let tempRooms1: String[] = tempRooms.result;
-        let sched: String[][] = myIR.schedule(tempCourses1, tempRooms1);
-        Log.test(JSON.stringify(sched));
+        let tempObj: any[] = [tempCourses, tempRooms];
+        return myIR.schedule(tempObj).then(function (response: InsightResponse) {
+            expect(response.code).to.equal(200);
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+        }).catch(function (err) {
+            expect.fail();
+        })
     });
 });
 /**

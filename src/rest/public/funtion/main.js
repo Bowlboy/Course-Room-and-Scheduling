@@ -106,7 +106,7 @@ $("#btncourses").click(function () {
         {"WHERE":
             {"AND": [arryofkeys]},
             "OPTIONS": {"COLUMNS": ["courses_dept","courses_id","courses_avg", "courses_instructor",
-                "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid"],
+                "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],
                 "ORDER": "rooms_dept", "FORM": "TABLE"}};
 
     $.ajax({
@@ -149,49 +149,49 @@ $("#btnrooms").click(function () {
     var Dist = $("#rad").val();
     var DBname = $("#brname").val();
 
-    var arryofkeys = []; // array of filled filters
+    var arryofkeys1 = []; // array of filled filters
 
     // if NOT have to add IS -> for non number
     // handle building short name
     if (Bname.length > 0 && BNrad == "IS" ) {
         var BNQ = {BNrad: {"rooms_shortname": Bname}};
-        arryofkeys.push(BNQ);
+        arryofkeys1.push(BNQ);
     }
     else if (Bname.length >0 && BNrad == "NOT") {
         var BNQ = {BNrad: {"IS":{"rooms_shortname": Bname}}};
-        arryofkeys.push(BNQ);
+        arryofkeys1.push(BNQ);
     }
     //handle room number
     if (Rnum.length > 0 && RNrad == "IS" ) {
         var RNQ = {RNrad: {"rooms_number": Rnum}};
-        arryofkeys.push(RNQ);
+        arryofkeys1.push(RNQ);
     }
     else if (Rnum.length >0 && RNrad == "NOT") {
         var RNQ = {RNrad: {"IS":{"rooms_number": Rnum}}};
-        arryofkeys.push(RNQ);
+        arryofkeys1.push(RNQ);
     }
     // handle room size
     if (Rsize.toString().length > 0) {
         var RSQ = {RSrad: {"rooms_seats": Rsize}}; // number
-        arryofkeys.push(RSQ);
+        arryofkeys1.push(RSQ);
     }
     // handle room type
     if (Rtype.length > 0 && RTrad == "IS" ) {
         var RTQ = {RTrad: {"rooms_type": Rtype}};
-        arryofkeys.push(RTQ);
+        arryofkeys1.push(RTQ);
     }
     else if (Rtype.length >0 && RTrad == "NOT") {
         var RTQ = {RTrad: {"IS":{"rooms_type": Rtype}}};
-        arryofkeys.push(RTQ);
+        arryofkeys1.push(RTQ);
     }
     // handle room funriture
     if (Ftype.length > 0 && FTrad == "IS" ) {
         var FTQ = {FTrad: {"rooms_furniture": Ftype}};
-        arryofkeys.push(FTQ);
+        arryofkeys1.push(FTQ);
     }
     else if (Ftype.length >0 && FTrad == "NOT") {
         var FTQ = {FTrad: {"IS":{"rooms_furniture": Ftype}}};
-        arryofkeys.push(FTQ);
+        arryofkeys1.push(FTQ);
     }
     // handle location -> HOW TO IMPLEMENT???
     var LDQ = {};
@@ -199,11 +199,10 @@ $("#btnrooms").click(function () {
     // array is now filled and time to make the query
     var query =
         {"WHERE":
-            {"AND": [{"GT": {"rooms_seats": 300}},
-                {"NOT": {"IS": {"rooms_type": "*studio*"}}},
-                {"NOT": {"IS": {"rooms_address": "6245 Agronomy Road V6T 1Z4"}}}]},
-            "OPTIONS": {"COLUMNS": ["rooms_seats", "rooms_type", "rooms_address"],
-                "ORDER": "rooms_seats", "FORM": "TABLE"}};
+            {"AND": [arryofkeys1]},
+            "OPTIONS": {"COLUMNS": ["rooms_fullname","rooms_shortname","rooms_name", "rooms_address",
+                "rooms_lat","rooms_lon","rooms_seats","rooms_type","rooms_furniture","rooms_href"],
+                "ORDER": "rooms_shortname", "FORM": "TABLE"}};
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
@@ -274,10 +273,10 @@ $("#btnSch").click(function () {
         rooms.push(SBNQ);
     }
     // handle S room name
-    if (SRname.length > 0) {
-        var SRNQ = {"IS": {"rooms_name": SRname}};
-        rooms.push(SRNQ);
-    }
+    // if (SRname.length > 0) {
+    //     var SRNQ = {"IS": {"rooms_name": SRname}};
+    //     rooms.push(SRNQ);
+    // }
     // handle location -> HOW TO IMPLEMENT???
     var SLDQ = {};
 
@@ -287,15 +286,43 @@ $("#btnSch").click(function () {
 
     var query =
         {"WHERE":
-            {"AND": [{"GT": {"rooms_seats": 300}},
-                {"NOT": {"IS": {"rooms_type": "*studio*"}}},
-                {"NOT": {"IS": {"rooms_address": "6245 Agronomy Road V6T 1Z4"}}}]},
-            "OPTIONS": {"COLUMNS": ["rooms_seats", "rooms_type", "rooms_address"],
-                "ORDER": "rooms_seats", "FORM": "TABLE"}};
+            {"AND": [course]},
+            "OPTIONS": {
+                "COLUMNS": [
+                    "courses_dept","courses_id","numberofsections","capacity"
+                ],
+                "ORDER": {
+                    "dir": "UP",
+                    "keys": ["courses_dept","courses_id"]
+                },
+                "FORM": "TABLE"
+            },
+            "TRANSFORMATIONS": {
+                "GROUP": ["courses_dept","courses_id"],
+                "APPLY": [{"numberofsections":{"COUNT": "courses_uuid"}}, {"capacity":{"BIGGEST":"courses_pass"}}]
+            }
+        };
+
+    var queryRoom = {"WHERE": SBNQ, "OPTIONS": {
+        "COLUMNS": ["rooms_name","rooms_seats"], "ORDER": "rooms_name", "FORM": "TABLE"}};
+
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
         data: query,
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done(function (data) {
+        console.log("Response", data);
+        generateTable(data.result);
+    }).fail(function () {
+        console.error("ERROR - Failed to submit query");
+    });
+
+    $.ajax({
+        url: 'http://localhost:4321/query',
+        type: 'post',
+        data: queryRoom,
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
