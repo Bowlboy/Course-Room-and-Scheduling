@@ -1506,7 +1506,7 @@ export default class InsightFacade implements IInsightFacade {
                 for (var i = 0; i <= room_capacity.length; i++) {
                     if (room_capacity[i] > students && !room_full[i]) {
                         finalSchedule[i + 1].push(name);
-                        if (finalSchedule[i + 1].length >= 15) {
+                        if (finalSchedule[i + 1].length > 15) {
                             room_full[i] = true;
                         }
                         break;

@@ -389,6 +389,7 @@ $("#btnsch").click(function () {
     }
 
     console.log("Checkpoint2");
+    var trigger = 0;
     // handle courses name
     if (SCname.length > 0) {
         if (SCname.length == 1) {
@@ -399,19 +400,24 @@ $("#btnsch").click(function () {
             course.push(SCNAQ2);
         }
         else {
+            trigger = 1;
+            var coow = [];
             SCnames = SCname.split(",");
             for (i = 0; i< SCnames.length;i++) {
+                console.log("SAMPAI SINI JUGA TOH");
                 SCnamed2 = SCnames[i].split("_");
-                var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
-                var SCNAQ2B = {"IS": {"courses_id": SCnamed2[1]}};
-                course.push(SCNAQ1B);
-                course.push(SCNAQ2B);
+                var SCNAQ1B = {"AND": [{"IS": {"courses_dept": SCnamed2[0]}}, {"IS": {"courses_id": SCnamed2[1]}}, {"EQ": {"courses_year": 2014}}]};
+                coow.push(SCNAQ1B);
             }
+            var cowr = {"OR": coow};
+            course.push(cowr);
         }
     }
     // add year requirement
     var YQ = {"EQ": {"courses_year": 2014}};
-    course.push(YQ);
+    if (trigger == 0) {
+        course.push(YQ);
+    }
 
     // NOW course ARE FILLLED WITH REQUIRED KEYS
 
@@ -452,8 +458,9 @@ $("#btnsch").click(function () {
         var SLDQ = {
             "WHERE": {"AND": [{"IS": {"rooms_shortname": SDBname}}]},
             "OPTIONS": {
-                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
-                "ORDER": "rooms_shortname", "FORM": "TABLE"
+                "COLUMNS": ["rooms_name", "rooms_seats", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_name",
+                "FORM": "TABLE"
             }
         };
     }
@@ -461,8 +468,9 @@ $("#btnsch").click(function () {
         var SLDQ = {
             "WHERE": {},
             "OPTIONS": {
-                "COLUMNS": ["rooms_shortname", "rooms_lat", "rooms_lon"],
-                "ORDER": "rooms_shortname", "FORM": "TABLE"
+                "COLUMNS": ["rooms_name", "rooms_seats", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_name",
+                "FORM": "TABLE"
             }
         };
     }
@@ -470,27 +478,43 @@ $("#btnsch").click(function () {
 
 
     var queryCourse =
-        {"WHERE":
-            {"AND": course},
+        {
+            "WHERE": {"AND": course},
             "OPTIONS": {
                 "COLUMNS": [
-                    "courses_dept","courses_id","numberofsections","capacity"
+                    "courses_dept", "courses_id", "numberofsections", "capacity"
                 ],
                 "ORDER": {
                     "dir": "UP",
-                    "keys": ["courses_dept","courses_id"]
+                    "keys": ["courses_dept", "courses_id"]
                 },
                 "FORM": "TABLE"
             },
             "TRANSFORMATIONS": {
-                "GROUP": ["courses_dept","courses_id"],
-                "APPLY": [{"numberofsections":{"COUNT": "courses_uuid"}}, {"capacity":{"BIGGEST":"courses_pass"}}]
+                "GROUP": ["courses_dept", "courses_id"],
+                "APPLY": [{"numberofsections": {"COUNT": "courses_uuid"}}, {"capacity": {"BIGGEST": "courses_pass"}}]
             }
         };
 
-    var queryRoom = {"WHERE": SBNQ, "OPTIONS": {
-        "COLUMNS": ["rooms_name","rooms_seats","rooms_lat","rooms_lon"], "ORDER": "rooms_name", "FORM": "TABLE"}};
-
+    if (rooms.length == 0) {
+        var queryRoom =
+            {"WHERE":
+                {},
+                "OPTIONS": {
+                    "COLUMNS": ["rooms_name", "rooms_seats", "rooms_lat", "rooms_lon"],
+                    "ORDER": "rooms_name",
+                    "FORM": "TABLE"
+                }};
+    }
+    else {
+        var queryRoom = {
+            "WHERE": {"AND": rooms}, "OPTIONS": {
+                "COLUMNS": ["rooms_name", "rooms_seats", "rooms_lat", "rooms_lon"],
+                "ORDER": "rooms_name",
+                "FORM": "TABLE"
+            }
+        };
+    }
     var coursesResult;
     var roomsResult;
 
@@ -498,6 +522,9 @@ $("#btnsch").click(function () {
     Number.prototype.toRad = function() {
         return this * Math.PI / 180;
     };
+
+    console.log(JSON.stringify(queryCourse));
+    console.log(JSON.stringify(queryRoom));
 
 
     $.ajax({
@@ -507,8 +534,9 @@ $("#btnsch").click(function () {
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
-        //console.log("Response", data.result);
+        console.log("Response", JSON.stringify(data.result));
         coursesResult = data.result;
+        console.log("Query ROOM " + JSON.stringify(queryRoom));
 
         $.ajax({
             url: 'http://localhost:4321/query',
@@ -518,8 +546,14 @@ $("#btnsch").click(function () {
             contentType: 'application/json'
         }).done(function (data) {
 
-            //console.log("Response", data.result);
+            console.log("Response", data.result);
             roomsResult = data.result;
+
+            if (roomsResult.length == 0) {
+                alert("I beg you to increase the search radius :)");
+            }
+
+            console.log("SDBName" + JSON.stringify(SLDQ));
 
             $.ajax({
                 url: 'http://localhost:4321/query',
@@ -532,20 +566,37 @@ $("#btnsch").click(function () {
                 var puuuuuuuuuuuu = [];
 
                 var result3 = data3.result;
+
+                if (result3.length == 0) {
+                    alert("I beg you to increase the search radius :)");
+                }
                 var lat2 = result3[0]["rooms_lat"];
                 var lon2 = result3[0]["rooms_lon"];
 
-                //console.log("roooms" + JSON.stringify(roomsResult));
-                //console.log("data3" + JSON.stringify(data3));
+                // console.log("roooms" + JSON.stringify(roomsResult));
+                // console.log("data3" + JSON.stringify(data3));
 
                 if (SDBname == 0) {
+                    if (coursesResult.length == 0) {
+                        alert("Please enter more courses");
+                    }
+                    if (roomsResult.length == 0) {
+                        alert("I humbly beg you to increase the number of search radius");
+                    }
                     var tempObj = [coursesResult, roomsResult];
                     var tempObjj = {ngentot: tempObj};
-                    //console.log("teempobj" + JSON.stringify(tempObjj));
+                    console.log("teempobj" + JSON.stringify(tempObjj));
                     generateTable(coursesResult);
+                    console.log("PLEASE" + JSON.stringify(roomsResult));
                     generateTable2(roomsResult);
                 }
                 else {
+                    if (coursesResult.length == 0) {
+                        alert("Please enter more courses");
+                    }
+                    if (roomsResult.length == 0) {
+                        alert("I humbly beg you to increase the number of search radius");
+                    }
 
                     for (var i = 0; i < roomsResult.length; i++) {
                         var lat1 = roomsResult[i]["rooms_lat"];
@@ -567,10 +618,13 @@ $("#btnsch").click(function () {
                         }
                     }
                      generateTable(coursesResult);
+                    if (puuuuuuuuuuuu.length == 0) {
+                        alert("I humbly implore you to increase the search parameters :)");
+                    }
                      generateTable2(puuuuuuuuuuuu);
                     var tempObj = [coursesResult, puuuuuuuuuuuu];
                     var tempObjj = {ngentot: tempObj};
-                    //console.log("teempobj" + JSON.stringify(tempObjj));
+                    console.log("teempobj" + JSON.stringify(tempObjj));
                 }
 
                 $.ajax({
@@ -588,8 +642,6 @@ $("#btnsch").click(function () {
             }).fail(function () {
                 console.error("ERROR - Failed to submit query");
             });
-
-
         }).fail(function () {
             console.error("ERROR - Failed to submit query");
         });
@@ -692,7 +744,7 @@ function generateTable3(data) {
     //console.log("DATA", data);
     //$.each(data, function (n0, v0) {
         $.each(data, function (n1, v1) {
-            console.log(v1);
+            // console.log(v1);
             var tbl_row = tbl_body.insertRow();
             tbl_row.className = odd_even ? "odd" : "even";
             $.each(this, function (k, v) {
