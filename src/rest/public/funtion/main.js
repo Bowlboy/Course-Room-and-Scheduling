@@ -599,6 +599,86 @@ $("#btnsch").click(function () {
 
 });
 
+$("#btnrnd").click(function () {
+
+    var CRinst = $("#CRinst").val();
+    var CRavg = $("#CRavg").val();
+    var CRname = $("#CRname").val();
+
+    var CRkeys = []; // array of filled filters
+
+    // if NOT have to add IS -> for non numbers
+    // comapre to both # fail or #pass -> handle Section Size
+    if (CRavg.toString().length > 0) {
+        var CRA = {"GT": {"courses_avg": Number(CRavg)}}; //number
+        CRkeys.push(CRA);
+    }
+    // handle Instructor
+    if (CRinst.length > 0) {
+        var CRIQ = {"IS": {"courses_instructor": CRinst}};
+        CRkeys.push(CRIQ);
+    }
+
+    //handle Courses Name
+    if (CRname.length > 0) {
+        if (CRname.length == 1) {
+            SCnamed = CRname.split("_");
+            var SCNAQ1 = {"IS": {"courses_dept": SCnamed[0]}};
+            var SCNAQ2 = {"IS": {"courses_id": SCnamed[1]}};
+            CRkeys.push(SCNAQ1);
+            CRkeys.push(SCNAQ2);
+        }
+        else {
+            SCnames = CRname.split(",");
+            var temp2 = [];
+            for (i = 0; i< SCnames.length;i++) {
+                SCnamed2 = SCnames[i].split("_");
+                var temp =[];
+                var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
+                var SCNAQ2B = {"IS": {"courses_id": SCnamed2[1]}};
+                temp.push(SCNAQ1B);
+                temp.push(SCNAQ2B);
+                var RQ = {"AND":temp};
+                temp2.push(RQ);
+            }
+            var PQ = {"OR": temp2};
+            CRkeys.push(PQ);
+        }
+    }
+
+    if(CRkeys.length == 0) {
+        alert("PLEASE FILL AT LEAST ONE INPUT IN COURSE RECOMMENDER")
+    }
+
+    // array is now filled and time to make the query dont forget to use
+    // Orad for the ORDER
+    var query =
+        {
+            "WHERE": {"AND": CRkeys},
+            "OPTIONS": {
+                "COLUMNS": ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
+                    "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"],
+                "ORDER": "courses_avg", "FORM": "TABLE"
+            }
+        };
+
+    //console.log(JSON.stringify(query));
+
+    $.ajax({
+        url: 'http://localhost:4321/query',
+        type: 'post',
+        data: JSON.stringify(query),
+        dataType: 'json',
+        contentType: 'application/json'
+    }).done(function (data) {
+        console.log("Response");
+        var results = data.result;
+            generateTable(results);
+    }).fail(function () {
+        console.error("ERROR - Failed to submit query");
+    });
+});
+
 /*$("#btnSubmit").click(function() {
  var query = $("#txtQuery").val();
 
