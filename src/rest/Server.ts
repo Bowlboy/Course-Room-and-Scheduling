@@ -158,8 +158,9 @@ export default class Server {
     }
 
     public static perform(req: restify.Request, res: restify.Response, next: restify.Next) {
-        //console.log("masuk perform");
-        //console.log(req.body);
+        console.log("masuk perform");
+        //console.log(JSON.parse(req.body));
+        console.log(req.body);
         IF.performQuery(req.body)
             .then(function success(content: any) {
                 //console.log(content);

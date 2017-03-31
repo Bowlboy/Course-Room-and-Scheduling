@@ -57,7 +57,19 @@ $("#btncourses").click(function () {
 
     // if NOT have to add IS -> for non numbers
     // comapre to both # fail or #pass -> handle Section Size
-    if (Secsize.toString().length > 0) {
+    if (Secsize.toString().length > 0 && SCrad == "EQ") {
+        var SCQ1 = {"EQ": {"courses_pass": Secsize}}; //number
+        var SCQ2 = {"EQ": {"courses_fail": Secsize}}; //number
+        arryofkeys.push(SCQ1);
+        arryofkeys.push(SCQ2);
+    }
+    else if (Secsize.toString().length > 0 && SCrad == "GT") {
+        var SCQ1 = {"GT": {"courses_pass": Secsize}}; //number
+        var SCQ2 = {"GT": {"courses_fail": Secsize}}; //number
+        arryofkeys.push(SCQ1);
+        arryofkeys.push(SCQ2);
+    }
+    else if (Secsize.toString().length > 0 && SCrad == "LT") {
         var SCQ1 = {SCrad: {"courses_pass": Secsize}}; //number
         var SCQ2 = {SCrad: {"courses_fail": Secsize}}; //number
         arryofkeys.push(SCQ1);
@@ -65,20 +77,21 @@ $("#btncourses").click(function () {
     }
     // handle dept
     if (Dept.length > 0 && Drad == "IS") {
-        var DQ = {Drad: {"courses_dept": Dept}};
+        var DQ = {"IS": {"courses_dept": Dept}};
         arryofkeys.push(DQ);
     }
     else if (Dept.length >0 && Drad == "NOT") {
-        var DQ = {Drad: {"IS":{"courses_dept": Dept}}};
+        var DQ = {"NOT": {"IS":{"courses_dept": Dept}}};
         arryofkeys.push(DQ);
     }
     //handle title
+    //theory comptg
     if (Tittle.length > 0 && Trad == "IS" ) {
-        var TQ ={Trad: {"courses_title": Tittle}};
+        var TQ ={"IS": {"courses_title": Tittle}};
         arryofkeys.push(TQ);
     }
     else if (Tittle.length >0 && Trad == "NOT") {
-        var TQ = {Trad: {"IS":{"courses_title": Tittle}}};
+        var TQ = {"NOT": {"IS":{"courses_title": Tittle}}};
         arryofkeys.push(TQ);
     }
     // handle Course Number
@@ -91,11 +104,11 @@ $("#btncourses").click(function () {
         arryofkeys.push(CNQ);
     }
     // handle Instructor
-    if (Cnum.length > 0 && Irad == "IS" ) {
+    if (Inst.length > 0 && Irad == "IS" ) {
         var IQ = {Irad: {"courses_instructor": Inst}};
         arryofkeys.push(IQ);
     }
-    else if (Cnum.length >0 && Irad == "NOT") {
+    else if (Inst.length >0 && Irad == "NOT") {
         var IQ = {Irad: {"IS":{"courses_instructor": Inst}}};
         arryofkeys.push(IQ);
     }
@@ -104,19 +117,21 @@ $("#btncourses").click(function () {
     // Orad for the ORDER
     var query =
         {"WHERE":
-            {"AND": [arryofkeys]},
+            {"AND": arryofkeys},
             "OPTIONS": {"COLUMNS": ["courses_dept","courses_id","courses_avg", "courses_instructor",
                 "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],
                 "ORDER": Orad, "FORM": "TABLE"}};
 
+    console.log(JSON.stringify(query));
+
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
-        data: query,
+        data: JSON.stringify(query),
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
-        console.log("Response", data);
+        console.log("Response");
         generateTable(data.result);
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
