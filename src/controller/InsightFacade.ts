@@ -1479,7 +1479,7 @@ export default class InsightFacade implements IInsightFacade {
                     var tempName = course_dept + " " + course_id + " 10" + i;
                     let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
                     finalCourses.push(tempObject);
-                    Log.test("teemp" + JSON.stringify(tempObject));
+                    // Log.test("teemp" + JSON.stringify(tempObject));
                 }
             }
 
@@ -1503,6 +1503,8 @@ export default class InsightFacade implements IInsightFacade {
                 }
             }
             var quality = 1 - (overflow.length) / courses.length;
+            var q = "Quality" + quality;
+            finalSchedule.push([q]);
             Log.test("Quality" + quality);
 
             // return finalSchedule

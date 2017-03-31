@@ -132,7 +132,30 @@ $("#btncourses").click(function () {
         contentType: 'application/json'
     }).done(function (data) {
         console.log("Response");
-        generateTable(data.result);
+        var results = data.result;
+        var realData = [];
+        for (var i = 0; i < results.length; i++) {
+            switch (SCRad) {
+                case ("GT"): {
+                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) >= Number(Secsize)) {
+                        realData.push(results[i]);
+                    }
+                }
+                case ("EQ"): {
+                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) == Number(Secsize)) {
+                        realData.push(results[i]);
+                    }
+                }
+                case ("LT"): {
+                    if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) <= Secsize) {
+                        realData.push(results[i]);
+                    }
+                }
+                default:
+                    break;
+            }
+        }
+        generateTable(realData);
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
     });
@@ -221,7 +244,7 @@ $("#btnrooms").click(function () {
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
-        data: query,
+        data: JSON.stringify(query),
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
@@ -327,7 +350,7 @@ $("#btnSch").click(function () {
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
-        data: query,
+        data: JSON.stringify(query),
         dataType: 'json',
         contentType: 'application/json'
     }).done(function (data) {
@@ -337,13 +360,26 @@ $("#btnSch").click(function () {
         $.ajax({
             url: 'http://localhost:4321/query',
             type: 'post',
-            data: queryRoom,
+            data: JSON.stringify(queryRoom),
             dataType: 'json',
             contentType: 'application/json'
         }).done(function (data) {
             console.log("Response", data);
             roomsResult = data;
+            var tempObj = [coursesResult, roomsResult];
 
+            $.ajax({
+                url: 'http://localhost:4321/query',
+                type: 'post',
+                data: tempObj,
+                dataType: 'json',
+                contentType: 'application/json'
+            }).done(function (data) {
+                console.log("Response", data);
+                generateTable(data)
+            }).fail(function () {
+                console.error("ERROR - Failed to submit query");
+            });
 
 
         }).fail(function () {

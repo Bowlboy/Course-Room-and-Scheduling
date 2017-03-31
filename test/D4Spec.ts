@@ -10,11 +10,13 @@ var fs = require("fs");
 var zip: any = fs.readFileSync("courses.zip", "base64");
 var zip3 = fs.readFileSync("rooms.zip", "base64");
 
+let response1 = '';
+
 describe.only("D4Spec", function () {
 
     let QueryAllCPSCCourses: QueryRequest;
     QueryAllCPSCCourses = {
-        "WHERE": {"AND": [{"EQ": {"courses_year": 2014}}, {"IS": {"courses_dept": "cpsc"}}]},
+        "WHERE": {"AND": [{"EQ": {"courses_year": 2014}}, {"IS": {"courses_dept": "adhe"}}]},
         "OPTIONS": {
             "COLUMNS": [
                 "courses_dept","courses_id","numberofsections","capacity"
@@ -33,8 +35,11 @@ describe.only("D4Spec", function () {
 
     let QueryDMP: QueryRequest;
     QueryDMP = {"WHERE": {
-        "IS": {"rooms_name": "*DMP*"}}, "OPTIONS": {
+        "IS": {"rooms_name": "*PHRM*"}}, "OPTIONS": {
             "COLUMNS": ["rooms_name","rooms_seats"], "ORDER": "rooms_name", "FORM": "TABLE"}};
+
+    let query1: QueryRequest;
+    query1 = {"WHERE":{"AND":[{"IS":{"courses_dept":"cpsc"}}]},"OPTIONS":{"COLUMNS": ["courses_dept","courses_id","courses_avg","courses_instructor","courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],"ORDER":"courses_fail","FORM":"TABLE"}};
 
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
@@ -122,8 +127,19 @@ describe.only("D4Spec", function () {
         let tempObj: any[] = [tempCourses, tempRooms];
         return myIR.schedule(tempObj).then(function (response: InsightResponse) {
             expect(response.code).to.equal(200);
-            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            Log.test('The Response is: ' + JSON.stringify(response.body));
         }).catch(function (err) {
+            expect.fail();
+        })
+    });
+
+    it("Test RESURRECT THE D3", function () {
+        return myIR.performQuery(query1).then(function (response: InsightResponse) {
+            // Log.test('The Response is: ' + JSON.stringify(response.body));
+            expect(response.code).to.equal(200);
+            // expect(JSON.stringify(response.body)).to.equal(response1);
+        }).catch(function (err) {
+            // Log.test('Error: ' + JSON.stringify(err));
             expect.fail();
         })
     });
