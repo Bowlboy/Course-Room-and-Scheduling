@@ -150,34 +150,35 @@ $("#btncourses").click(function () {
         console.log("Response");
         var results = data.result;
         var realData = [];
-        // console.log(JSON.stringify(results[0]) + JSON.stringify(results[0]["courses_fail"] + Secsize));
-        for (var i = 0; i < results.length; i++) {
-            switch (SCrad) {
-                case ("GT"): {
-                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) >= Secsize) {
-                        realData.push(results[i]);
+
+        if(Number(Secsize) > 0) {
+            for (var i = 0; i < results.length; i++) {
+                switch (SCrad) {
+                    case ("GT"): {
+                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) >= Number(Secsize)) {
+                            realData.push(results[i]);
+                        }
                     }
-                };
-                break;
-                case ("EQ"): {
-                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) == Secsize) {
-                        realData.push(results[i]);
-                        console.log("BL");
+                    case ("EQ"): {
+                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) == Number(Secsize)) {
+                            realData.push(results[i]);
+                        }
                     }
-                };
-                break;
-                case ("LT"): {
-                    if ((results[i]["courses_fail"] + results[i]["courses_pass"]) <= Secsize) {
-                        realData.push(results[i]);
+                    case ("LT"): {
+                        if (((results[i]["courses_fail"]) + (results[i]["courses_pass"])) <= Secsize) {
+                            realData.push(results[i]);
+                        }
                     }
-                };
-                break;
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
+            console.log(JSON.stringify(realData));
+            generateTable(realData);
         }
-        console.log(JSON.stringify(realData));
-        generateTable(realData);
+        else {
+            generateTable(results);
+        }
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
     });
@@ -534,5 +535,14 @@ function generateTable(data) {
         myNode.removeChild(myNode.firstChild);
     }
     document.getElementById("tblResults").appendChild(tbl_body);
+ /*   var table = document.getElementById("tblResult");
+    var row = table.insertRow(0);
+    var akey = Object.keys(data[0]);
+    for (i=0; i<akey.length; i++) {
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = akey[i].toString();
+    }*/
+
+
     // $("#tblResults").appendChild(tbl_body);
 }
