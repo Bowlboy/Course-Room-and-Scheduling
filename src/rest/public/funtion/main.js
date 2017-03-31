@@ -462,15 +462,25 @@ $("#btnsch").click(function () {
     // handle S room name
     if (SRname.length > 0) {
         if (SRname.length == 1) {
+            console.log("IF");
             var SRNQ = {"IS": {"rooms_name": SRname}};
              rooms.push(SRNQ);
         }
         else {
+            console.log("ELSE");
             SRnames = SRname.split(",");
-            for (i = 0; i< SCnames.length;i++) {
+            var temp2 = [];
+            for (i = 0; i< SRnames.length;i++) {
+                var temp = [];
                 var SRNQ2 = {"IS": {"rooms_name": SRnames[i]}};
-                rooms.push(SRNQ2);
+                temp.push(SRNQ2);
+                var RQ = {"AND" : temp};
+                temp2.push(RQ);
             }
+            //console.log( JSON.stringify(temp2));
+            var PQ = {"OR": temp2};
+            rooms.push(PQ);
+            //console.log( JSON.stringify(rooms));
         }
     }
 
