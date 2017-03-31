@@ -58,20 +58,20 @@ $("#btncourses").click(function () {
     // if NOT have to add IS -> for non numbers
     // comapre to both # fail or #pass -> handle Section Size
     if (Secsize.toString().length > 0 && SCrad == "EQ") {
-        var SCQ1 = {"EQ": {"courses_pass": Secsize}}; //number
-        var SCQ2 = {"EQ": {"courses_fail": Secsize}}; //number
+        var SCQ1 = {"LT": {"courses_pass": Number(Secsize)}}; //number
+        var SCQ2 = {"LT": {"courses_fail": Number(Secsize)}}; //number
         arryofkeys.push(SCQ1);
         arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "GT") {
-        var SCQ1 = {"GT": {"courses_pass": Secsize}}; //number
-        var SCQ2 = {"GT": {"courses_fail": Secsize}}; //number
-        arryofkeys.push(SCQ1);
-        arryofkeys.push(SCQ2);
+        var SCQ1 = {"GT": {"courses_pass": Number(Secsize)}}; //number
+        var SCQ2 = {"GT": {"courses_fail": Number(Secsize)}}; //number
+        //arryofkeys.push(SCQ1);
+        //arryofkeys.push(SCQ2);
     }
     else if (Secsize.toString().length > 0 && SCrad == "LT") {
-        var SCQ1 = {SCrad: {"courses_pass": Secsize}}; //number
-        var SCQ2 = {SCrad: {"courses_fail": Secsize}}; //number
+        var SCQ1 = {"LT": {"courses_pass": Number(Secsize)}}; //number
+        var SCQ2 = {"LT": {"courses_fail": Number(Secsize)}}; //number
         arryofkeys.push(SCQ1);
         arryofkeys.push(SCQ2);
     }
@@ -96,25 +96,29 @@ $("#btncourses").click(function () {
     }
     // handle Course Number
     if (Cnum.length > 0 && CNrad == "IS" ) {
-        var CNQ = {CNrad: {"courses_id": Cnum}};
+        var CNQ = {"IS": {"courses_id": Cnum}};
         arryofkeys.push(CNQ);
     }
     else if (Cnum.length >0 && CNrad == "NOT") {
-        var CNQ = {CNrad: {"IS":{"courses_id": Cnum}}};
+        var CNQ = {"NOT": {"IS":{"courses_id": Cnum}}};
         arryofkeys.push(CNQ);
     }
     // handle Instructor
     if (Inst.length > 0 && Irad == "IS" ) {
-        var IQ = {Irad: {"courses_instructor": Inst}};
+        var IQ = {"IS": {"courses_instructor": Inst}};
         arryofkeys.push(IQ);
     }
     else if (Inst.length >0 && Irad == "NOT") {
-        var IQ = {Irad: {"IS":{"courses_instructor": Inst}}};
+        var IQ = {"NOT": {"IS":{"courses_instructor": Inst}}};
         arryofkeys.push(IQ);
     }
 
     // array is now filled and time to make the query dont forget to use
     // Orad for the ORDER
+    if (arryofkeys.length == 0) {
+        alert("FILL ONE OF THE FILTER BOX IN COURSES");
+    }
+
     var query =
         {"WHERE":
             {"AND": arryofkeys},
@@ -375,7 +379,7 @@ $("#btnSch").click(function () {
 function generateTable(data) {
     var tbl_body = document.createElement("tbody");
     var odd_even = false;
-    console.log("DATA", data);
+    //console.log("DATA", data);
     $.each(data, function () {
         var tbl_row = tbl_body.insertRow();
         tbl_row.className = odd_even ? "odd" : "even";
@@ -385,6 +389,10 @@ function generateTable(data) {
         })
         odd_even = !odd_even;
     })
+    var myNode = document.getElementById("tblResults");
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
     document.getElementById("tblResults").appendChild(tbl_body);
     // $("#tblResults").appendChild(tbl_body);
 }
