@@ -389,8 +389,8 @@ $("#btnsch").click(function () {
     }
 
     console.log("Checkpoint2");
-    var trigger = 0;
     // handle courses name
+
     if (SCname.length > 0) {
         if (SCname.length == 1) {
             SCnamed = SCname.split("_");
@@ -400,24 +400,26 @@ $("#btnsch").click(function () {
             course.push(SCNAQ2);
         }
         else {
-            trigger = 1;
-            var coow = [];
             SCnames = SCname.split(",");
+            var temp2 = [];
             for (i = 0; i< SCnames.length;i++) {
-                console.log("SAMPAI SINI JUGA TOH");
                 SCnamed2 = SCnames[i].split("_");
-                var SCNAQ1B = {"AND": [{"IS": {"courses_dept": SCnamed2[0]}}, {"IS": {"courses_id": SCnamed2[1]}}, {"EQ": {"courses_year": 2014}}]};
-                coow.push(SCNAQ1B);
+                var temp =[];
+                var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
+                var SCNAQ2B = {"IS": {"courses_id": SCnamed2[1]}};
+                temp.push(SCNAQ1B);
+                temp.push(SCNAQ2B);
+                var RQ = {"AND":temp};
+                temp2.push(RQ);
             }
-            var cowr = {"OR": coow};
-            course.push(cowr);
+            var PQ = {"OR": temp2};
+            course.push(PQ);
         }
     }
+
     // add year requirement
     var YQ = {"EQ": {"courses_year": 2014}};
-    if (trigger == 0) {
-        course.push(YQ);
-    }
+    course.push(YQ);
 
     // NOW course ARE FILLLED WITH REQUIRED KEYS
 
