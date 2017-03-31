@@ -107,7 +107,7 @@ $("#btncourses").click(function () {
             {"AND": [arryofkeys]},
             "OPTIONS": {"COLUMNS": ["courses_dept","courses_id","courses_avg", "courses_instructor",
                 "courses_title","courses_pass","courses_fail","courses_audit","courses_uuid","courses_year"],
-                "ORDER": "rooms_dept", "FORM": "TABLE"}};
+                "ORDER": Orad, "FORM": "TABLE"}};
 
     $.ajax({
         url: 'http://localhost:4321/query',
@@ -306,6 +306,9 @@ $("#btnSch").click(function () {
     var queryRoom = {"WHERE": SBNQ, "OPTIONS": {
         "COLUMNS": ["rooms_name","rooms_seats"], "ORDER": "rooms_name", "FORM": "TABLE"}};
 
+    var coursesResult;
+    var roomsResult;
+
     $.ajax({
         url: 'http://localhost:4321/query',
         type: 'post',
@@ -314,23 +317,27 @@ $("#btnSch").click(function () {
         contentType: 'application/json'
     }).done(function (data) {
         console.log("Response", data);
-        generateTable(data.result);
+        coursesResult = data;
+
+        $.ajax({
+            url: 'http://localhost:4321/query',
+            type: 'post',
+            data: queryRoom,
+            dataType: 'json',
+            contentType: 'application/json'
+        }).done(function (data) {
+            console.log("Response", data);
+            roomsResult = data;
+
+
+
+        }).fail(function () {
+            console.error("ERROR - Failed to submit query");
+        });
     }).fail(function () {
         console.error("ERROR - Failed to submit query");
     });
 
-    $.ajax({
-        url: 'http://localhost:4321/query',
-        type: 'post',
-        data: queryRoom,
-        dataType: 'json',
-        contentType: 'application/json'
-    }).done(function (data) {
-        console.log("Response", data);
-        generateTable(data.result);
-    }).fail(function () {
-        console.error("ERROR - Failed to submit query");
-    });
 });
 
 /*$("#btnSubmit").click(function() {
