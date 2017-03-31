@@ -711,7 +711,7 @@ $("#btnrnd").click(function () {
         if (CRname.length == 1) {
             SCnamed = CRname.split("_");
             var SCNAQ1 = {"IS": {"courses_dept": SCnamed[0]}};
-            var SCNAQ2 = {"IS": {"courses_id": SCnamed[1]}};
+            var SCNAQ2 = {"NOT":{"IS": {"courses_id": SCnamed[1]}}};
             CRkeys.push(SCNAQ1);
             CRkeys.push(SCNAQ2);
         }
@@ -722,7 +722,7 @@ $("#btnrnd").click(function () {
                 SCnamed2 = SCnames[i].split("_");
                 var temp =[];
                 var SCNAQ1B = {"IS": {"courses_dept": SCnamed2[0]}};
-                var SCNAQ2B = {"IS": {"courses_id": SCnamed2[1]}};
+                var SCNAQ2B = {"NOT":{"IS": {"courses_id": SCnamed2[1]}}};
                 temp.push(SCNAQ1B);
                 temp.push(SCNAQ2B);
                 var RQ = {"AND":temp};
