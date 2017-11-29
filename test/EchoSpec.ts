@@ -28,6 +28,9 @@ describe("EchoSpec", function () {
     let query1: QueryRequest;
     query1  = {WHERE: {GT:{"courses_avg": 98}},OPTIONS:{COLUMNS: ["courses_dept", "courses_avg", "courses_title"], ORDER:"courses_dept", FORM:"TABLE"}};
 
+    let query13: QueryRequest;
+    query13 = {"WHERE": {"AND": [{"IS": {"rooms_furniture": "*Tables*"}}, {"GT": {"rooms_seats": 300}}]}, "OPTIONS": {"COLUMNS": ["rooms_shortname", "rooms_type", "transs","wuanjirrrr","ngentot","anjing"], "ORDER": {"dir": "DOWN", "keys": ["rooms_shortname","rooms_type"]}, "FORM": "TABLE"}, "TRANSFORMATIONS": {"GROUP": ["rooms_shortname","rooms_type"], "APPLY": [{"transs":{"SUM":"rooms_seats"}},{"wuanjirrrr":{"AVG":"rooms_seats"}},{"ngentot":{"COUNT":"rooms_seats"}},{"anjing":{"MIN":"rooms_seats"}}]}};
+
     function sanityCheck(response: InsightResponse) {
         expect(response).to.have.property('code');
         expect(response).to.have.property('body');
@@ -147,6 +150,72 @@ describe("EchoSpec", function () {
                 //console.log(err);
                 //console.log (err.code);
                 //console.log(err.body);
+            });
+    });
+
+    it("PUT courses", function () {
+        return chai.request(URL)
+            .put('/dataset/courses')
+            .attach("body", fs.readFileSync("courses.zip"), "courses310")
+            .then(function (res: any) {
+                //Log.trace('then:');
+                // some assertions
+                //console.log('then');
+                //console.log(res.status);
+                //console.log(res.body);
+            })
+            .catch(function (err: any) {
+                //Log.trace('catch:');
+                // some assertions
+                //console.log('catch');
+                //console.log(err);
+                //console.log (err.code);
+                //console.log(err.body);
+                expect.fail();
+            });
+    });
+
+    it("PUT courses", function () {
+        return chai.request(URL)
+            .put('/dataset/rooms')
+            .attach("body", fs.readFileSync("rooms.zip"), "courses310")
+            .then(function (res: any) {
+                //Log.trace('then:');
+                // some assertions
+                //console.log('then');
+                //console.log(res.status);
+                //console.log(res.body);
+            })
+            .catch(function (err: any) {
+                //Log.trace('catch:');
+                // some assertions
+                //console.log('catch');
+                //console.log(err);
+                //console.log (err.code);
+                //console.log(err.body);
+                expect.fail();
+            });
+    });
+
+    it("POST courses", function () {
+        return chai.request(URL)
+            .post('/query')
+            .send(query13)
+            .then(function (res: any) {
+                //Log.trace('then:');
+                // some assertions
+                //console.log('then');
+                //console.log(res.status);
+                //console.log(res.body);
+            })
+            .catch(function (err: any) {
+                //Log.trace('catch:');
+                // some assertions
+                //console.log('catch');
+                //console.log(err);
+                //console.log (err.code);
+                //console.log(err.body);
+                expect.fail();
             });
     });
 });

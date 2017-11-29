@@ -1,7 +1,7 @@
 /**
  * This is the main programmatic entry point for the project.
  */
-import {IInsightFacade, InsightResponse, QueryRequest} from "./IInsightFacade";
+import {IInsightFacade, InsightResponse, QueryRequest, Schedule} from "./IInsightFacade";
 
 import Log from "../Util";
 
@@ -964,6 +964,28 @@ export default class InsightFacade implements IInsightFacade {
                 return tempSum;
             }
                 ;
+            case 'BIGGEST': {
+                var tempBiggest = 0;
+                for (var arr of array) {
+                    var buffer = 0;
+                    var keyy = Object.keys(arr);
+                    for (var i = 0; i < keyy.length; i++) {
+                        if (keyy[i] == "courses_pass" || keyy[i] == "courses_fail") {
+                            var tempData = arr[<any>keyy[<any>i]];
+                            if (typeof tempData === "number") {
+                                buffer += parseInt(tempData);
+                                if (tempBiggest < buffer) {
+                                    tempBiggest = buffer;
+                                }
+                            }
+                            else {
+                                throw new TypeError("errMAX");
+                            }
+                        }
+                    }
+                }
+                return tempBiggest;
+            };
             default: {
                 throw new TypeError("errDefault");
             }
@@ -1120,7 +1142,10 @@ export default class InsightFacade implements IInsightFacade {
                             let rejectIR = {code: 400, body: {error: "Something is wrong in NOT"}};
                             reject(rejectIR);
                         }
-
+                        else {
+                            let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
+                            reject(rejectIR);
+                        }
                     }
                 }
             }
@@ -1316,6 +1341,7 @@ export default class InsightFacade implements IInsightFacade {
 
                 // NewArr1 now contains a reprsentative of each group.
                 for (var name of GroupNames) {
+                    var biggestSize = 0;
                     let tempObject: any = GROUPS[<any>name][0];
                     var GroupMembers = GROUPS[<any>name];
                     for (var ap of APPLY) {
@@ -1360,6 +1386,10 @@ export default class InsightFacade implements IInsightFacade {
                                 let rejectIR = {code: 400, body: {error: "Something is wrong in AVG"}};
                                 reject(rejectIR);
                             }
+                            else {
+                                let rejectIR = {code: 400, body: {error: "Something is wrong Apply"}};
+                                reject(rejectIR);
+                            }
                         }
                     }
                     newArr1.push(tempObject);
@@ -1391,6 +1421,122 @@ export default class InsightFacade implements IInsightFacade {
                 let myIR: any = {code: 200, body: body};
                 fulfill(myIR);
             }
+        })
+    }
+
+    schedule(objj: Schedule): Promise<InsightResponse> {
+        return new Promise(function(fulfill, reject) {
+            Log.test("sampe sini gaa");
+
+            var obj = objj["ngentot"];
+
+            Log.test("objj" + JSON.stringify(obj));
+
+            let courses: any[] = obj[0];
+            let rooms: any[] = obj[1];
+
+            var totalSections = 0;
+
+            Log.test("rooms" + JSON.stringify(rooms));
+
+            let finalSchedule: String[][] = [];
+            let overflow: String[] = [];
+            let firstArray: String[] = [, "MWF 8-9", "MWF 9-10", "MWF 10-11", "MWF 11-12", "MWF 12-13", "MWF 13-14", "MWF 14-15", "MWF 15-16", "MWF 16-17", "TT 8-9.30", "TT 9.30-11", "TT 11-12.30", "TT 12.30-2", "TT 2-3.30", "TT 3.30-5"];
+
+
+            Log.test("sampe sini gaa2");
+
+            function compare(a: any, b: any) {
+                if (a.rooms_seats < b.rooms_seats)
+                    return -1;
+                if (a.rooms_seats > b.rooms_seats)
+                    return 1;
+                return 0;
+            }
+
+            rooms.sort(compare);
+
+            Log.test("sampe sini gaa3");
+
+            // Log.test(JSON.stringify(rooms));
+
+            let room_names: String[] = [];
+            let room_capacity: number[] = [];
+            let room_full: boolean[] = [];
+
+            finalSchedule.push(firstArray);
+            for (var room of rooms) {
+                // KEY[0] = NAME, KEY[1] = MAX_SEATS
+                var roomKeys = Object.keys(room);
+                room_names.push(room[<any>roomKeys[0]]);
+                room_capacity.push(room[<any>roomKeys[1]]);
+                room_full.push(false);
+                let tempArray: String[] = [room[<any>roomKeys[0]]];
+                finalSchedule.push(tempArray);
+            }
+
+            // Log.test("room_names" + room_names);
+            // Log.test("room_capacity" + room_capacity);
+
+
+            Log.test("sampe sini gaa4");
+
+            let finalCourses: any[] = [];
+
+            let checker: String[][] = [];
+
+            for (var course of courses) {
+                // KEY[0] = COURSE_DEPT, KEY[1] = COURSE_ID, KEY[2] = #SECTIONS, KEY[3] = #STUDENTS
+                var courseKey = Object.keys(course);
+                var course_dept = course[<any>courseKey[0]];
+                var course_id = course[<any>courseKey[1]];
+                var num_sections = course[<any>courseKey[2]];
+                var num_students = course[<any>courseKey[3]];
+                num_sections = Math.ceil(num_sections / 3);
+                totalSections += num_sections;
+
+                for (var i = 0; i < num_sections; i++) {
+                    if (i < 15) {
+                        var tempName = course_dept + " " + course_id + " 10" + i;
+                        let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
+                        finalCourses.push(tempObject);
+                        // Log.test("teemp" + JSON.stringify(tempObject));
+                    }
+                    else {
+                        var tempName = course_dept + " " + course_id + " 10" + i;
+                        let tempObject: any = {"name": tempName, "numberOfStudents": num_students};
+                        overflow.push(tempObject);}
+                }
+            }
+
+            // Log.test("final courses" + JSON.stringify(finalCourses));
+
+            for (var course of finalCourses) {
+                var name = course[<any>Object.keys(course)[0]];
+                var students = course[<any>Object.keys(course)[1]];
+                for (var i = 0; i <= room_capacity.length; i++) {
+                    if (room_capacity[i] > students && !room_full[i]) {
+                        finalSchedule[i + 1].push(name);
+                        if (finalSchedule[i + 1].length > 15) {
+                            room_full[i] = true;
+                        }
+                        break;
+                    }
+                    if (i == room_capacity.length) {
+                        overflow.push(name);
+                        break;
+                    }
+                }
+            }
+            var quality = 1 - (overflow.length) / totalSections;
+            var q = "Quality" + quality;
+            finalSchedule.push([q]);
+            Log.test("Quality" + quality);
+
+            // return finalSchedule
+            let body: any = {render: "TABLE", result: finalSchedule};
+            let myIR: any = {code: 200, body: body};
+            fulfill(myIR);
         })
     }
 }

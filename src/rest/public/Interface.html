@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Team 65 Demo</title>
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>D4 Team 65</h1>
+        <h2>Input Zip File</h2>
+        <input type="file" name="fileUpload" id="fileUpload" />
+        <button id="btnUpload">Upload</button>
+
+        <div>
+           <h2>Courses</h2>
+                Section Size: <input type="number" name="secsize" id="secsize">
+            <input type="radio" name="secsizerad" value="EQ" checked> Equal
+            <input type="radio" name="secsizerad" value="GT"> Greater Than
+            <input type="radio" name="secsizerad" value="LT"> Less Than
+            <br>
+                Department: <input type="text" name="dept" id="dept">
+            <input type="radio" name="deptrad" value="IS" checked> Is
+            <input type="radio" name="deptrad" value="NOT"> Not
+            <br>
+                Tittle: <input type="text" name="tittle" id="tittle">
+            <input type="radio" name="titrad" value="IS" checked> Is
+            <input type="radio" name="titrad" value="NOT"> Not
+            <br>
+                Course Number: <input type="text" name="cornum" id="cornum">
+            <input type="radio" name="cnumrad" value="IS" checked> Is
+            <input type="radio" name="cnumrad" value="NOT"> Not
+            <br>
+                Instructor: <input type="text" name="inst" id="inst">
+            <input type="radio" name="instrad" value="IS" checked> Is
+            <input type="radio" name="instrad" value="NOT"> Not
+            <br>
+                Ordering:
+            <input type="radio" name="orad" value="courses_fail" checked> Most Failing Student
+            <input type="radio" name="orad" value="courses_pass"> Most Passing Student
+            <input type="radio" name="orad" value="courses_avg"> Average Grade
+            <br>
+                <button id="btncourses">Filter Courses</button>
+        </div>
+
+        <div>
+            <h2>Rooms</h2>
+            Building Short Name: <input type="text" name="bname" id="bname">
+            <input type="radio" name="bnamerad" value="IS" checked> Is
+            <input type="radio" name="bnamerad" value="NOT"> Not
+            <br>
+            Room Number: <input type="text" name="rnum" id="rnum">
+            <input type="radio" name="rnumrad" value="IS" checked> Is
+            <input type="radio" name="rnumrad" value="NOT"> Not
+            <br>
+            Room Size: <input type="number" name="rsize" id="rsize">
+            <input type="radio" name="rsizerad" value="EQ" checked> Equal
+            <input type="radio" name="rsizerad" value="GT"> Greater Than
+            <input type="radio" name="rsizerad" value="LT"> Less Than
+            <br>
+            Room Type: <input type="text" name="rtype" id="rtype">
+            <input type="radio" name="rtyperad" value="IS" checked> Is
+            <input type="radio" name="rtyperad" value="NOT"> Not
+            <br>
+            Furniture Type: <input type="text" name="ftype" id="ftype">
+            <input type="radio" name="ftyperad" value="IS" checked> Is
+            <input type="radio" name="ftyperad" value="NOT"> Not
+            <br>
+            Location: <input type="number" name="rad" id="rad">m from building(short name)<input type="text" name="brname" id="brname">
+            <br>
+            <button id="btnrooms">Filter Rooms</button>
+        </div>
+
+        <div>
+            <h2>Scheduling</h2>
+
+            <h3>Courses</h3>
+            Department: <input type="text" name="schdept" id="schdept">
+            <br>
+            Course Number: <input type="text" name="schcornum" id="schcornum">
+            <br>
+            Course Name(dept_id) <input type="text" name="schcname" id="schcname">
+
+            <h3>Rooms</h3>
+            Building Short Name: <input type="text" name="schbname" id="schbname">
+            <br>
+            Location: <input type="number" name="schrad" id="schrad">m from building <input type="text" name="schbrname" id="schbrname">
+            <br>
+            Room Name(sname_number)<input type="text" name="schrname" id="schrname">
+            <br>
+
+            <button id="btnsch">Schedule</button>
+        </div>
+
+        <div>
+            <h2>Course Recommender</h2>
+
+            Instructor you prefer: <input type="text" name="CRinst" id="CRinst">
+            <br>
+            Courses you have taken(dept_id) <input type="text" name="CRname" id="CRname">
+            <br>
+            Minimun average <input type="number" name="CRavg" id="CRavg">
+            <br>
+
+            <button id="btnrnd">Recommend</button>
+        </div>
+
+        <div>
+            <table class ="table" id="tblResults"></table>
+        </div>
+
+        <div>
+            <table class="table" id="tblResults2"></table>
+        </div>
+
+        <div>
+            <table class ="table" id="tblResults3"></table>
+        </div>
+
+
+        <script src="funtion/jquery-3.2.0.js"></script>
+        <script src="funtion/main.js"></script>
+    </body>
+</html>
+

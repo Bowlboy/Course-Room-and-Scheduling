@@ -76,6 +76,7 @@ export default class Server {
                 that.rest.put('/dataset/:id', Server.add);
                 that.rest.del('/dataset/:id', Server.remove);
                 that.rest.post('/query', Server.perform);
+                that.rest.post('/schedule', Server.schedule);
 
                 that.rest.listen(that.port, function () {
                     Log.info('Server::start() - restify listening: ' + that.rest.url);
@@ -157,9 +158,30 @@ export default class Server {
     }
 
     public static perform(req: restify.Request, res: restify.Response, next: restify.Next) {
-        //console.log("masuk perform");
-        //console.log(req.body);
+        console.log("masuk perform");
+        //console.log(JSON.parse(req.body));
+        console.log(req.body);
         IF.performQuery(req.body)
+            .then(function success(content: any) {
+                //console.log(content);
+                //console.log(content.code);
+                //console.log(content.body);
+                res.json(content.code,content.body);
+                return next();
+            })
+            .catch(function (err: any) {
+                //console.log(err);
+                //console.log(err.code);
+                //console.log(err.body);
+                res.json(err.code,err.body);
+                return next();
+            })
+    }
+
+    public static schedule(req: restify.Request, res: restify.Response, next: restify.Next) {
+        console.log("masuk schedule");
+        console.log(req.body);
+        IF.schedule(req.body)
             .then(function success(content: any) {
                 //console.log(content);
                 //console.log(content.code);
